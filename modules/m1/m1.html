@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>M1: The Unix Shell &#8212; MPCS 51082 - Introduction to Unix Systems  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS 51082</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../index.html">Modules</a></li>
+                <li><a href="../../assignments/index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">M1: The Unix Shell</a><ul>
+<li><a class="reference internal" href="#pre-recorded-lectures">Pre-recorded Lectures</a><ul>
+<li><a class="reference internal" href="#week-1-videos">Week 1 Videos</a></li>
+<li><a class="reference internal" href="#week-2-videos">Week 2 Videos</a></li>
+<li><a class="reference internal" href="#week-3-videos">Week 3 Videos</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resources-readings">Resources/Readings</a></li>
+<li><a class="reference internal" href="#synchronous-sessions-in-person-lecture">Synchronous Sessions (In-person Lecture)</a><ul>
+<li><a class="reference internal" href="#week-1">Week 1</a></li>
+<li><a class="reference internal" href="#week-2">Week 2</a></li>
+<li><a class="reference internal" href="#week-3">Week 3</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#assignment">Assignment</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/modules/m1/m1.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="m1-the-unix-shell">
+<h1>M1: The Unix Shell<a class="headerlink" href="#m1-the-unix-shell" title="Link to this heading">¶</a></h1>
+<p>This module introduces the Unix shell as both a command interpreter and a programming environment. Students will learn how to effectively navigate the shell, automate tasks with Bash scripting, and leverage key text processing utilities. The module also covers customization of the shell environment and configuration files to improve productivity.</p>
+<p>By the end of this module, students will be able to:</p>
+<ol class="arabic simple">
+<li><p>Write and execute basic Bash scripts to automate common tasks.</p></li>
+<li><p>Use essential text processing and filtering commands such as <code class="docutils literal notranslate"><span class="pre">cut</span></code>, <code class="docutils literal notranslate"><span class="pre">sort</span></code>, <code class="docutils literal notranslate"><span class="pre">uniq</span></code>, <code class="docutils literal notranslate"><span class="pre">tail</span></code>, <code class="docutils literal notranslate"><span class="pre">grep</span></code>, and <code class="docutils literal notranslate"><span class="pre">sed</span></code>.</p></li>
+<li><p>Understand and modify the shell environment and configuration files (e.g., <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>).</p></li>
+<li><p>Use the command history effectively to recall, repeat, and edit previously executed commands.</p></li>
+</ol>
+<section id="pre-recorded-lectures">
+<h2>Pre-recorded Lectures<a class="headerlink" href="#pre-recorded-lectures" title="Link to this heading">¶</a></h2>
+<p><strong>Note: Professor Samuels will state on Ed when the prerecorded videos are ready to be viewed each week for a module.</strong></p>
+<p>The pre-recorded lectures are available here: <a class="reference external" href="https://uchicago.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=aea92d17-f047-4f07-b6a2-b3cb01627208">M1 Videos</a>.</p>
+<section id="week-1-videos">
+<h3>Week 1 Videos<a class="headerlink" href="#week-1-videos" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>1.1 - Text Processing</p></li>
+<li><p>1.2 - Shell Scripting</p></li>
+<li><p>1.3 - Demo: Shell-Scripting &amp; Street Cleaning</p></li>
+</ul>
+</section>
+<section id="week-2-videos">
+<h3>Week 2 Videos<a class="headerlink" href="#week-2-videos" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>1.4 - Process Substitution, Globbing Syntax</p></li>
+<li><p>1.5 - Parameter Expansion</p></li>
+<li><p>1.6 - Syntax Functions, Arrays, Dictionaries</p></li>
+</ul>
+</section>
+<section id="week-3-videos">
+<h3>Week 3 Videos<a class="headerlink" href="#week-3-videos" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>1.7 - Shell Aliasing &amp; History</p></li>
+<li><p>1.8 - Shell Environment and Configuration</p></li>
+<li><p>1.9 - Shell Configuration Demo</p></li>
+</ul>
+<p>The slides presented in lecture and these videos are accessible on our Canvas Page. Click on the Files link and you then can download the m1.zip file.</p>
+</section>
+</section>
+<section id="resources-readings">
+<h2>Resources/Readings<a class="headerlink" href="#resources-readings" title="Link to this heading">¶</a></h2>
+<p>For this module, your focus should be to learn the basic syntax of the shell scripting.</p>
+<ul class="simple">
+<li><p>The slides and code presented in this module are accessible on our Canvas Page. Click on the Files link and you then can download the m1.zip file.</p></li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://devhints.io/bash">Bash Scripting Cheatsheet</a></dt><dd><ul>
+<li><p>Great resource for learning and experimenting with the language syntax</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="synchronous-sessions-in-person-lecture">
+<h2>Synchronous Sessions (In-person Lecture)<a class="headerlink" href="#synchronous-sessions-in-person-lecture" title="Link to this heading">¶</a></h2>
+<p>As a reminder here are the dates and times for the synchronous session for this module:</p>
+<section id="week-1">
+<h3>Week 1<a class="headerlink" href="#week-1" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Dates/Times</dt><dd><ul>
+<li><p>Section 1: <strong>Tuesday January 6th 5:30pm-7:30pm</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Session Outline</dt><dd><ul>
+<li><p>Course logistics and Unix architecture overview</p></li>
+<li><p>Shell Command Execution and Globbing</p></li>
+<li><p>Text Processing/Filter Commands [if time permits]</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="week-2">
+<h3>Week 2<a class="headerlink" href="#week-2" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Dates/Times</dt><dd><ul>
+<li><p>Section 1: <strong>Tuesday January 13th 5:30pm-7:30pm</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Session Outline</dt><dd><ul>
+<li><p>Finding files in the filesystem</p></li>
+<li><p>Advance Bash Syntax [as time permits]</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="week-3">
+<h3>Week 3<a class="headerlink" href="#week-3" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Dates/Times</dt><dd><ul>
+<li><p>Section 1: <strong>Monday January 20th 5:30pm-7:30pm</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Session Outline</dt><dd><ul>
+<li><p>Using regular expressions to find search/modify text in Unix</p></li>
+<li><p>Midterm discussion</p></li>
+<li><p>Shell Aliasing/History [as time permits]</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+</section>
+<section id="assignment">
+<h2>Assignment<a class="headerlink" href="#assignment" title="Link to this heading">¶</a></h2>
+<p>Assignments are always <strong>due</strong> on Wednesday evenings.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="../../assignments/hw1/index.html">Homework #1</a>, due January 14th at 11:59pm CDT</p></li>
+<li><p><a class="reference external" href="../../assignments/hw2/index.html">Homework #2</a>, due January 21st at 11:59pm CDT</p></li>
+<li><p><a class="reference external" href="../../assignments/hw3/index.html">Homework #3</a>, due January 28th at 11:59pm CDT</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

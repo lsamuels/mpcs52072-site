@@ -1,0 +1,6 @@
+Course Description
+-------------------
+This course introduces the fundamental concepts, principles, and abstractions that underlie the design and architecture of Unix systems. Students will learn how Unix works from the hardware level up through the application layer, while developing practical skills in the shell environment. Along the way, the course emphasizes core topics such as processes, system calls, file systems, and networking, as well as advanced kernel subsystems that support modern operating environments. By the end, students will not only gain confidence with Unix commands and utilities, but also develop a deeper understanding of systems programming, enabling them to implement programs effectively on Unix operating systems such as Linux and macOS.
+
+Prerequisite: Core Programming (or concurrently),
+

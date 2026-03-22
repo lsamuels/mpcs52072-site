@@ -1,0 +1,268 @@
+========
+Syllabus
+========
+
+.. warning::
+
+   This is a tentative syllabus and subject to change.
+
+
+.. include:: description.rst 
+
+.. include:: course-staff.rst
+
+
+Course Structure
+----------------
+The course material will be split into six modules that will span 1-2 weeks through out the quarter. Each module looks at a different phase of a compiler and explores its functionality and importance in the system: 
+
+- M1: The Unix Shell (Week 1-2): Learn how to interact with Unix through the command line, mastering essential commands, syntax, and scripting basics.
+- M2: Unix Processes and Management(Week 3 - 4): Look at the internal structures of programs and processes in Unix and how they are managed. 
+- M3: Interacting with the Unix Kernel(Week 5-6): Explore how user programs communicate with the kernel through system calls and how the kernel manages resources. 
+- M4: Advanced Kernel Subsystems (Week 9): Examine advanced features such as memory management, file systems, networking, device drivers. 
+The delivery of the course content will follow a flipped classroom model, where lecture material and course content will be provided in two ways:
+
+- **Synchronous content** (*i.e., in-person*): Each week during our normal class time, we will meet in person at the time and location designated above. The synchronous sessions will include:
+
+  - An introduction to the material and topics for the current week's module.
+  - An opportunity to ask questions about the content provided in the videos from the prior week.
+  - Live coding sessions and activities related to the material covered in the current week's module.
+
+- **Asynchronous content** (*i.e., pre-recorded videos and readings*): Each week after class, you will be required to watch pre-recorded videos and complete assigned readings for the current module. The videos will cover lecture content that would normally be delivered in a traditional in-person setting. These videos and readings will typically range between 1 and 1.5 hours and will be posted after our scheduled class time. You are encouraged to view them at your convenience; however, you must watch the videos before the following week’s class. I will also aim to post readings for the next module in advance, in case you would like to preview upcoming topics.  
+
+Please see the `calendar <calendar.html>`__ for more details on what happens on a week to week basis.
+
+Coursework
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The course will include weekly homework, one midterm exam, attendance and projects: 
+
+* **Homework** - The weekly homework assignments will contain practice problems to help enforce the concepts learned during a lecture.
+
+* **Milestones** - The course work for the second half of the course revolves around building a course project in two parts. Each part of the project is represented as a milestone. Details about the course project and its parts will be presented by the instructor later in the course.  
+
+* **Attendance** - In order to receive you full attendance weight, you must do the following 
+   1. Attend every lecture (either in-person or remotely). If you cannot attend a lecture then you must reach out to the instructor letting them know you won't be able to attend. 
+   2. You must watch any specified pre-recorded lectures. We will look at the statistics on Panopto to ensure you watch the videos. 
+
+   As long as you continuously do those two main points you will receive full credit for attendance. 
+
+* **Exam** - There will be one exam in the course. Please see the *Exams* section for more details. 
+
+All homework will be due and out on **Wednesday @ 11:59pm**.  
+
+Please see the `Assignments Rubric <assignments/index.html>`__ page for
+more details on how the assignments will be graded.
+
+Exams 
+~~~~~~~~~~~~~~~~~~~~~~~
+There will be one exam in this course. The exam will be a mixture of coding exercises and short-answer questions. The exam will be in-person during our normal classroom time.
+
++-------------+--------------+-----------------------------------------------+
+| Exam        | Time Limit   | Date                                          |
++=============+==============+===============================================+
+| Quarter Exam| 120 minutes  |  **February 24th @ 7:30pm**                   |
++-------------+--------------+-----------------------------------------------+
+
+The exam location is in our normal classroom at the same time. There are no make-up exam in this class. There also will not be any earlier exam taken unless due to extraordinary circumstances such as an medical emergency.
+
+Course Software 
+~~~~~~~~~~~~~~~~~~~~~~~
+Bash and C will be the **required** language to code all programming assignment. You do not need to know the language in order to take this course. 
+If you haven't already learned it then you will learn it as the course progresses. I will provide a rationale for the languages during the 
+first lecture. **Please note this not a C programming class**. We will learn just enough of the C language to see how we can use it to to 
+develop applications that interacts with a Unix system. 
+
+Please make sure you have following software installed for this course:
+
+- `Clang <https://clang.llvm.org>`__ If you are running on macOS or linux then you already have this installed. If you are running a Windows machine then you'll need to download a C compiler.
+- `Git <http://git-scm.com/downloads/>`__
+-  Text editor (suggestion, not required): `Visual Studio Code <https://code.visualstudio.com>`__ 
+-  IDE (suggestion, not required): `CLion <https://www.jetbrains.com/clion/>`__
+
+The course software is also accessible via logging in remotely to a CS Linux Machine. We will explain how to do this during the first week of the quarter. 
+
+Grading
+-------
+
+Your final grade will be based on the following:
+
++----------------------------------------------+-----+
+| Homework 1-6 (5% each)                       | 30% |
++----------------------------------------------+-----+
+| Project                                      | 25% |
++----------------------------------------------+-----+
+| Quarter Exam                                 | 40% |
++----------------------------------------------+-----+
+| Attendance                                   | 5%  |
++----------------------------------------------+-----+
+
+Grades are *not* curved in this class or, at least, not in the traditional sense.
+We use a standard set of grade boundaries:
+
+* 95-100: A
+* 90-95: A-
+* 85-90: B+
+* 80-85: B
+* 75-80: B-
+* 70-75: C+
+* <70: Dealt on a case-by-case basis
+
+We curve only to the extent we might lower the boundaries for one or more letter
+grades, depending on the distribution of the raw scores. We will not raise the
+boundaries in response to the distribution.
+
+So, for example, if you have a total score of 82 in the course, you are guaranteed
+to get, at least, a B (but may potentially get a higher grade if the boundary for
+a B+ is lowered).
+
+.. _late_submissions:
+
+Late submissions
+~~~~~~~~~~~~~~~~
+
+You are allowed to make **at most two** late submissions on the programming assignments. You are allowed to make **at most two** 
+late submissions on the programming assignments. This is total across all assignments and not on a  per-assignment basis. 
+For example, you can use one late submission on homework #1 and homework #2 and then you'll be out of late extensions. Please ask 
+on Ed if you are confused by the late submission policy. Late submissions will be accepted up to 24 hours after the deadline. 
+You are allowed to double up on your late submissions (i.e., if you have not used your two late submissions, then you can use 
+them back to back).
+
+**No credit will be given** for late submissions after you have used up your two allowed
+late submissions.
+
+**No credit will be given** for *any* submission made 24 hours after the deadline.
+
+Please note that, while Gradescope does enforce the 24-hour limit on late submissions and will clearly flag
+late submissions with a red "LATE" label, it does not enforce our specific limit
+of two late submissions. **It is your responsibility to keep track of how many late submissions
+you have made so far, and to ensure you don't make more than two late submissions.**
+
+If extraordinary circumstances (medical and family emergency etc.)
+prevent a student from meeting a deadline, we may grant additional
+extensions on a case-by-case basis. Whenever possible, the student
+must inform their instructor of these extraordinary circumstances
+*before* the deadline. 
+
+Please note that having a heavy workload in a given week does not
+qualify as an extraordinary circumstance. The purpose of the two
+extensions is precisely to give you some flexibility in weeks when you
+are busier than usual. Additionally mild COVID or common cold illness is also does not qualify as an extraordinary circumstance.  
+
+Regrades
+~~~~~~~~
+
+We sometimes make mistakes, and are happy to review any incorrect
+grading decision.
+
+However, please note that we will only consider regrade requests where
+a grader made an actual mistake (e.g., they took points off claiming
+you didn't do something, when you actually did do it and the grader
+maybe missed that when reading over your submission). We will not
+consider regrade requests that ask for point penalties to be reduced,
+or try to argue that we should not be taking points off for a given
+issue in your code.
+
+For example, suppose you receive a penalty that says
+"-2 points: Function X did not check that parameter Y is greater than zero".
+If function X in your code *did* perform this check, and the grader
+missed this fact (and erroneously applied that penalty), you can submit
+a regrade request asking us to review this decision. We ask that you keep
+these requests brief and to the point: no more than 1-2 paragraphs identifying
+the exact penalty and the reasons you believe it was applied erroneously, including
+references to specific parts of your code (e.g., "I did check the value of the
+parameter in line 107"). Focus on laying out the facts, and nothing else.
+
+On the other hand, let's say you received the "Function X did not
+check that parameter Y is greater than zero" penalty, and function X
+in your code did *not* perform this check. In this case, you cannot
+submit a regrade request arguing that this is not something for which
+we should deduct points, or that the point deduction should be
+lower. Please note that all penalties are explicitly approved by an
+instructor (graders have no discretion to come up with penalties on
+their own and, if they took points off for something, it is because
+they were directed to do so by the instructors).
+
+Please note that, while you may request a regrade for a specific issue,
+an instructor may do a full regrade of your submission if they feel there
+are other issues with the grading of your submission. This can result in you
+ending up with a lower score on the assignment.
+
+**Steps to Submit a Regrade Request**
+
+1. Read over the above section to make sure your request will not be denied. 
+
+2. All regrades must be submitted on Gradescope. Do not write on Ed asking for a regrade request. However, you can on Ed notify the instructor(s) that you submitted a regrade request on Gradescope. 
+
+3. Finally, it is also your responsibility to make these requests in a timely manner. Requests for regrades must be submitted no later than **one week** after a graded piece of work is returned to you. After that time, we will not consider any requests for regrades, *regardless of whether the regrade request is reasonable and justified*.
+
+Please allow time for the course staff to review your regrade request. We cannot provide a specific timeframe when your request will be handled. We are on a tight schedule grading other assignments but your request will be reviewed before the end of the quarter. 
+
+Books
+-----
+This course will not have a required textbook; although, for those students who may find it helpful to know
+the topics we will discuss each week, readings will come from the text:
+
+-  *The Linux Programming Interface: A Linux and UNIX System Programming Handbook by Michael Kerrisk*
+-  *Computer Systems: A Programmer's Perspective (3rd Edition) by Bryant, & Randal O'Hallaron*
+
+and will be shown on the course schedule. Along with these readings and the lecture notes, students may
+find the following references helpful in understanding the course material:
+
+-  *C Programming: A Modern Approach, 2nd Edition by K. N. King*
+
+
+Policies
+--------        
+
+Policy on academic honesty
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We take academic honesty **very** seriously in this class. Please make sure to
+read our `Academic Honesty <honesty.html>`_ page.
+
+Policy on Generative AI
+~~~~~~~~~~~~~~~~~~~~~~~
+Using generative AI tools should be viewed as a means to enhance learning and explore new avenues, rather than as a substitute for rigorous study and practice. While generative AI tools can assist in generating content, 
+you are expected to have a clear understanding of the concepts being explored, the generated output, and its accuracy. Relying solely on AI-generated content without understanding the underlying principles is discouraged. 
+Assessments and exams are designed to evaluate your understanding of concepts and problem-solving skills. Relying solely on AI tools for assessment preparation may hinder your mastery of essential skills.
+
+Specifically, you are allowed to use Generative AI in this course as long as correct citation is provide: 
+
+- The use of AI tools, such as ChatGPT or Dall-E 2, for this course is allowed for specific assignments only when determined to be in support of the course learning goals. Assignments in which AI tools are permitted will be clearly identified by the instructor and noted in the assignment directions. You are not required to use AI tools, but if you choose to use them for any part of the assignment (from brainstorming to text editing), you must use proper citation (please use `APA citation format <https://apastyle.apa.org/blog/how-to-cite-chatgpt>`__  ). Failure to properly cite AI tools is considered a violation of the University of Chicago's Academic Honesty and Plagiarism policy. If you are unclear if something is an AI Tool, please check with your instructor.  (CCTL, UChicago) 
+
+
+**Improperly citing or no citation when a Generative AI resource was used in assignment will be treated as an academic misconduct case.**
+
+
+The Generative AI policy comes from the hardwork of the *Citation: Generative AI: Policy Guidance for MPCS Faculty* group. 
+
+Diversity statement
+-------------------
+
+The University of Chicago is committed to diversity and rigorous
+inquiry that arises from multiple perspectives. We concur with that
+commitment and also believe that we have the highest quality
+interactions and can creatively solve more problems when we recognize
+and celebrate our diversity. We thus expect to maintain a productive
+learning environment based upon open communication, mutual respect,
+and non-discrimination. We view the diversity that students bring to
+this class as a resource, strength and benefit. It is our intent to
+present materials and activities that are respectful of diversity:
+gender, sexuality, disability, socioeconomic status, ethnicity, race,
+religious background, and immigration status.  Any suggestions as to
+how to further such a positive and open environment in the class will
+be appreciated and given serious consideration.
+
+If you have a preferred name different from what appears on the class
+roster, or preferred gender pronouns you would like us to use, please
+let us know.
+
+Disability statement
+--------------------
+
+If there are circumstances that make our learning environment and
+activities difficult, please let us know. We will maintain the
+confidentiality of any such discussions.
+
+

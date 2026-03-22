@@ -1,0 +1,326 @@
+==========================================
+Milestone #2
+==========================================
+
+**Due:  Tuesday March 10th at 11:59pm**
+
+**No extensions can be used for this milestone** 
+
+In this assignment, we will wrap up our shell implementation by implementing signals to handle job control and a few built-in shell commands.   
+
+CS Linux Machine
+~~~~~~~~~~~~~~~~~
+You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or 
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments. 
+Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.
+**We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines.** 
+However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.
+
+Please follow the instructions provided here
+
+* `Using Visual Studio Code and SSH <https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html>`__
+
+Creating Your Private Repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There is no new repository to create for this assignment. You will continue to use the repository you created in milestone #1. 
+
+
+Task 1: Update the ``msh`` state 
+=================================
+In this assignment, the signal handlers will notify your shell when a child process terminates. The shell ``msh_t *shell`` variable now needs to be global to allow the signal handlers to access it. Most likely, many of you defined the ``msh_t *shell`` variable as a local variable of the ``main`` function; however, it nows needs to be global. First step, is to define it as an external variable inside ``shell.h`` (**the following code should already be done for you!**) as such 
+
+.. code-block:: C 
+
+  extern msh_t *shell; 
+
+and then inside ``shell.c`` define it to be equal to ``NULL`` as such: 
+
+.. code-block:: C 
+  
+  msh_t *shell = NULL; 
+
+This is now a global variable so make sure it's define towards the top of those files. **Make sure to remove the local variable declaration for ``msh_t *shell`` defined in your ``msh.c`` file! This only applies to those students who did this previously in milestone 1. Hopefully, most of you, are already using the global variable declaration.** 
+
+Task 2: Signal Handlers Module (``signal_handlers.h`` and ``signal_handlers.c``) 
+=================================================================================
+Currently, the way we  do not handle background jobs; therefore, we will update this code to use *signals*, which is the mechanism used to make background jobs work. To help you get started, we have provided the skeleton code for signal handling. Create and copy the following code into the ``include/signal_handlers.h`` file:
+
+.. code-block:: C
+
+  #ifndef _SIGNAL_HANDLERS_H_
+  #define _SIGNAL_HANDLERS_H_
+
+  void initialize_signal_handlers(); 
+
+  #endif 
+
+You shouldn't need to add any additional functions here but you can if you wish. Create and copy the starter implementation into ``src/signal_handlers.c``: 
+
+.. code-block:: C
+
+  #include "signal_handlers.h"
+  #include <unistd.h>
+  #include <string.h>
+  #include <ctype.h>
+  #include <signal.h>
+  #include <stdlib.h>
+  #include <errno.h>
+  #include <stdio.h> 
+
+  /* 
+  * sigchld_handler - The kernel sends a SIGCHLD to the shell whenever
+  *     a child job terminates (becomes a zombie), or stops because it
+  *     received a SIGSTOP or SIGTSTP signal. The handler reaps all
+  *     available zombie children, but doesn't wait for any other
+  *     currently running children to terminate.  
+  * Citation: Bryant and O’Hallaron, Computer Systems: A Programmer’s Perspective, Third Edition 
+  */
+  void sigchld_handler(int sig) 
+  {
+
+
+  }
+
+  /* 
+  * sigint_handler - The kernel sends a SIGINT to the shell whenver the
+  *    user types ctrl-c at the keyboard.  Catch it and send it along
+  *    to the foreground job.  
+  * Citation: Bryant and O’Hallaron, Computer Systems: A Programmer’s Perspective, Third Edition 
+  */
+  void sigint_handler(int sig) 
+  {
+
+
+  }
+
+  /*
+  * sigtstp_handler - The kernel sends a SIGTSTP to the shell whenever
+  *     the user types ctrl-z at the keyboard. Catch it and suspend the
+  *     foreground job by sending it a SIGTSTP.  
+  * Citation: Bryant and O’Hallaron, Computer Systems: A Programmer’s Perspective, Third Edition 
+  */
+  void sigtstp_handler(int sig) 
+  {
+
+
+  }
+
+  /*
+  * setup_handler - wrapper for the sigaction function
+  *
+  * Citation: Bryant and O’Hallaron, Computer Systems: A Programmer’s Perspective, Third Edition 
+  */
+  typedef void handler_t(int);
+  handler_t *setup_handler(int signum, handler_t *handler) 
+  {
+      struct sigaction action, old_action;
+
+      action.sa_handler = handler;  
+      sigemptyset(&action.sa_mask); /* block sigs of type being handled */
+      action.sa_flags = SA_RESTART; /* restart syscalls if possible */
+
+      if (sigaction(signum, &action, &old_action) < 0) {
+          perror("Signal error");
+          exit(1); 
+      }
+      return (old_action.sa_handler);
+  }
+
+
+  void initialize_signal_handlers() {
+
+      // sigint handler: Catches SIGINT (ctrl-c) signals.
+      setup_handler(SIGINT,  sigint_handler);   /* ctrl-c */
+      // sigtstp handler: Catches SIGTSTP (ctrl-z) signals.
+      setup_handler(SIGTSTP, sigtstp_handler);  /* ctrl-z */
+      // sigchld handler: Catches SIGCHILD signals.
+      setup_handler(SIGCHLD, sigchld_handler);  /* Terminated or stopped child */
+  }
+
+Update your ``alloc_shell`` function to call ``initialize_signal_handlers`` to setup the signal handlers. Read over the documentation above each signal handler code to make sure you understand when those functions will be called. Additionally, make sure to watch the pre-recorded videos on signals because they provide insight about how to think about implementing these functions. 
+
+You **must** remove the code in ``evaluate`` that deletes the foreground jobs. The signal handlers will now handle the updating of job list based on when a child process exits. Add code that handles background jobs. As reminder the parent process (i.e., the shell), does not wait for the background process to complete but rather continues to allow the user to enter another command after it forks the background process. One important note is that our shell must not ``exit`` until all background jobs complete. Make sure to still include this requirement in your code. 
+
+Process Completion Status 
+-------------------------
+Inside the ``sigchld_handler`` function, it's going to be important that you understand the process completion status so you know how to update the your ``shell`` state. Please make sure to read over these functions defined here: 
+
+* `Process Completion Status <https://www.gnu.org/software/libc/manual/html_node/Process-Completion-Status.html>`__
+
+Specifically, the ones you should pay close attention to are the following: 
+
+- WIFSTOPPED
+- WIFSIGNALED
+- WIFCONTINUED
+- WIFEXITED
+
+Additionally, when you are calling ``waitpid`` inside ``sigchld_handler`` make sure you understand the options that you can supply to it. Documentation is here: 
+
+* `Process Completion(waitpid) <https://www.gnu.org/software/libc/manual/html_node/Process-Completion.html>`__
+
+Pay close attention to the following options: 
+
+- WNOHANG 
+- WUNTRACED
+- WCONTINUED
+
+
+Optional Task: History Module (``history.h`` and ``history.c``) (Extra Credit towards your Exam scores)
+=======================================================================================================
+You will implement the ``history`` command/feature included in most shells. To get started, create and copy the following code into the ``include/history.h`` file: 
+
+
+.. code-block:: C 
+
+  #ifndef _HISTORY_H_
+  #define _HISTORY_H_
+
+  extern const char *HISTORY_FILE_PATH; 
+
+  //Represents the state of the history of the shell 
+  typedef struct history {
+      char **lines; 
+      int max_history; 
+      int next; 
+  }history_t; 
+
+
+  history_t *alloc_history(int max_history); 
+
+  void add_line_history(history_t *history, const char *cmd_line);
+
+  void print_history(history_t *history); 
+
+  char *find_line_history(history_t *history, int index);
+
+  void free_history(history_t *history); 
+
+  #endif 
+
+The header **must** contain the following definitions where you can add new fields but cannot delete or modify the function prototypes and types. **Make sure to include a documentation header for each function prototype**. To help you get started with the implementation file, create and copy the following code into the ``src/history.c`` file:
+
+.. code-block:: C 
+
+  #include "history.h"
+  #include <stdio.h> 
+  #include <stdlib.h>
+  #include <string.h> 
+
+  const char *HISTORY_FILE_PATH = "../data/.msh_history"; 
+
+The constant variable ``HISTORY_FILE_PATH`` contains the path to where you will store the history after the shell exits. You must use this variable in your implementation. 
+
+``alloc_history`` function 
+---------------------------
+Most shells store the users history when they logout in a file under their home directory (e.g., your bash history is located here: ``~/.bash_history``). For ``msh``, you will create and store the history here: ``data/.msh_history`` (i.e., inside the ``data`` directory of your repository in a file named ``msh_history``). The ``alloc_history`` function creates a new ``history_t`` state by
+
+1. Allocating memory for a new ``history_t`` value. 
+2. Allocating memory for array of command line strings (``char **lines``). Make the size of this array equal to the ``max_history`` argument. The history must be ordered such that the oldest command line history starts at index zero to the most recent command line history being at the last empty index. 
+3. We recommend you make the ``next`` field of the ``history_t`` state point to the next available slot. 
+4. The function must also open the ``HISTORY_FILE_PATH`` file and load all prior history into ``char **lines`` **up until** ``max_history`` is reached. This means if ``data/.msh_history`` has 14 entries but now ``max_history=5`` then only the 5 oldest lines are loaded into ``char **lines``. 
+
+The function returns the allocated ``history_t`` state. 
+
+``add_line_history`` function 
+------------------------------
+The ``add_line_history`` adds the parameter ``cmd_line`` to the history of lines. If ``cmd_line`` is empty then do not add it to the history. If the history of lines is full (i.e., all elements in ``char **lines`` is taken) then the function always deletes the oldest command line history (i.e., always at index 0). The function should shift all elements over by one and then insert the ``cmd_line`` at the last element in ``char **lines``. 
+
+**Do not add the ``exit`` command to your history**. The function must return if given ``exit`` and not add it to the history lines. 
+
+``print_history`` function 
+---------------------------
+We provide the implementation of ``print_history`` below: 
+
+.. code-block:: C 
+
+  void print_history(history_t *history) {
+      for(int i = 1; i <= history->next; i++) {
+          printf("%5d\t%s\n",i,history->lines[i-1]);
+      }
+  }
+
+Please use this implementation in your code. History listing always starts with 1-indexing similar to bash. 
+
+``find_line_history`` function 
+--------------------------------
+The ``find_line_history`` returns the command line at the specified ``index``. If ``index`` is not within the range of ``[1,max_history]`` inclusive then the function returns ``NULL``. History uses indexing starting at one but the ``char **lines`` start at zero-indexing so be mindful of this difference. 
+
+
+``free_history`` function 
+--------------------------
+The ``free_history`` functions frees the ``history_t`` and all allocated memory associated with the state. However, before freeing the memory, the function must save all history inside the ``char **lines`` array to the ``HISTORY_FILE_PATH`` file. The oldest command line history starts at line one in the file until the most recent command line history at the end of the file. 
+
+
+Testing the ``history`` module
+--------------------------------
+Professor Samuels will given you ``test_history.c`` file inside the Ed Post for Milestone #2. Place the ``test_history.c`` under the ``tests`` directory and compile and run it as follows: 
+
+.. code-block:: console
+
+  $ gcc -I../include/ -o test_history test_history.c ../src/history.c
+  $ ./test_history 
+
+
+Update the ``evaluate`` function 
+----------------------------------
+Make sure to update the ``evaluate`` function to include the command lines coming into the evaluate function. Remember a command line as such: ``ls -la . ; sort bigfile & cd ..`` counts as one history line and not three; although, there are three jobs on the line. 
+
+
+Task 3: Built-in Commands 
+==========================
+Your ``msh`` must support a series of **built-in** shell commands. We recommend that you implement a function inside ``shell.c`` called ``char *builtin_cmd(char **argv)`` that takes in your ``argv`` array to handle processing any built-in commands. It returns a ``char *`` because the ``!N`` may want to return the chosen command line history. In all other cases, you can return ``NULL`` to indicate nothing additional should happen.
+
+You must implement the following 6 built-in commands: 
+
+1. ``jobs`` command - The ``jobs`` command lists all the jobs currently active. It must look similar to Bash's ``jobs`` command but with one slight difference. Each line must have the format: ``[JOB_ID] PID STATE CMD_LINE``, where ``JOB_ID`` is the ``int jid;`` from the ``job_t`` entry,  ``PID`` is the process id for the job, ``STATE`` is either ``RUNNING`` if the job is currently running or ``Stopped`` if the job is currently suspended, and ``CMD_LINE`` is the full command line string for the job. For example, if the user enters in ``/usr/bin/sort -n LARGE_NUM_FILE.txt &`` and its the first job entered with a ``pid=2343`` then its output would be: ``[1] 2343 RUNNING /usr/bin/sort -n LARGE_NUM_FILE.txt``. In our ``msh``, the only jobs you will see here are jobs that are background jobs or jobs that were suspended that could either be background or foreground jobs.  
+2. ``history`` command - Calls ``print_history`` to print the current shell history. **Complete this built-in only after the optional history task. Only implement this if you are doing the extra credit. This must be implemented to get the full extra credit points.**
+3. ``!N`` command - This command is the history expansion command where ``N`` is a line number from the ``history`` command. The command reruns the ``N`` command from the user's history list. **Similiar to ``exit``, Do not add !N command to the history of the user**. This command must display to the user the command that was chosen to be ran. The command line chosen must be executed again by the ``evaluate`` function. **Complete this built-in only after the optional history task. Only implement this if you are doing the extra credit. This must be implemented to get the full extra credit points.**
+4. ``bg <job>`` command -  restarts ``<job>`` by sending it a ``SIGCONT`` signal, and then runs it in the background. The ``<job>`` argument can be either a PID or a JOB_ID (i.e., you specify it as ``%JOB_ID``).
+5. ``fg <job>`` command - restarts ``<job>`` by sending it a ``SIGCONT`` signal, and then runs it in the foreground. The ``<job>`` argument can be either a PID or a JOB_ID (i.e., you specify it as ``%JOB_ID``).
+6. ``kill SIG_NUM PID`` command - Calls the ``kill`` function, with ``SIG_NUM`` equal to either ``2``(``SIGINT``), ``9`` (``SIGKILL``), ``18``(``SIGCONT``), or ``19``(``SIGSTOP``). Any other ``SIG_NUM`` number must produce the error message: ``error: invalid signal number`` to the user. 
+
+
+Hints & Tips  
+~~~~~~~~~~~~~~~
+- When you implement your signal handlers, be sure to send ``SIGINT`` and ``SIGTSTP`` signals to the entire foreground process group, using ``-pid`` instead of ``pid`` in the argument to the kill function.
+- You now may want to define a function ``waitfg`` that waits for the foreground process to complete. One of the tricky parts of the assignment is deciding on the allocation of work between the ``waitfg`` and sigchld handler functions. We recommend the following approach:
+   - In ``waitfg``, use a whilte(1) loop around the sleep function.
+   - In ``sigchldhandler``, use exactly one call to ``waitpid``.
+
+  While other solutions are possible, such as calling ``waitpid`` in both ``waitfg`` and ``sigchld`` handler, these can be very confusing. It is simpler to do all reaping in the handler.
+- In ``evaluate``, the parent must use ``sigprocmask`` to block ``SIGCHLD`` signals before it forks the child, and then unblock these signals, again using ``sigprocmask`` after it adds the child to the job list by calling ``add_job``. Since children inherit the blocked vectors of their parents, the child must be sure to then unblock ``SIGCHLD`` signals before it execs the new program.
+
+  The parent needs to block the ``SIGCHLD`` signals in this way in order to avoid the race condition where the child is reaped by ``sigchld`` handler (and thus removed from the job list) before the parent calls ``add_job``.
+
+- Programs such as ``more``, ``less``, ``vi``, and ``emacs`` do strange things with the terminal settings. Don’t run these programs from your shell. Stick with simple text-based programs such as ``/bin/ls``, ``/bin/ps``, and ``/bin/echo`` for testing purposes.
+
+- When you run your shell from the standard Unix shell, your shell is running in the foreground process group. If your shell then creates a child process, by default that child will also be a member of the foreground process group. Since typing ctrl-c sends a ``SIGINT`` to every process in the foreground group, typing ctrl-c will send a ``SIGINT`` to your shell, as well as to every process that your shell created, which obviously isn’t correct.
+
+  Here is the workaround: After the fork, but before the ``execve``, the child process should call ``setpgid(0, 0)``, which puts the child in a new process group whose group ID is identical to the child’s PID. This ensures that there will be only one process, your shell, in the foreground process group. When you type ctrl-c, the shell should catch the resulting ``SIGINT`` and then forward it to the appropriate foreground job (or more precisely, the process group that contains the foreground job).
+
+Testing 
+========
+We provide test code for testing the ``history`` feature of the shell inside. You can find these testcases in your repository under ``tests/milestone2``. These tests are almost the same as the milestone 1 tests but they also contain background processes. The history tests can be found in ``tests/test_history.c``. Please note We cannot provide other test cases easily for the remaining features (i.e., builtin commands).  We will have to test this by hand since the new features require user interaction. 
+
+
+Grading
+========
+Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)
+
+The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:
+
+- **Completeness**: 60%
+- **Correctness**: 25%
+- **Design/Style**: 15% 
+
+Submission
+===========
+Before submitting, make sure you've added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the "Project" assignment page by linking your Github account to your Gradescope account and upload the correct repository based on the homework assignment. When you submit your homework, a pop window will appear. Click on "Github" and then  "Connect to Github" to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be "main" or "master") for this course.  
+  
+Depending on the assignment, once you submit your work, an "autograder" will run. This autograder should produce the same test results as when you run the code yourself; if it doesn't, please let us know so we can look into it. A few other notes: 
+
+- You are allowed to make as many submissions as you want before the deadline.
+- Please make sure you have read and understood our :ref:`Late Submission Policy <late_submissions>`. 
+- Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).
+- Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.

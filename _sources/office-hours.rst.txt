@@ -1,0 +1,47 @@
+Office Hours 
+------------
+All office hours will either be fully **in-person/remote (on Zoom)** or **hybrid (in-person/remote)**. Please read the sections below on how each type of office hour is held.
+
+
+Fully In-Person Office Hours 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Fully in-person office hours will be held at a designated location in JCL. You will meet with the TA and/or instructor 
+and ask questions and get help on material/assignments. There is no sign-up for in-person office hours on Ed. However, the
+TA/instructor will ensure that everyone gets fair share of time for there concerns to be addressed. 
+
+
+Hybrid/Fully Remote Office Hours 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+With hybrid and remote office hours the course staff will be working individually wiht each student. Right before the beginning of an office hour, 
+an Ed sign-up post will be created to  allow you to claim a spot to be seen. Please know that not all 
+students will be able to  be seen during an office hour but we will try our best to accommodation everyone. Even if 
+you are coming in-person **you must sign up when the post is goes live**, Do not walk in  in-person until 
+the TA/instructor indicates you can enter the room. We may be seeing a remote student at the time. 
+
+Here is the information that you will see when the hybrid/remote office hours post goes up:  
+
+    **In-person instructions (if hybrid office hours)**
+
+    Please make sure to sign up even if you are coming in-person. Please provide an explanation for 
+    why are you coming and be close by the office hour location. We will let you know when you can enter.
+
+    **Remote instructions**
+
+    In this post, add a comment with a brief description of your issue, and a Zoom meeting ID for remote 
+    students (this can be your personal meeting ID or one created specifically for office hours). The 
+    instructor or TA running office hours will go through these messages and visit each meeting to 
+    provide one-on-one help. Note: If you are uncomfortable sharing a meeting ID on the channel, 
+    simply specify that you would like the instructor/TA to send you a private message once they’re 
+    reading to see you, so you can then share a meeting ID with them privately. When an instructor or 
+    TA joins your meeting, please share your screen with them if your question is going to involve 
+    looking at code or debugging of any sort (if you prefer, you can also share a single window, 
+    such as your code editor or a terminal). This is similar to how you would show an instructor/TA 
+    your laptop during normal office hours. During office hours, you may be asked to grant control 
+    to the instructor/TA over your screen. This can sometimes allow us to help you more interactively 
+    (similar to how an instructor/TA would type on your laptop during normal office hours), but please 
+    let us know if you would prefer not to do this. You will know when you are coming up soon because 
+    the instructor or TA will click the “Resolved” button to indicate we have completed a session.
+
+By appointment. Please reach out on Ed Discussion to schedule an appointment. 
+
+

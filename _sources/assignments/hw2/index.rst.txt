@@ -1,0 +1,539 @@
+=============
+Homework #2 
+=============
+
+**Due: Wednesday January 21st at 11:59pm**
+
+This homework is intended to provide additional practice with writing Bash scripts. Specifically, using more advanced bash syntax and filtering (i.e., text processing) commands to process text.
+
+CS Linux Machine
+==================
+You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or 
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments. 
+Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.
+**We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines.** 
+However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.
+
+Please follow the instructions provided here
+
+* `Using Visual Studio Code and SSH <https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html>`__
+
+Creating Your Private Repository
+==================================
+
+For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a 
+GitHub account. If you do not yet have one, you can get an account here: https://github.com/join. 
+
+To actually get your private repository, you will need this invitation URL: 
+
+* **HW2 invitation (Please check the Post “Homework #2 is ready” Ed)**
+
+When you click on an invitation URL, you will have to complete the following steps:
+
+1. You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.
+
+.. note::
+
+   If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course. 
+
+
+2. You must click “Accept this assignment” or your repository will not actually be created.
+
+3. After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it's ready within seconds and you can just refresh the page. 
+
+4. You now need to clone your repository (i.e., download it to your machine). 
+    - Make sure you’ve set up `SSH access <https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh>`__ on your GitHub account.
+    
+    - For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: git@github.com:mpcs51082-win26/hw2-GITHUB-USERNAME.git. 
+
+    - If you do not know how to use ``git clone`` to clone your repository then follow this guide that Github provides: `Cloning a Repository <https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository>`__
+    
+
+If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.
+
+**IMPORTANT:** Eligible Commands & Bash
+=========================================
+For this homework assignment, you are only allowed to use the following commands with or without using their options in your scripts.
+
+- All eligible commands provided in homework 1. 
+- All commands covered in the Module 1 week 2 slides. 
+
+**Using any other command not specified in this list will result in a major penalty for that specific problem**. You are free to use the entirety of the bash scripting language but are restricted to using only the above commands within your script files.  **You also cannot use ``awk`` for this assignment**.
+
+If you have any questions about using a command **ask on Ed before you use it**!
+
+Problem 1 
+==========
+Problem 1 is composed of a series of subproblems (i.e., Problem 1a-1#). For each subproblem, you will do the following: 
+
+1. Write a Bash script that accepts a single argument, which can be either a *string* or a *path to a plain text file or directory*. The problem description for each subproblem will explicitly specify what this argument represents and how it should be used.  The script must ``exit 1`` if the single argument is not supplied. No error message is printed. 
+2. Each script will begin with the following skeleton code 
+
+   .. code-block:: bash 
+    
+    #! /usr/bin/env bash
+
+    set -o errexit
+    set -o nounset
+    set -o pipefail
+    
+    # TODO: Error-Check the command line argument is supplied. 
+
+    # ONE_LINE_COMMAND
+
+
+   however, ``# ONE_LINE_COMMAND`` will be replaced with a **one line command** (this could also be a pipe of commands) that accomplishes the task of the subproblem. You can only use the commands listed in the Eligible Commands section below. For example, if the subproblem asked 
+   
+   *Find the top ten most frequently used words in the command line argument. The command line argument represents a filepath to a file that just contains words. Assume there is only one word on each line in the file. Place the solution in a file called example.sh*  
+   
+   The solution would be: 
+
+   .. code-block:: bash 
+
+    #! /usr/bin/env bash
+
+    set -o errexit
+    set -o nounset
+    set -o pipefail
+    
+    # TODO: Error-Check the command line argument is supplied. 
+
+    sort "$1" | uniq -c | sort -n -r | head -n 10
+
+   You can also use the syntax of using a backlash ``\`` to make the pipes line up on seperate lines
+
+   .. code-block:: bash 
+
+      #! /usr/bin/env bash
+
+      set -o errexit
+      set -o nounset
+      set -o pipefail
+
+      # TODO: Error-Check the command line argument is supplied.
+
+      sort "$1" \ # Make sure there is no space/character after the backslash! 
+      | uniq -c \
+      | sort -n -r \
+      | head -n 10
+   
+   and one sample run (using the ``indep.txt`` from module 1) would be::
+
+    $ bash example.sh indep.txt
+        77 of
+        75 the
+        64 to
+        55 and
+        25 our
+        20 their
+        20 has
+        20 for
+        18 in
+        18 He
+   
+3. We will refer to the single command line argument as ``$1`` in the problem descriptions. Assume if ``$1`` is a file that it always exist and is structured as specified in the problem.  
+4. The one-liner can only be made of a command or series of commands (i.e., via pipes). **You cannot define variables, use control flow structures, or use command chaining with semi-colons**. You are allowed to use command chaining with ``&&`` and ``||``.  If in doubt then ask on Ed discussion before you final submission. 
+
+
+Problem 1a — Words appearing in both columns
+----------------------------------------------
+Inside the ``p1/a.sh`` implement the following bash script: 
+
+**Input:** ``$1`` is the path to a plain text file. Each line contains exactly two words, separated by a single space. No headers.
+
+**Output:**  Print the unique set of words that appear in both the first and second columns (i.e., the intersection of the two columns), one word per line, sorted in ascending lexicographic order.
+
+**Example.**
+
+Given a file ``p1/data/a/pairs.txt``:
+::
+  
+  apple pear
+  banana apple
+  pear grape
+  fig banana
+
+Run inside ``p1`` directory:
+::
+  
+  $ bash a.sh data/a/pairs.txt
+  apple
+  banana
+  pear
+
+**Notes:**
+
+- Treat words as **case-sensitive** (e.g., ``Apple`` and ``apple`` are different).
+- If there are **no** common words, print nothing and exit successfully.
+- Duplicate occurrences within a column do not change the output (set semantics).
+
+
+
+Problem 1b — Count exact-named ``.txt`` files in the current directory
+------------------------------------------------------------------------
+Inside the ``p1/b.sh`` implement the following bash script: 
+
+**Input:**  ``$1`` is the path to a plain text file. Each line contains exactly one word (no spaces). No headers.
+
+**Output:**  Print a single integer which is the number of regular files in the current working directory whose names match exactly one of the words in ``$1`` with a ``.txt`` extension. For example, the word ``apple`` matches ``apple.txt`` but not ``Apple.txt`` (case-sensitive) and not ``pineapple.txt`` (must be an exact basename match). **You are not allowed to use parameter substitution or any substitution method for this problem**. You are allowed to use the ``basename`` command (e.g., ``$ basename photo.jpeg .jpeg  # -> photo`` ). 
+
+
+
+**Example:**
+
+Input file ``p1/data/b/words.txt``:
+::
+  
+  apple
+  pear
+  grape
+  pear
+
+Assume you are inside the ``p1/data/b`` directory:
+::
+  $ cd data/b/; ls -1
+  apple.txt
+  pear.txt
+  Apple.txt
+  pineapple.txt
+  notes.md
+  words.txt 
+  $ bash ../../b.sh words.txt
+  2
+
+**Notes:**
+
+- Search is **non-recursive**: only the directory where the script runs.
+- Count each matching file **once** even if its word appears multiple times in ``$1``.
+- Only files ending exactly in ``.txt`` count (directories or other extensions are ignored).
+
+**Helpful Hint: ``grep -F`` and ``grep -f``**
+
+- ``-F`` makes ``grep`` treat patterns as fixed strings (literal text), not regular expressions.  
+- ``-f <file>`` tells ``grep`` to read patterns from a file (one per line). These are often combined to match literal words from a list efficiently.
+
+
+.. _p1c:
+
+Problem 1c — Count files per extension (non-recursive)
+---------------------------------------------------------
+Inside the ``p1/c.sh`` implement the following bash script: 
+
+**Input:**  ``$1`` is the path to a **directory**. The script examines only items in that directory (not subdirectories).
+
+**Output:**  For all regular files in ``$1`` that have an extension, compute how many files share the **last** extension (the substring after the final dot), and print one line per extension as:
+::
+  
+  <count> <extension>
+
+Sort the output by the count in descending order; if counts tie, sort by extension in ascending lexicographic order.
+
+**Example:**
+
+Assume ``p1/data/c`` directory contains the following:
+::
+  
+  log1.log
+  log2.log
+  words.txt
+  my_markdown.md
+  hw1.html
+  hw2.html
+  hw3.html
+
+Run:
+::
+  
+  $ bash c.sh data/c
+  3 html
+  2 log
+  1 md
+  1 txt
+
+**Notes:**
+
+- Treat the extension as the text after the final dot in the filename (e.g., ``archive.tar.gz`` → ``gz``).
+- Ignore files without any dot in their basename (no extension).
+- Make sure to use ``LC_ALL=C`` sort before the final sort. This ensures sorting is done in the C (POSIX) locale, which provides consistent and predictable ordering (e.g., Z sorts before a, and accented characters are sorted by byte value).
+- **Spacing matters in Problem 1C** — consider using ``tr`` and ``xargs -L1`` to help match the expected output format.
+
+**Hint (``rev``) command:**  
+
+The ``rev`` command reverses each input line. It's handy for “last-dot” extraction. *You may use this command just for this problem.* 
+
+
+Problem 1d — Alphabet slice by numeric range
+----------------------------------------------
+Inside the ``p1/d.sh`` implement the following bash script: 
+
+**Input:**  ``$1`` is the path to a plain text file that contains one line of the form ``START,END`` where both are integers in ``[1,26]``.  
+Assume ``START ≤ END`` (e.g., ``2,4``). 
+
+**Output:**  Print the lowercase letters of the English alphabet beginning at index ``START`` and ending at index ``END`` (inclusive), where ``a`` is index 1 and ``z`` is index 26.  
+Output the letters on one line, separated by a single space, with no trailing space.
+
+**Examples:**
+::
+  
+  $ echo "2,4" > letters.txt
+  $ bash d.sh letters.txt
+  b c d
+
+::
+  
+  $ echo "1,26" > letters.txt
+  $ bash d.sh letters.txt
+  a b c d e f g h i j k l m n o p q r s t u v w x y z
+
+::
+  
+  $ echo "25,26" > letters.txt
+  $ bash d.sh letters.txt
+  y z
+
+**Notes:**
+
+- Treat indices as **1-based** and **inclusive**.
+- Inputs are guaranteed to be valid by the contract; you do not need to handle out-of-range values.
+
+
+Problem 1e — First available numeric slot for a stem
+-----------------------------------------------------
+Inside the ``p1/e.sh`` implement the following bash script: 
+
+**Input:**  ``$1`` is a **stem** (a basename or path without the numeric suffix), e.g., ``results`` or ``/tmp/checkpoint``.  
+You will check for existing entries named ``$1.001`` through ``$1.10`` in the **current directory**.
+
+**Output:**  Print the first filename in the zero-padded range ``$1.{001..10}`` that does **not** already exist.  
+If all slots ``001..100`` exist, print **nothing** (empty output).
+
+**Example:**
+::
+  
+  $ ls data/e 
+  report.001  report.002  report.004  log.001 log.002 log.003 log.004 log.005 log.006 log.007 log.008 log.009 log.010
+  $ bash e.sh data/e/report
+  data/e/report.003
+  $ bash e.sh data/e/log
+  $ # (prints nothing)
+
+Problem 1 Testing Structure 
+-------------------------------
+Inside your repository, there is a top-level ``tests/``  directory that contains tests for each homework problem (separated into their own directories). For problem1, each subproblem is divided into its own directory based on its letter (e.g., ``a``, ``b``, etc.).  Each test within a subdirectory consists of:
+
+- ``testXX.in`` — one line with the exact command to run (paths are relative to the test folder).
+- ``testXX.ans`` — the expected output.
+
+the **last line** of ``testXX.ans`` is the **expected exit status**; all prior lines are the expected stdout.  
+
+Each test directory has a runner file ``run.sh`` that compares both stdout and exit status. A mismatch in either causes the test to fail. To run all the tests for a specific problem can run ``bash run.sh`` in that specific directory. For example, from the top-level directory of your repository, you can run the problem 1 tests by performing the following: 
+
+.. code-block:: bash
+
+   $ cd tests/p1/a
+   $ bash run.sh
+
+The  output will be similar to the test-cases provided in homework 1. 
+
+Run a single test (Problem 1)
+-----------------------------
+Each runner supports a ``-t`` flag to target one test by label (without ``.in``):
+
+.. code-block:: bash
+
+   $ cd tests/p1/a
+   $ bash run.sh -t test01
+
+Problem 2 — Build per-line station lists from  CTA stops
+---------------------------------------------------------------
+Inside the ``p2/p2.sh`` file,  write a bash script that reads a single CTA “L” stops CSV and, for each requested train line, produces a file named ``<line>.txt`` containing the **station names** served by that line (one per line, sorted). Lines are specified on the command line and are **case-insensitive**.
+
+CSV schema (assumed)
+~~~~~~~~~~~~~~~~~~~~~
+The input CSV has a header and these columns:
+
+1. ``STOP_ID`` (integer)  
+2. ``DIRECTION_ID`` (single letter)  
+3. ``STATION_DESCRIPTIVE_NAME`` (e.g., ``Clark/Lake (Blue & Brown & … lines)``)  
+4. ``MAP_ID``  
+5. ``Location`` (``"(lat, lon)"``)
+
+You need to determine from these columns which ones will help you solve this specific problem. 
+
+Input 
+~~~~~~~
+- ``$1``: path to the CSV file (must exist). The file has a header row that should be ignored.  
+- ``$2 …``: zero or more line names (case-insensitive), each from the allowed set:  
+  ``red``, ``blue``, ``brown``, ``green``, ``orange``, ``pink``, ``yellow``, ``purple``.
+
+Output 
+~~~~~~
+For each requested line, create a file named ``<line>.txt`` (line name in lowercase) containing the base station names served by that line, which are sorted in ascending and each one on a separate line.  
+The *base station name* is the text before the first ``(`` in ``STATION_DESCRIPTIVE_NAME``, trimmed of trailing spaces. Here is the code for retrieving the basename: 
+
+::
+  
+  echo "Clark/Lake (Blue & Brown & … lines)" | grep -o '^[^()]*' | sed 's/[[:space:]]*$//' 
+
+will return 
+
+::
+
+  Clark/Lake
+
+You must use: ``grep -o '^[^()]*' | sed 's/[[:space:]]*$//'`` in your code to get the basename. 
+
+If a requested line has no matching stations, do **not** create a file for that line. On success, the script prints nothing to stdout; all results are written to files.
+
+**Line membership rule:**  
+
+A station is considered to serve a given line if the station's ``STATION_DESCRIPTIVE_NAME`` contains that line's name (e.g., ``"(Red Line)"``, ``"(Blue & Brown lines)"``), matched **case-insensitively**.
+
+**Validation & errors:**
+
+- If ``$1`` is missing then print ``Error: missing required CTA stops file`` *to stderr* and a usage line *to stdout*, then ``exit 1``.
+- If ``$1`` does not exist then print ``"Error: $1 does not exist"`` *to stderr* and a usage line *to stdout*, then ``exit 1``.
+- If any line name in ``$2…`` is not in the allowed set, print  ``Error: invalid stop (<name>)`` to *stderr*, print usage *to stdout*, then ``exit 1``.
+- Required usage text (printed to stderr on error): ``Usage: p2.sh FILE [LINE] ...``
+
+**Output format:**
+
+- For each requested line, write ``<line>.txt`` (lowercase) with content like:
+::
+  
+  Clark/Lake
+  Cumberland
+  Washington/Wells
+
+- Sort station names alphabetically; emit each station once even if it appears multiple times in the CSV for that line.  
+- Do not print anything else to stdout.
+
+Examples:
+~~~~~~~~~~~~
+Given an input file ``p2/cta.csv`` (header + rows):
+::
+  
+  STOP_ID,DIRECTION_ID,STATION_DESCRIPTIVE_NAME,MAP_ID,Location
+  30374,S,Clark/Lake (Blue & Brown lines),40380,"(41.885737, -87.630886)"
+  30173,N,Howard (Red & Purple & Yellow lines),40900,"(42.019063, -87.672892)"
+  30151,E,Central Park (Pink Line),40780,"(41.853839, -87.714842)"
+  30184,W,Halsted (Green Line),40940,"(41.778943, -87.644244)"
+  30252,S,Loyola (Red Line),41300,"(42.001073, -87.661061)"
+  30374,S,Clark/Lake (Pink Line),40380,"(41.885737, -87.630886)"
+  30044,N,Cumberland (Blue Line),40230,"(41.984246, -87.838028)"
+  30374,S,Clark/Lake (Blue & Brown & Green & Orange & Purple & Pink lines),40380,"(41.885737, -87.630886)"
+  30374,S,Clark/Lake (Green & Orange & Purple lines),40380,"(41.885737, -87.630886)"
+  30141,N,Washington/Wells (Brown & Orange & Purple & Pink lines),40730,"(41.882695, -87.63378)"
+
+Run:
+::
+  
+  $ bash p2.sh cta.csv Red pink BLUE
+
+Creates the files:
+
+``red.txt``
+::
+  
+  Howard
+  Loyola
+
+``blue.txt``
+::
+  
+  Clark/Lake
+  Cumberland
+
+``pink.txt``
+::
+  
+  Central Park
+  Clark/Lake
+  Washington/Wells
+
+More examples: 
+:: 
+
+  $ bash p2.sh cta.csv Red pink tan
+  Error: invalid stop (tan)
+  Usage: p2.sh FILE [LINE] ...
+  $ bash p2.sh 
+  Error: missing required CTA stops file
+  Usage: p2.sh FILE [LINE] ...
+  $ bash p2.sh RANDOMFILE
+  Error: RANDOMFILE does not exist
+  Usage: p2.sh FILE [LINE] ...
+  $ bash p2.sh cta.csv
+  $ # Nothing is created
+
+
+
+
+Notes
+~~~~~~
+
+- A single station can serve multiple lines; your script should include it in each relevant ``<line>.txt``.  
+- Some stations and stop IDs are listed multiple times in the CSV.  
+- Case handling: treat both the **requested line names** and the **membership check** as **case-insensitive**.  
+- No files are created when no lines are provided or when none of the requested lines are present in the input.
+
+
+Problem 2 — Test structure & how to run
+----------------------------------------
+Each test lives in its own directory:
+
+- ``test01/``, ``test02/``, …  
+    - ``cta.csv`` — input CSV (with header)
+    - ``args.txt`` — arguments passed to your script (everything after the script name)
+    - ``expected/``  
+      - ``<line>.txt`` files — expected outputs for requested lines (e.g., ``red.txt``)  
+      - ``stdout.txt`` — expected stdout (usually empty)  
+      - ``status.txt`` — expected exit code (``0`` on success, ``1`` on error)
+
+Runner
+~~~~~~
+You can run all the tests by going into the ``tests/p2`` directory and executing: 
+
+.. code-block:: console 
+
+  $ bash run.sh 
+
+By default it runs your solution at ``../../p2/p2.sh`` (resolved to an absolute path).  
+You can override with an absolute path:
+
+.. code-block:: console
+
+   $ P2_SCRIPT=/full/path/to/p2.sh bash run.sh
+
+**What it does:**
+
+- Discovers ``test*/`` directories, runs each as:
+   - ``bash $P2_SCRIPT $(cat args.txt) > got.stdout 2> got.stderr; echo $? > got.status``
+- Compares:
+    - ``expected/stdout.txt`` ↔ ``got.stdout``
+    - ``expected/status.txt`` ↔ ``got.status``
+    - Every expected ``*.txt`` (except ``stdout.txt``/``status.txt``) ↔ produced file of the same name
+- Fails a test if an expected file is missing or if extra top-level ``*.txt`` files were produced.
+
+
+Grading
+-------
+Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)
+
+The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:
+
+- **Completeness**: 70%
+- **Correctness**: 15%
+- **Style/Design**: 15%
+
+
+Submission
+----------
+Before submitting, make sure you've added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the "Homework #2" assignment page by linking your Github account to your Gradescope account and upload the correct repository based on the homework assignment. When you submit your homework, a pop window will appear. Click on "Github" and then  "Connect to Github" to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be "main" or "master") for this course.  
+  
+Depending on the assignment, once you submit your work, an "autograder" will run. This autograder should produce the same test results as when you run the code yourself; if it doesn't, please let us know so we can look into it. A few other notes: 
+
+- You are allowed to make as many submissions as you want before the deadline.
+- Please make sure you have read and understood our :ref:`Late Submission Policy <late_submissions>`. 
+- Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).
+- Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.

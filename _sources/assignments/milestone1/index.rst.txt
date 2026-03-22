@@ -1,0 +1,505 @@
+==========================================
+Milestone #1
+==========================================
+
+**Due:  Tuesday March 10th at 11:59pm**
+
+**No extensions can be used for this milestone** 
+
+
+In this assignment, we will begin implementing the course project: a shell program. This assignment focuses on understanding the repository structure and getting the initial parsing of the shell commands correct.  
+
+CS Linux Machine
+~~~~~~~~~~~~~~~~~
+You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or 
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments. 
+Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.
+**We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines.** 
+However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.
+
+Please follow the instructions provided here
+
+* `Using Visual Studio Code and SSH <https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html>`__
+
+Creating Your Private Repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a 
+GitHub account. If you do not yet have one, you can get an account here: https://github.com/join. 
+
+To actually get your private repository, you will need this invitation URL: 
+
+* **Project invitation (Please check the Post Project is ready” Ed)**
+
+When you click on an invitation URL, you will have to complete the following steps:
+
+1. You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.
+
+.. note::
+
+   If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course. 
+
+
+2. You must click “Accept this assignment” or your repository will not actually be created.
+
+3. After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it's ready within seconds and you can just refresh the page. 
+
+4. You now need to clone your repository (i.e., download it to your machine). 
+    - Make sure you’ve set up `SSH access <https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh>`__ on your GitHub account.
+    
+    - For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: git@github.com:mpcs51082-win26/msh-GITHUB-USERNAME.git. 
+
+    - If you do not know how to use ``git clone`` to clone your repository then follow this guide that Github provides: `Cloning a Repository <https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository>`__
+    
+
+If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.
+
+
+``msh``: A Unix-like shell
+============================
+For the last three assignments, you will apply what you have learned in the course to build your own Unix-like shell called ``msh`` (i.e., MPCS shell). This shell will not include everything that the ``bash`` shell provides; however, many of the topics covered in the course will be implemented within ``msh``.  
+Each assignment represents reaching a milestone for the project, where each will be a continuation of the prior that entails adding additional components to the shell.  
+
+The first task in implementing ``msh`` is understanding the repository structure of the shell, which is described in the next section.
+
+
+Task 0: Understanding the Repository Structure
+------------------------------------------------
+Since the building of the shell spans multiple assignments, all remaining assignments will work out of the ``msh-GITHUB-USERNAME`` repository you created above. The initial contents of your repository has the following structure 
+
+.. code-block:: console  
+
+  ├── bin
+  ├── data
+  ├── include
+  │   ├── job.h
+  │   └── shell.h
+  ├── README.md
+  ├── Makefile 
+  ├── scripts
+  │   └── build.sh
+  ├── src
+  │   ├── job.c
+  │   ├── msh.c
+  │   └── shell.c
+  └── tests
+    
+
+The repository structure is similar to most small C projects in industry. The contents of each directory is explained below:
+
+
+1. ``bin`` directory - will include the ``msh`` executable that is generated by the ``gcc`` compiler when compiling all source files together. 
+2. ``data`` directory - includes any auxiliary data files needed by the testcases. You are also allowed to place test data files in this directory for testing purposes. 
+3. ``include`` directory - contains all the include files for the modules associated with building the ``msh`` executable. **Only header files (i.e., ``.h`` files) are allowed in this directory**. 
+4. ``README.md`` file - contains documentation about the repository and instructions for building the shell. We will revisit this file in a later assignment. 
+5. ``Makefile`` file - This is an optional file that makes it easy to  compile multiple C files together. We will not cover Makefiles in this course; however, if you are familiar with them then you can implement it in this file. Otherwise, you can ignore this file. 
+7. ``scripts`` directory - You will still be writing bash scripts along with building the shell. All script files for ``msh`` must be placed in this directory. For this assignment you will work with ``build.sh``, which is explained in a later section. 
+8. ``src`` directory - includes all the source files for the modules you will implement. **Only source files (i.e., ``.c`` files) are allowed in this directory**. 
+9. ``tests`` directory - contains the testcases for testing the various modules created for the shell. 
+
+As we move along, we will be adding more files and data to the repository each milestone.
+
+
+
+Task 2: Shell Module (``shell.h`` and ``shell.c``) 
+====================================================
+
+The actual logic for the shell and its state will be implemented in a separate module defined in ``shell.c`` and ``shell.h``. To get started, the following code is already in your ``shell.h`` file: 
+
+.. code-block:: C 
+
+  // Represents the state of the shell 
+  typedef struct msh {
+     /** TODO: IMPLEMENT **/ 
+  }msh_t;
+
+  extern msh_t *shell; 
+
+
+The state of the shell is contained within the ``msh_t`` definition. You will need to add fields to this definition as you implement the ``shell`` module. The ``extern`` states that the global variables ``shell`` is defined in the separate in file. Inside the ``shell.c`` you will see the actual global variable the represents the shell state 
+
+.. code-block:: C 
+
+  msh_t *shell = NULL; 
+
+This is the global variable you will use to represent the shell state. 
+
+
+``alloc_shell`` function 
+-------------------------
+
+Inside your ``shell.h``, copy the following function prototype: 
+
+.. code-block:: c 
+  
+  /*
+  * alloc_shell: allocates and initializes the state of the shell
+  * 
+  * max_jobs: The maximum number of jobs that can be in existence at any point in time. 
+  * 
+  * max_line: The maximum number of characters that can be entered for any specific command line.   
+  * 
+  * max_history: The maximum number of saved history commands for the shell. 
+  * 
+  * Returns: a msh_t pointer that is allocated and initialized  
+  */
+  msh_t *alloc_shell(int max_jobs, int max_line, int max_history); 
+
+This function allocates (i..e, ``malloc``), initializes and returns a pointer to a ``msh_t`` value. The shell has limits to the number of jobs in existence, the maximum number of characters that can be entered in on the command line and how many previous commands are stored in its history, All these are represented by the parameters to the function (i.e., ``max_jobs``, ``max_line`` and ``max_history``) respectively. Ensure that you save these values inside your state definition (i.e., ``msh_t``) because you will need to reference them in later functions. If any of these parameters are equal to ``0`` then you will use the following default values for the corresponding limits:
+
+.. code-block:: c 
+
+  const int MAX_LINE = 1024;
+  const int MAX_JOBS = 16; 
+  const int MAX_HISTORY = 10; 
+  
+You will call this function later in the ``msh.c`` file to allocate a new shell state. 
+
+Place the implementation of this function inside ``src/shell.c``. 
+
+``parse_tok`` function 
+-------------------------
+
+Inside your ``shell.h``, copy the following function prototype: 
+
+.. code-block:: c 
+  
+  /**
+  * parse_tok: Continuously retrieves separate commands from the provided command line until all commands are parsed   
+  * 
+  * line:  the command line to parse, which may include multiple commands. If line is NULL then parse_tok continues parsing the previous command line. 
+  *  
+  * job_type: Specifies whether the parsed command is a background (sets the value of 0 at the address of job_type) or foreground job (sets the value of 1 at the address of job_type). If no job is returned then assign the value at the address to -1
+  * 
+  * Returns: NULL no other commands can be parsed; otherwise, it returns a parsed command from the command line.
+  *         
+  * Please note this function does modify the ``line`` parameter. 
+  */
+  char *parse_tok(char *line, int *job_type); 
+
+``msh`` shell contains two special characters that separate multiple commands (i.e., jobs) on the same command line: ``;`` (foreground job) and ``&`` (background job). A ``msh`` command line could contain a single job on the command line as such  
+
+.. code-block:: console 
+
+  ls -la 
+
+or multiple jobs on a single command line as such 
+
+.. code-block:: console 
+
+  ls -la & cd .. ; cat file.txt 
+
+where the above command line contains three separate jobs: ``ls -la``, ``cd ..``, and ``cat file.txt`` 
+
+This function is similar to ``strtok`` such that it continuously retrieves and returns the jobs on a command line that are separated by ``&`` and ``;``. For each returned job, it will place a ``1`` at the address ``job_type`` points to if the job is a **foreground job**; otherwise, it places ``0`` at that address to represent the job is a **background job**. If the ``line`` argument is ``NULL``, similar to ``strtok``, it continues to parse the previous command line. For example, here's a sample code showing how ``parse_tok`` should work 
+
+.. code-block:: C 
+
+  char *cmd_line="ls -la & cd .. ; cat file.txt"
+  int type; 
+  char *job; 
+  job = parse_tok(cmd_line,&type); 
+  printf("job=%s, type=%d\n",job,type); // prints job=ls -la type=0
+  job = parse_tok(NULL,&type); 
+  printf("job=%s, type=%d\n",job,type); // prints job=cd .. type=1
+  job = parse_tok(NULL,&type); 
+  printf("job=%s, type=%d\n",job,type); // prints job=cat file.txt type=1
+  job = parse_tok(NULL,&type); // job = NULL  type = -1
+  job = parse_tok(NULL,&type); // Still job = NULL  type = -1 
+
+
+We recommend that you keep an internal pointer of the ``line`` parameter in a `static variable <https://www.geeksforgeeks.org/static-variables-in-c/>`__ and reuse as means to return back the portions of the string. One way to implement this function is to place null characters ``\0`` at the locations where you find a ``&`` and ``;`` 
+and return the address of the element the represents the beginning of the next job to return. You can return the address of an array element as follows: ``&array[NUM]`` where ``NUM`` is the valid index. For example, ``&array[2]`` returns the address of the third element in the array (assuming 0 indexing).  
+
+Place the implementation of this function inside ``src/shell.c``. 
+
+``separate_args`` function 
+---------------------------
+
+Inside your ``shell.h``, copy the following function prototype: 
+
+.. code-block:: c 
+  
+  /**
+  * separate_args: Separates the arguments of command and places them in an allocated array returned by this function   
+  * 
+  * line: the command line to separate. This function assumes only a single command that takes in zero or more arguments. 
+  *  
+  * argc: Stores the number of arguments produced at the memory location of the argc pointer. 
+  *
+  * is_builtin: true if the command is a built-in command; otherwise false. 
+  * 
+  * Returns: NULL is line contains no arguments; otherwise, a newly allocated array of strings that represents the arguments of the command (similar to argv). Make sure the array includes a NULL value in its last location. 
+  * Note: The user is responsible for freeing the memory return by this function! 
+  */
+  char **separate_args(char *line, int *argc, bool *is_builtin); 
+
+This function separates out each word in the provided ``line`` and places them in a newly allocated array of strings with the command name always being at index 0. ``msh`` assumes words on the command line are separated by one or more whitespace characters.  This function assumes ``line`` is a single job (i.e., ``ls -la`` and not ``ls -la; cd ..``).
+It places the number of arguments it found (including the program name) at the address of ``argc``. The last element in the returned array must contain a ``NULL`` value. For now, ignore ``is_builtin``. We will come back to the ``is_builtin`` in a future milestone. Here's a sample code showing how ``separate_args`` should work 
+
+.. code-block:: C 
+
+  char *cmd_line[]="ls -la /mpcs51082-aut25"
+  char **argv; 
+  int argc 
+  argv = separate_args(cmd_line,&argc);
+  printf("%s",argv[0]); // prints ls 
+  printf("%s",argv[1]); // prints -la 
+  printf("%s",argv[2]); // prints  /mpcs51082-aut25
+  //Please note there is an argv[3] that should contain NULL!
+  printf("%d", argc); // prints 3
+  argv = separate_args("",&argc);  // argv = NULL
+
+Place the implementation of this function inside ``src/shell.c``. 
+
+``evaluate`` function 
+-----------------------
+***Before implementing ``evaluate``, implement the job module, which is explained in **Task 2: Job Module (``job.h`` and ``job.c``)**. After implementing Task 2,  come back to implement the remainder of the shell module. 
+Inside your ``shell.h``, copy the following function prototype: 
+
+.. code-block:: c 
+  
+  /*
+  * evaluate - executes the provided command line string 
+  * 
+  * shell - the current shell state value 
+  * 
+  * line - the command line string to evaluate 
+  * 
+  * Returns: non-zero if the command executed wants the shell program to close. Otherwise, a 0 is returned. 
+  */
+  int evaluate(msh_t *shell, char *line); 
+
+This function executes the job(s) provided in the ``line`` parameters
+
+the ``evaluate`` function **must** be updated as follows: 
+
+1. Create a new child process using ``fork()`` that will handle the execution of the current job. 
+2. Have the parent add the newly created job to the jobs array. 
+3. The child process will then call ``execve(...)`` to execute the job. 
+4. The parent process will blocking using ``waitpid(...)`` or ``wait(...)`` (you choose) until the child process completes. 
+5.  If ``line`` surpasses the maximum number of characters on the line then print: ``error: reached the maximum line limit``. 
+6. Once the child process terminates, the parent process must delete the job from the jobs array. 
+
+Assuming the ``msh-lamonts`` directory is a copy of the ``msh`` repository, then running the ``/usr/bin/ls msh-lamonts`` now evaluates to the following 
+
+.. code-block:: console 
+
+  msh> /usr/bin/ls msh-lamonts 
+  bin  data  include  README.md  saqs  scripts  src  tests
+
+Notice how we had to provide the full path to the ``ls`` executable (i.e., ``/usr/bin/ls`` and not just the ``ls``). This is required since our shell currently is not looking at the ``PATH`` environment variable to find executables. Thus, when you are testing your ``msh`` shell currently you must provide the full executable.
+
+Multiple Jobs
+~~~~~~~~~~~~~~
+What happens if you have multiple jobs on the same command line? For example, 
+
+.. code-block:: console 
+
+  msh> /usr/bin/ls msh-lamonts; /usr/bin/printf "%02d/%02d/%02d\n" 2 2 2023 
+
+then this must cause the ``evaluate`` function to run the jobs sequentially after each other. The shell goes through the five steps described above for the first job (i.e., ``msh> /usr/bin/ls msh-lamonts``), and then does the steps again for the subsequent jobs that are running in the foreground (i.e., ``/usr/bin/printf "%02d/%02d/%02d\n" 2 2 2023``). Thus, the following above command produces 
+
+.. code-block:: console 
+
+  msh> /usr/bin/ls msh-lamonts; /usr/bin/printf "%02d/%02d/%02d\n" 2 2 2023
+  bin  data  include  README.md  saqs  scripts  src  tests
+  02/02/2023
+
+Background Jobs 
+~~~~~~~~~~~~~~~~
+We will implement Background jobs in Milestone 2. 
+
+
+Place the implementation of ``evaluate`` inside ``src/shell.c``. 
+
+
+``exit_shell`` function 
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Inside your ``shell.h``, copy the following function prototype: 
+
+.. code-block:: c 
+  
+  /*
+  * exit_shell - Closes down the shell by deallocating the shell state.  
+  * 
+  * shell - the current shell state value
+  * 
+  */
+  void exit_shell(msh_t *shell); 
+
+This function simply deallocates any memory allocated within the shell state. For now, make sure to ``free`` any state data allocated you called with ``malloc`` and make sure to free the ``shell`` variable. For this assignment, you may have not allocated any memory other than the ``shell`` variable itself, which is fine. 
+
+Place the implementation of this function inside ``src/shell.c``. 
+
+
+Task 2: Job Module (``job.h`` and ``job.c``) 
+=============================================
+The job module will contain information about the current jobs (i.e., foreground and/or background jobs) in existence. You are free to implement this module as you wish; we provide some helpful tips. 
+
+The implementation must be defined in a file ``src/job.c`` and its header in ``include/job.h``. The header **must** contain the following definitions where you can add new fields but cannot delete or rename these types: 
+
+.. code-block:: C 
+
+  #ifndef _JOB_H_
+  #define _JOB_H_ 
+
+  #include <sys/types.h>
+
+  typedef enum job_state{FOREGROUND, BACKGROUND, SUSPENDED, UNDEFINED} job_state_t; 
+
+  // Represents a job in a shell. 
+  typedef struct job {
+      char *cmd_line;     // The command line for this specific job. 
+      job_state_t state;  // The current state for this job 
+      pid_t pid;          // The process id for this job 
+      int jid;            // The job number for this job 
+  }job_t;
+
+  #endif 
+
+The ``enum job_state`` is an enumeration type that allows you to assign the ``job_state_t`` field to one of those defined constants. It provides better code readability. For example, 
+
+.. code-block:: C 
+
+  job_t job; 
+  job_state_t state = FOREGROUND; 
+  job.state = state; 
+
+To help you get started thinking about how to design and incorporate this module into the shell module, we recommend the following: 
+
+1. Inside the ``msh_t`` typedef in the ``shell.h`` include a new field ``job_t *jobs`` to represent an array jobs that are running in the shell. 
+2. When allocating the ``job_t *jobs``, we recommend you allocate it to the size of ``max_jobs`` (i.e., the parameter from ``alloc_shell``). You may not use every element in the array; however, it will make it easier to add,delete, and modify jobs in the array. After creating the jobs array, you should intialize every element to a value such that you know that element is an empty location in the job. For example, assign every ``cmd_line`` field for each element in the array to ``NULL``. This way, when trying to add a new job to the array you know that location in the array is empty. When you remove a job from the array, make sure you that at the end you make ``cmd_line = NULL``for that specific element.   
+3. Define a ``bool add_job(job_t *jobs, int max_jobs, pid_t pid, job_state_t state, const char *cmd_line)`` function that adds a new job to the array. Reminder if there are no more jobs left to allocate (i.e., ``max_jobs`` has been reached) then this function should return a false; otherwise, true to indicate the job was added. 
+4. Define a  ``bool delete_job(job_t *jobs, pid_t pid)`` function to remove a job from the array of jobs based on the ``pid_t`` provided. You should think about the return value for this function. Make sure to reset the location in the array where the job was deleted. As I mentioned earlier this could be setting ``cmd_line=NULL`` at that location. 
+5. Define a ``void free_jobs(job_t *jobs, int max_jobs)`` function to deallocate the jobs array. 
+
+The above suggestions are **not required** and you are free to design the library as you wish as long as it has at least the above skeleton code. You can make modifications to the headers defined above, add new functions, etc. However, for each function prototype in the ``job.h`` file, you must provide documentation for that function.
+
+
+Task 3: The Executable Program (``msh.c``) 
+============================================
+
+The ``msh`` program will work similarly to ``bash`` command where it will act as a interactive **REPL (Read-Eval-Print Loop)**, where it will allow the user to enter in a command line (i.e., input), evaluate the command line, and print the result of running the command line back to the console console. The ``msh`` program 
+will continuously perform this REPL mechanism until the user enters ``exit``. Most prompts for a shell such as bash looks like something like ``lamonts@linux2:~$``, where it might have the machine logged in under along with current directory and a ``$``. For ``msh``, it will **always** have the prompt: ``msh>``. 
+ 
+Inside the ``src/msh.c``, you will implement a ``main`` function along with any helper functions you wish that must have the following
+
+1. Handle the following **optional** command line arguments: ``-s NUMBER``, ``-j NUMBER``, ``-l NUMBER``. The ``-s NUMBER`` represents the maximum number of command lines to store in the shell history. ``-j NUMBER`` represents the maximum number of jobs that can be in existence at any point in time and ``-l NUMBER`` represents the maximum number of characters that can be entered in for a single command line. These can be entered in any order and you must ensure that ``NUMBER`` is a positive integer (i.e., an integer greater than zero). **Please note we are not implementing the functionality of -j and -s in this assignment but will in future assignments**. However, you still need to  handle these arguments in this assignment. I recommend looking at `getopt() <https://www.geeksforgeeks.org/getopt-function-in-c-to-parse-command-line-arguments/>`__ to make it easy to process the options and ``sscanf`` to easily determine if the ``NUMBER`` is an actual number. If any additional command line arguments are specified or an **optional** command line argument is not correctly formatted then the program must ``return 1`` and print the usage state: ``usage: msh [-s NUMBER] [-j NUMBER] [-l NUMBER]``. **Do not print anything else out**. 
+2. Allocate and initialize a ``msh_t`` state (i.e., call ``allocate_shell``). If the user did not supply a optional command line argument then a ``0`` is passed in for that specific limit parameter (i.e., the shell will use the default value for that specific limit). This is the global variable mentioned in the previous section ``msh_t *shell``. This means you will need to ``include "shell.h"`` to get access to this variable in order to allocate and initialize the variable. 
+3. Using the allocated ``msh_t`` state, implement the *REPL* mechanism where it will prompt the user to enter in a command line, call the ``evaluate`` function of the shell module to execute the command. The program will continuously allow the user to enter in command lines until they enter ``exit``, which should close down the shell and exit.  
+4. If std-in closes then close down the shell and exit. We will explain how to check if stdin closes in the next section.  
+
+``getline()``
+-----------
+The C ``getline(char **lineptr, size_t *restrict n,FILE *restrict stream)`` function reads an entire line from stream. The ``getline()`` stores the contents of a single line into the argument ``lineptr``. The ``*lineptr`` is null-terminated and includes the newline character, if one was found. 
+If ``*lineptr`` is set to ``NULL`` before the call, then ``getline()`` will allocate the string for storing the line. This string should be freed by the user program even if ``getline()`` failed. For example, take a look at the following code:
+
+.. code-block:: C 
+
+  #define _GNU_SOURCE
+  #include <stdio.h>
+  #include <stdlib.h>
+
+  int main() {
+
+      char *line = NULL;
+      long int len = 0;
+      long nRead = getline(&line, &len, stdin);
+      while ( nRead != -1) {
+          printf("Retrieved line of length %zd with contents:%s\n", nRead, line); //Remove this printf in your shell. It it only here for demonstration purposes. 
+          //The getline function keeps the \n at the end so we remove by assigning the null character at that location. 
+           if (line[nRead - 1] == '\n'){ 
+            line[nRead - 1] = '\0';
+          }
+          // Done using line so I must free it!!
+          free(line);
+          //Make sure to reset line back to null for the next line
+          line = NULL;
+          nRead = getline(&line, &len, stdin);
+      }
+      return 0;
+  }
+
+For the purposes of this assignment, we can grab the entire contents being read in from standard input using ``getline`` within a while loop. ``getline`` will return ``-1`` once it has reached the end of the stream (i.e., std-in has closed). Otherwise, 
+it returns the number of characters on the line (``nRead``). Notice that line is always set to ``NULL`` before we call ``getline``. This is a requirement for this assignment so we can allocate a new string for each line from the stream. Make sure to always free 
+the line after you are done using it. Also notice that when calling ``getline`` we pass in ``&line`` and ``&len``. This is required to make sure it can successfully place in the contents. Note that ``len`` is not the number of characters on the line but rather it is the length of an internal buffer to hold the characters. 
+You can ignore that value for this assignment; however, you still need to pass it in to call ``getline``. Make sure to include ``#define _GNU_SOURCE`` because it is required to use ``getline``.
+
+
+Building the ``msh`` executable 
+=================================
+
+Since the source and header files are in different directories you need to tell the compiler (i.e., ``gcc``) where they are located. Here's a simple way to do it: 
+
+.. code-block:: console  
+
+  $ gcc -I./include/ -o ./bin/msh src/*.c
+
+**This assumes you are in the root directory of your repository**! The ``-I`` flag tells the compiler were the user-defined header files are located. Running this code will then place the ``msh`` executable in the ``bin`` directory. 
+
+Sample Runs 
+=============
+
+Here are few sample runs of the ``msh`` shell at this point in its development. Please note that all sample runs assumes you are running and building the program from the root directory of your repository:
+
+
+.. code-block:: console  
+
+  $ gcc -I./include/ -o ./bin/msh src/*.c
+  $ alias msh=./bin/msh
+  $ msh 
+  msh>/usr/bin/ls -l
+  total 29
+  -rwxrwx--- 1 lamonts lamonts 50048 Nov 10 09:38 msh
+  msh> /usr/bin/echo "This is the MPCS shell"
+  "This is the MPCS shell"
+  msh> exit 
+  $ msh -l lamont -s 45 
+  usage: msh [-s NUMBER] [-j NUMBER] [-l NUMBER]
+  $ msh -s 45 -j 0 
+  usage: msh [-s NUMBER] [-j NUMBER] [-l NUMBER]
+  $ msh -l -j 
+  usage: msh [-s NUMBER] [-j NUMBER] [-l NUMBER]
+  $ msh -l 5
+  msh> ls -la /mpcs; 
+  error: reached the maximum line limit 
+  msh> exit 
+
+
+Task 3: ``build.sh`` 
+~~~~~~~~~~~~~~~~~~~~~
+Inside the ``scripts/build.sh`` write a bash script that builds the ``msh`` executable and places it inside the ``bin`` directory. Use the information from the *Building the ``msh`` executable* section above. This really should only be one to three lines of code. If you are using a ``Makefile`` then you can call ``make`` function from within here. 
+
+**Note: The script must work relative to executing it from within the scripts directory.** For example, 
+
+.. code-block:: console  
+
+  ~/msh-lamonts/scripts$ source build.sh 
+
+This should build the executable ``msh`` and place it inside the ``bin`` directory. 
+
+Testing 
+~~~~~~~~
+Inside your ``tests`` directory, you can test your ``shell`` library by running the tests inside the ``test_seperate_args``  and ``test_parse_tok.c``. For example, here's how to build ``test_parse_tok``, 
+
+.. code-block:: console  
+  
+  $ cd tests 
+  $ gcc -I../include/ -o test_parse_tok ../src/shell.c ../src/job.c test_parse_tok.c && ./test_parse_tok 
+
+You can do the same for ``test_seperate_args.c``. 
+
+You can test the running of the ``msh`` program by running the tests inside ``tests/milestone1``. Specifically, you can do the following 
+
+.. code-block:: console  
+  
+  $ cd tests/milestone1 
+  $ bash test_msh.sh #Make sure the msh executable is built first and is inside the bin directory (i.e., bin/msh)
+
+Please let Professor Samuels know if there is any issues running these tests on Ed. 
+
+Submission
+~~~~~~~~~~~~
+You will turn in the final solution to the project after completing milestone 2. Once you have verified your milestone 1 implementation is working please just move on to Milestone 2 specification. 

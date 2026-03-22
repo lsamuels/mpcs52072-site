@@ -1,0 +1,39 @@
+
+==============
+Assignments
+==============
+
+Homework
+=========
+- `Homework #1 <./hw1/index.html>`__, due January 14th at 11:59pm CDT
+- `Homework #2 <./hw2/index.html>`__, due January 21st at 11:59pm CDT
+- `Homework #3 <./hw3/index.html>`__, due January 28th at 11:59pm CDT
+- `Homework #4 <./hw4/index.html>`__, due February 4th at 11:59pm CDT
+- `Homework #5 <./hw5/index.html>`__, due February 11th at 11:59pm CDT
+- `Homework #6 <./hw6/index.html>`__, due February 18th at 11:59pm CDT
+
+Project 
+=======
+- `Milestone #1 <./milestone1/index.html>`__, due March 10th at 11:59pm CDT
+- `Milestone #2 <./milestone2/index.html>`__, due March 10th at 11:59pm CDT
+
+
+
+Assignment Rubric 
+===================
+The following general rubric will be used to grade your coding problems in your homework and projects. The rubric
+allows for more transparency on how your assignments are graded. Short answer questions and written work will be more subjective. 
+
+
+- **Completeness**: This score will be determined by the result of running a series of automated tests on your code. The tests check whether your code implements the tasks we ask you to implement in the assignment and, thus, are a good measure of how *complete* your code is. Completeness is an **all or nothing** grading item. This means that there will be no partial credit for this section. Either you pass the tests or you do not. 
+    
+- **Correctness**: This score encompasses issues with your code that, while not explicitly captured by the tests, could lead to incorrect behavior (or simply neglect to implement something we told you to implement).
+
+  We will usually provide you some hints on what we will be looking out for in this component of the rubric. Please note that this section of the rubric will never re-penalize you for a failure that is already captured by the tests. So, if your code fails to implement something we told you to implement, but that is already captured by the tests, we would not re-penalize you here.
+       
+- **Design & Style**: This score will be determined by “qualities, many of which are intangible, that don’t have to do with (and exist to some extent independently of) the correct operation of your code.” (thanks to Adam Shaw for this concise phrasing). For example, in many assignments you will have to decompose your code into multiple functions, where that decomposition is up to you. Whether your decomposition makes sense and is well designed would be evaluated in this score.
+
+  For style, we will generally be looking at the following: 
+  
+  - *Documenting functions*: Every top-level function written by you must have a comment documenting its purpose.
+  - *Clarity*: Your code must be easy to read and understand. This is a fairly subjective aspect, but common deductions for lack of clarity include using variables without descriptive names, writing convoluted code that would be easier to understand with more code comments, using magic numbers, etc.

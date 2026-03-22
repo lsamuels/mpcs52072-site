@@ -1,0 +1,11 @@
+MPCS 51082 - Introduction to Unix Systems
+=================================================
+
+.. include:: course-staff.rst
+
+.. include:: description.rst
+
+
+
+
+.. _Home:    index.html

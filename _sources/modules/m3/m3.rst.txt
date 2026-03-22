@@ -1,0 +1,59 @@
+M3: Interacting with the Kernel
+==================================
+This third module explores how processes begin to interact with the operating system and kernel. Specifically, when a process needs to request an operating system service such as system call request. We will begin by learning more advanced C topics that specifically  interacts with the kernel. 
+
+By the end of this module, students will be able to:
+
+- Distinguish system calls from library calls and explain the user↔kernel transition. 
+- Understand The syscall path: user mode → kernel mode → return
+- Create new processes with fork() and manage parent/child control flow correctly.
+- Reap children and handle termination states using wait()/waitpid(); diagnose zombies and orphans.
+- Declare, pass, and manipulate pointers correctly, including const correctness and basic pointer arithmetic.
+- alocate, and free dynamic memory with malloc/calloc/free, avoiding leaks 
+- Understand Common memory bugs: leaks, use-after-free, and dangling pointers
+
+Pre-recorded Lectures
+---------------------
+**Note: Professor Samuels will state on Ed when the prerecorded videos are ready to be viewed each week for a module.**
+
+The pre-recorded lectures are available here: `M3 Videos <>`_.
+You can also find the videos under the "Panopto" tab on the MPCS 51082 canvas site.
+
+The lectures are a series of approx 15-20 minute videos. **Please come back here weekly as the videos will be updated if a module spans multiple weeks.** This module includes the following videos: 
+
+The slides presented in these videos are accessible in the upstream repository.
+
+Resources/Readings 
+-------------------
+
+* The slides and code presented in this module are accessible in the upstream repository.
+* **The Linux Programming Interface: A Linux and UNIX System Programming Handbook readings:**
+   - Chapter 3.1-3.6
+
+Synchronous Sessions (In-person Lecture) 
+-----------------------------------------
+As a reminder here are the dates and times for the synchronous session for this module:
+
+Week 6 
+~~~~~~~
+- Dates/Times
+   -  Section 1: **Monday February 10th 5:30pm-07:30pm** 
+
+- Session Outline 
+   - Exceptions
+   - System calls process
+   - Process Creation and Termination in C 
+
+Week 7 
+~~~~~~~
+- Dates/Times
+   -  Section 1: **Monday February 17th 5:30pm-07:30pm** 
+- Session Outline 
+   - Discuss Final Exam 
+   - Introductions to Signals in C 
+
+Assignment
+----------------------
+Assignments are always **due** on Wednesday evenings. 
+
+* `Homework #6 <../../assignments/hw6/index.html>`__, due February 18th at 11:59pm CDT

@@ -1,0 +1,83 @@
+M1: The Unix Shell 
+===========================
+This module introduces the Unix shell as both a command interpreter and a programming environment. Students will learn how to effectively navigate the shell, automate tasks with Bash scripting, and leverage key text processing utilities. The module also covers customization of the shell environment and configuration files to improve productivity.
+ 
+By the end of this module, students will be able to:
+
+1. Write and execute basic Bash scripts to automate common tasks.  
+2. Use essential text processing and filtering commands such as ``cut``, ``sort``, ``uniq``, ``tail``, ``grep``, and ``sed``.  
+3. Understand and modify the shell environment and configuration files (e.g., ``.bashrc``).  
+4. Use the command history effectively to recall, repeat, and edit previously executed commands.  
+
+Pre-recorded Lectures
+---------------------
+**Note: Professor Samuels will state on Ed when the prerecorded videos are ready to be viewed each week for a module.**
+
+The pre-recorded lectures are available here: `M1 Videos <https://uchicago.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=aea92d17-f047-4f07-b6a2-b3cb01627208>`_.
+
+Week 1 Videos 
+~~~~~~~~~~~~~~
+* 1.1 - Text Processing
+* 1.2 - Shell Scripting 
+* 1.3 - Demo: Shell-Scripting & Street Cleaning  
+
+
+Week 2 Videos 
+~~~~~~~~~~~~~~
+* 1.4 - Process Substitution, Globbing Syntax
+* 1.5 - Parameter Expansion 
+* 1.6 - Syntax Functions, Arrays, Dictionaries
+
+Week 3 Videos 
+~~~~~~~~~~~~~~
+* 1.7 - Shell Aliasing & History
+* 1.8 - Shell Environment and Configuration
+* 1.9 - Shell Configuration Demo
+
+The slides presented in lecture and these videos are accessible on our Canvas Page. Click on the Files link and you then can download the m1.zip file.
+
+Resources/Readings 
+-------------------
+For this module, your focus should be to learn the basic syntax of the shell scripting.
+
+* The slides and code presented in this module are accessible on our Canvas Page. Click on the Files link and you then can download the m1.zip file.
+* `Bash Scripting Cheatsheet <https://devhints.io/bash>`__
+   - Great resource for learning and experimenting with the language syntax
+
+Synchronous Sessions (In-person Lecture) 
+-----------------------------------------
+As a reminder here are the dates and times for the synchronous session for this module:
+
+Week 1 
+~~~~~~~
+- Dates/Times
+   -  Section 1: **Tuesday January 6th 5:30pm-7:30pm** 
+- Session Outline 
+   - Course logistics and Unix architecture overview
+   - Shell Command Execution and Globbing 
+   - Text Processing/Filter Commands [if time permits]
+
+Week 2 
+~~~~~~~
+- Dates/Times
+   -  Section 1: **Tuesday January 13th 5:30pm-7:30pm** 
+- Session Outline 
+   - Finding files in the filesystem 
+   - Advance Bash Syntax [as time permits]
+
+Week 3 
+~~~~~~~
+- Dates/Times
+   -  Section 1: **Monday January 20th 5:30pm-7:30pm** 
+- Session Outline 
+   - Using regular expressions to find search/modify text in Unix 
+   - Midterm discussion 
+   - Shell Aliasing/History [as time permits]
+
+Assignment
+----------------------
+Assignments are always **due** on Wednesday evenings. 
+
+*  `Homework #1  <../../assignments/hw1/index.html>`__, due January 14th at 11:59pm CDT
+*  `Homework #2  <../../assignments/hw2/index.html>`__, due January 21st at 11:59pm CDT
+*  `Homework #3  <../../assignments/hw3/index.html>`__, due January 28th at 11:59pm CDT

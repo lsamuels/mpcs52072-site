@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Homework #1 &#8212; MPCS 51082 - Introduction to Unix Systems  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS 51082</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../../modules/index.html">Modules</a></li>
+                <li><a href="../index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Homework #1</a><ul>
+<li><a class="reference internal" href="#getting-started">Getting started</a><ul>
+<li><a class="reference internal" href="#mpcs-unix-bootcamp">MPCS Unix Bootcamp</a></li>
+<li><a class="reference internal" href="#cs-linux-machine">CS Linux Machine</a></li>
+<li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#important-eligible-commands-bash"><strong>IMPORTANT:</strong> Eligible Commands &amp; Bash</a></li>
+<li><a class="reference internal" href="#warm-up">Warm-Up</a><ul>
+<li><a class="reference internal" href="#warm-up-0">Warm-Up #0</a></li>
+<li><a class="reference internal" href="#warm-up-1">Warm-Up #1</a></li>
+<li><a class="reference internal" href="#warm-up-2">Warm-Up #2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#aside-1-sorting-with-sort-k-n">Aside 1: Sorting with <cite>sort -k..,..n</cite></a><ul>
+<li><a class="reference internal" href="#key-syntax">Key syntax</a></li>
+<li><a class="reference internal" href="#cheat-sheet">Cheat sheet</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#aside-2-csv-parsing-with-ifs-and-while-loop">Aside 2: CSV Parsing with IFS and while loop</a></li>
+<li><a class="reference internal" href="#homework-dataset">Homework Dataset</a></li>
+<li><a class="reference internal" href="#problem-1-count-unique-wards">Problem 1 - Count Unique Wards</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#problem-2-sections-per-ward">Problem 2 - Sections per Ward</a><ul>
+<li><a class="reference internal" href="#id1">Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#problem-3-ward-section-directory-pack">Problem 3 - Ward/Section Directory Pack</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#naming-structure-requirements">Naming &amp; Structure Requirements</a></li>
+<li><a class="reference internal" href="#id2">Examples</a><ul>
+<li><a class="reference internal" href="#hint"><strong>Hint</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-the-tests">Running the Tests</a><ul>
+<li><a class="reference internal" href="#run-a-single-test-problem-1">Run a single test (Problem 1)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grading">Grading</a></li>
+<li><a class="reference internal" href="#submission">Submission</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/assignments/hw1/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="homework-1">
+<h1>Homework #1<a class="headerlink" href="#homework-1" title="Link to this heading">¶</a></h1>
+<p><strong>Due: Friday, January 14th at 11:59pm</strong></p>
+<p>This homework is intended to server as an introduction to bash shell scripting, basic Unix commands, and using filtering (i.e., text processing) commands to process text.
+This assignment is not meant to cover everything in the bash scripting language or to use a large number of built-in utility commands.
+It solely serves as a way for you to get familiar with working with the shell, Bash syntax, and basic utility commands.</p>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
+<p>The following two sections explain the process of setting up your homework workspace for the course and how to retrieve your private Github repository.</p>
+<section id="mpcs-unix-bootcamp">
+<h3>MPCS Unix Bootcamp<a class="headerlink" href="#mpcs-unix-bootcamp" title="Link to this heading">¶</a></h3>
+<p>The <strong>MPCS Unix Bootcamp</strong> is a prerequisite for this course.  Before beginning this assignment, make sure to review <em>Modules 0-7</em>.</p>
+<p>You can find the Unix Bootcamp materials on our Canvas page under  <code class="docutils literal notranslate"><span class="pre">Files</span> <span class="pre">→</span> <span class="pre">Unix</span> <span class="pre">Bootcamp</span> <span class="pre">Materials</span></code>.</p>
+<p>You may skip any modules after 7, since we will cover those topics later in this class.</p>
+</section>
+<section id="cs-linux-machine">
+<h3>CS Linux Machine<a class="headerlink" href="#cs-linux-machine" title="Link to this heading">¶</a></h3>
+<p>You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments. Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.</p>
+<p><strong>We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines in order to receive credit.</strong></p>
+<p>However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.</p>
+<p>Please follow the instructions provided here</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html">Using Visual Studio Code and SSH</a></p></li>
+</ul>
+</section>
+<section id="creating-your-private-repository">
+<h3>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h3>
+<p>For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a
+GitHub account. If you do not yet have one, you can get an account here: <a class="reference external" href="https://github.com/join">https://github.com/join</a>.</p>
+<p>To actually get your private repository, you will need this invitation URL:</p>
+<ul class="simple">
+<li><p><strong>HW1 invitation (Please check the Post “HW 1 is ready” Ed)</strong></p></li>
+</ul>
+<p>When you click on an invitation URL, you will have to complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>You must click “Accept this assignment” or your repository will not actually be created.</p></li>
+<li><p>After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it’s ready within seconds and you can just refresh the page.</p></li>
+<li><dl class="simple">
+<dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
+<li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs51082-aut25/hw1-GITHUB-USERNAME.git.</p></li>
+<li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.</p>
+</section>
+</section>
+<section id="important-eligible-commands-bash">
+<h2><strong>IMPORTANT:</strong> Eligible Commands &amp; Bash<a class="headerlink" href="#important-eligible-commands-bash" title="Link to this heading">¶</a></h2>
+<p>For this homework assignment, you are only allowed to use the following commands with or without using their options in your scripts.</p>
+<ul class="simple">
+<li><p>Commands used in the Week 1, module 1 slides (i.e., <code class="docutils literal notranslate"><span class="pre">m1.pdf</span></code>)</p></li>
+<li><p>Commands presented in the Unix Bootcamp Modules 0-7 <strong>only</strong></p></li>
+<li><p>tr</p></li>
+<li><p>exit</p></li>
+</ul>
+<p><strong>Using any other command not specified in this list will result in a major penalty for that specific problem</strong>. I know there might be some better commands out there such as <strong>``awk``</strong>, and <strong>``sed``</strong> but we will first learn the basics and then use more advanced commands as we move along in the course. You are free to use the entirety of the bash scripting language but are restricted to using only the above commands within your script files.</p>
+<p><strong>If you have any questions about using a command ask on Ed before you use it</strong>! <strong>You must code all problems in the Bash scripting language. No other programming language or scripting language is allowed</strong>.</p>
+</section>
+<section id="warm-up">
+<h2>Warm-Up<a class="headerlink" href="#warm-up" title="Link to this heading">¶</a></h2>
+<p>Warm-up exercises are not graded and are meant to give you hints towards solving the actual homework problems. All solutions to warm-up problems that require coding are already in your repositories.
+<strong>Do not just look at the solution</strong>! Try to solve the problem before looking at the solution. Please look in the hw1/warmup_solns directory to find these solutions.</p>
+<section id="warm-up-0">
+<h3>Warm-Up #0<a class="headerlink" href="#warm-up-0" title="Link to this heading">¶</a></h3>
+<p>Before beginning the actual warm-up and homework problems, make sure you watch the prerecorded videos for module 1 and experiment with the <a class="reference external" href="https://devhints.io/bash">devhints cheat sheet</a>  code-snippets while logged into a CS Linux machine.</p>
+</section>
+<section id="warm-up-1">
+<h3>Warm-Up #1<a class="headerlink" href="#warm-up-1" title="Link to this heading">¶</a></h3>
+<p>In a file named <code class="docutils literal notranslate"><span class="pre">warmup1.sh</span></code>, write a bash script that takes in a file as a command line argument. This file will only contain positive integers.
+The script must find the maximum integer in the file. You can use the <code class="docutils literal notranslate"><span class="pre">hw1/warmup/numbers.txt</span></code> to test your script.
+You can assume the file will only contain <strong>positive integers</strong>. The script should be ran as <code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">warmup1.sh</span> <span class="pre">FILE</span></code> where <code class="docutils literal notranslate"><span class="pre">FILE</span></code> is the name of a file that contains only positive numbers.
+For example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bash</span> <span class="n">warmup1</span><span class="o">.</span><span class="n">sh</span> <span class="n">numbers</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>If the user forget to supply the file argument then print the error message <code class="docutils literal notranslate"><span class="pre">&quot;Error:</span> <span class="pre">no</span> <span class="pre">numbers</span> <span class="pre">file</span> <span class="pre">entered&quot;</span></code> and exit from the script immediately by running the command
+<code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">1</span></code>.</p>
+</section>
+<section id="warm-up-2">
+<h3>Warm-Up #2<a class="headerlink" href="#warm-up-2" title="Link to this heading">¶</a></h3>
+<p>In a file named <code class="docutils literal notranslate"><span class="pre">warmup2.sh</span></code>, write a bash script that reads in a series of command line arguments that represent individuals associated with Uchicago.
+Each command line argument has the following format: <code class="docutils literal notranslate"><span class="pre">CNET:POSITION</span></code>, where <code class="docutils literal notranslate"><span class="pre">CNET</span></code> is a Uchicago CNET identifier and <code class="docutils literal notranslate"><span class="pre">POSITION</span></code> is the position of the individual at the university. For example,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lamonts</span><span class="p">:</span><span class="n">faculty</span>
+<span class="n">borja</span><span class="p">:</span><span class="n">faculty</span>
+<span class="n">bob</span><span class="p">:</span><span class="n">student</span>
+</pre></div>
+</div>
+<p>For example, running the script as such</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bash</span> <span class="n">warmup2</span><span class="o">.</span><span class="n">sh</span> <span class="n">lamonts</span><span class="p">:</span><span class="n">faculty</span> <span class="n">bob</span><span class="p">:</span><span class="n">student</span> <span class="n">borja</span><span class="p">:</span><span class="n">faculty</span> <span class="n">sue</span><span class="p">:</span><span class="n">student</span>
+</pre></div>
+</div>
+<p>creates the directory shown in the image below</p>
+<img alt="../../_images/warmup2.png" src="../../_images/warmup2.png" />
+</section>
+</section>
+<section id="aside-1-sorting-with-sort-k-n">
+<h2>Aside 1: Sorting with <cite>sort -k..,..n</cite><a class="headerlink" href="#aside-1-sorting-with-sort-k-n" title="Link to this heading">¶</a></h2>
+<p>The <cite>sort</cite> command can sort text files by <em>fields</em> (columns) using <cite>-k</cite>.
+For CSV-like data, pair it with <cite>-t’,’</cite> to tell <cite>sort</cite> that fields are comma-separated.</p>
+<section id="key-syntax">
+<h3>Key syntax<a class="headerlink" href="#key-syntax" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Field delimiter</strong>: <code class="docutils literal notranslate"><span class="pre">-t','</span></code> sets the column separator to a comma.</p></li>
+<li><dl class="simple">
+<dt><strong>Sort key</strong>: <code class="docutils literal notranslate"><span class="pre">-kSTART,END</span></code> selects the field range to sort by.</dt><dd><ul>
+<li><p>Most common: <code class="docutils literal notranslate"><span class="pre">-k2,2</span></code> → sort by <em>only</em> column 2.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">n</span></code> to sort <strong>numerically</strong> (otherwise it’s lexical): <code class="docutils literal notranslate"><span class="pre">-k2,2n</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Multiple keys</strong>: provide more than one <code class="docutils literal notranslate"><span class="pre">-k</span></code> in priority order.
+Example: <code class="docutils literal notranslate"><span class="pre">-k2,2n</span> <span class="pre">-k3,3n</span> <span class="pre">-k5,5n</span></code> sorts by col2, then col3, then col5.</p></li>
+</ul>
+</section>
+<section id="cheat-sheet">
+<h3>Cheat sheet<a class="headerlink" href="#cheat-sheet" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>One numeric key: <code class="docutils literal notranslate"><span class="pre">sort</span> <span class="pre">-t','</span> <span class="pre">-k2,2n</span></code></p></li>
+<li><p>Two keys: <code class="docutils literal notranslate"><span class="pre">sort</span> <span class="pre">-t','</span> <span class="pre">-k2,2n</span> <span class="pre">-k3,3n</span></code></p></li>
+<li><p>Three keys: <code class="docutils literal notranslate"><span class="pre">sort</span> <span class="pre">-t','</span> <span class="pre">-k2,2n</span> <span class="pre">-k3,3n</span> <span class="pre">-k5,5n</span></code></p></li>
+<li><p>Reverse on a key: add <code class="docutils literal notranslate"><span class="pre">r</span></code> to that key (e.g., <code class="docutils literal notranslate"><span class="pre">-k2,2nr</span></code>)</p></li>
+</ul>
+</section>
+</section>
+<section id="aside-2-csv-parsing-with-ifs-and-while-loop">
+<h2>Aside 2: CSV Parsing with IFS and while loop<a class="headerlink" href="#aside-2-csv-parsing-with-ifs-and-while-loop" title="Link to this heading">¶</a></h2>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">IFS</span></code> (Internal Field Separator) variable in Bash to
+split fields from a CSV file. For example, suppose we have a file
+<code class="docutils literal notranslate"><span class="pre">data.csv</span></code> with the following content:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Alice</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="n">Engineer</span>
+<span class="n">Bob</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="n">Designer</span>
+<span class="n">Carol</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="n">Manager</span>
+</pre></div>
+</div>
+<p>We can parse it line by line using a <code class="docutils literal notranslate"><span class="pre">while</span></code> loop:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read each line from data.csv</span>
+<span class="k">while</span><span class="w"> </span><span class="nv">IFS</span><span class="o">=</span>,<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>name<span class="w"> </span>age<span class="w"> </span>role<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Name: </span><span class="nv">$name</span><span class="s2">, Age: </span><span class="nv">$age</span><span class="s2">, Role: </span><span class="nv">$role</span><span class="s2">&quot;</span>
+<span class="k">done</span><span class="w"> </span>&lt;<span class="w"> </span>data.csv
+</pre></div>
+</div>
+<p>Explanation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IFS=,</span></code> tells Bash to split each line by commas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">read</span> <span class="pre">-r</span> <span class="pre">name</span> <span class="pre">age</span> <span class="pre">role</span></code> assigns each field to a variable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">done</span> <span class="pre">&lt;</span> <span class="pre">data.csv</span></code> feeds the CSV file into the loop.</p></li>
+</ul>
+<p>When run, the script prints:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Name</span><span class="p">:</span> <span class="n">Alice</span><span class="p">,</span> <span class="n">Age</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="n">Role</span><span class="p">:</span> <span class="n">Engineer</span>
+<span class="n">Name</span><span class="p">:</span> <span class="n">Bob</span><span class="p">,</span> <span class="n">Age</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="n">Role</span><span class="p">:</span> <span class="n">Designer</span>
+<span class="n">Name</span><span class="p">:</span> <span class="n">Carol</span><span class="p">,</span> <span class="n">Age</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span> <span class="n">Role</span><span class="p">:</span> <span class="n">Manager</span>
+</pre></div>
+</div>
+</section>
+<section id="homework-dataset">
+<h2>Homework Dataset<a class="headerlink" href="#homework-dataset" title="Link to this heading">¶</a></h2>
+<p>For all problems in this homework, you will use the street-cleaning dataset introduced in this week’s pre-recorded video:</p>
+<p><a class="reference external" href="https://uchicago.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=d5bd8165-8af0-4d9e-81b4-b1fd011013b7">1.5 – Demo: Shell-Scripting &amp; Street Cleaning</a></p>
+<p>The original dataset (<code class="docutils literal notranslate"><span class="pre">orig_sched.csv</span></code>) is in the <code class="docutils literal notranslate"><span class="pre">data/</span></code> directory of your repository.</p>
+<p>We’ve also included several modified versions of the dataset in <code class="docutils literal notranslate"><span class="pre">data/</span></code> to help you test your <code class="docutils literal notranslate"><span class="pre">bash</span></code> scripts. You may assume the following about any street-cleaning file provided to your scripts:</p>
+<ul class="simple">
+<li><p>The file is always a <strong>modification of the original dataset</strong> supplied in <code class="docutils literal notranslate"><span class="pre">data/orig_sched.csv</span></code>.</p></li>
+<li><p>The file <strong>always includes the header row</strong>, and the <strong>header is identical</strong> to the original (same columns, same order, same names).</p></li>
+<li><p>The <strong>records themselves may change</strong> (rows may be added/removed and/or modified), but the <strong>schema does not</strong>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You should not need to handle arbitrary CSV layouts or missing headers. Focus your solutions on the exact column structure of the original file.</p>
+</div>
+<p>Feel free to add additional modified datasets of the original dataset to help test your scripts.</p>
+</section>
+<section id="problem-1-count-unique-wards">
+<h2>Problem 1 - Count Unique Wards<a class="headerlink" href="#problem-1-count-unique-wards" title="Link to this heading">¶</a></h2>
+<p>Inside <code class="docutils literal notranslate"><span class="pre">p1/p1.sh</span></code>, write a Bash script that takes a <em>street-cleaning CSV file</em> as an argument and prints the <strong>total number of unique wards</strong> in the file. The script must accept exactly one argument: the path to the CSV (e.g., <code class="docutils literal notranslate"><span class="pre">data/orig_sched.csv</span></code>). If <strong>no file or too many files</strong> are provided, the script must <strong>exit with status 1</strong> and print:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Usage:<span class="w"> </span>p1.sh<span class="w"> </span>SCHEDULE_FILE
+</pre></div>
+</div>
+<p>Output should be a <strong>single integer</strong>: the number of distinct wards present in the file.</p>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h3>
+<p>Successful run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bash<span class="w"> </span>p1.sh<span class="w"> </span>../data/orig_sched.csv
+<span class="m">50</span>
+</pre></div>
+</div>
+<p>No argument provided:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bash<span class="w"> </span>p1.sh
+Usage:<span class="w"> </span>p1.sh<span class="w"> </span>SCHEDULE_FILE
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+<span class="m">1</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="problem-2-sections-per-ward">
+<h2>Problem 2 - Sections per Ward<a class="headerlink" href="#problem-2-sections-per-ward" title="Link to this heading">¶</a></h2>
+<p>Inside <code class="docutils literal notranslate"><span class="pre">p2/p2.sh</span></code>, write a Bash script that takes a street-cleaning CSV file and prints, <strong>for each ward</strong>, the <strong>total number of unique sections</strong> in that ward. The script must accept exactly <strong>one</strong> argument: the path to the CSV (e.g., <code class="docutils literal notranslate"><span class="pre">data/orig_sched_modified.csv</span></code>). If <strong>no file</strong> is provided, the script must <strong>exit with status 1</strong> and print:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Usage:<span class="w"> </span>p2.sh<span class="w"> </span>SCHEDULE_FILE
+</pre></div>
+</div>
+<p><strong>Output format</strong>: one ward per line as: <code class="docutils literal notranslate"><span class="pre">WARD</span> <span class="pre">COUNT</span></code> sorted in ascending order by ward number.</p>
+<section id="id1">
+<h3>Examples<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bash<span class="w"> </span>p2.sh<span class="w"> </span>../data/orig_sched.csv
+<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">11</span>
+<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">7</span>
+<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">13</span>
+<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">15</span>
+<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">17</span>
+<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">18</span>
+<span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">17</span>
+<span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="m">23</span>
+<span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="m">20</span>
+<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">17</span>
+<span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">12</span>
+<span class="w"> </span><span class="m">12</span><span class="w"> </span><span class="m">11</span>
+<span class="w"> </span><span class="m">13</span><span class="w"> </span><span class="m">27</span>
+<span class="w"> </span><span class="m">14</span><span class="w"> </span><span class="m">18</span>
+<span class="w"> </span><span class="m">15</span><span class="w"> </span><span class="m">10</span>
+<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="m">25</span>
+<span class="w"> </span><span class="m">17</span><span class="w"> </span><span class="m">25</span>
+<span class="w"> </span><span class="m">18</span><span class="w"> </span><span class="m">20</span>
+<span class="w"> </span><span class="m">19</span><span class="w"> </span><span class="m">25</span>
+<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">19</span>
+<span class="w"> </span><span class="m">21</span><span class="w"> </span><span class="m">24</span>
+<span class="w"> </span><span class="m">22</span><span class="w"> </span><span class="m">14</span>
+<span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">23</span>
+<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="m">11</span>
+<span class="w"> </span><span class="m">25</span><span class="w"> </span><span class="m">10</span>
+<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="m">12</span>
+<span class="w"> </span><span class="m">27</span><span class="w"> </span><span class="m">18</span>
+<span class="w"> </span><span class="m">28</span><span class="w"> </span><span class="m">14</span>
+<span class="w"> </span><span class="m">29</span><span class="w"> </span><span class="m">14</span>
+<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="m">15</span>
+<span class="w"> </span><span class="m">31</span><span class="w"> </span><span class="m">11</span>
+<span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="m">20</span>
+<span class="w"> </span><span class="m">33</span><span class="w"> </span><span class="m">13</span>
+<span class="w"> </span><span class="m">34</span><span class="w"> </span><span class="m">6</span>
+<span class="w"> </span><span class="m">35</span><span class="w"> </span><span class="m">12</span>
+<span class="w"> </span><span class="m">36</span><span class="w"> </span><span class="m">13</span>
+<span class="w"> </span><span class="m">37</span><span class="w"> </span><span class="m">15</span>
+<span class="w"> </span><span class="m">38</span><span class="w"> </span><span class="m">26</span>
+<span class="w"> </span><span class="m">39</span><span class="w"> </span><span class="m">23</span>
+<span class="w"> </span><span class="m">40</span><span class="w"> </span><span class="m">19</span>
+<span class="w"> </span><span class="m">41</span><span class="w"> </span><span class="m">32</span>
+<span class="w"> </span><span class="m">42</span><span class="w"> </span><span class="m">5</span>
+<span class="w"> </span><span class="m">43</span><span class="w"> </span><span class="m">8</span>
+<span class="w"> </span><span class="m">44</span><span class="w"> </span><span class="m">11</span>
+<span class="w"> </span><span class="m">45</span><span class="w"> </span><span class="m">25</span>
+<span class="w"> </span><span class="m">46</span><span class="w"> </span><span class="m">9</span>
+<span class="w"> </span><span class="m">47</span><span class="w"> </span><span class="m">20</span>
+<span class="w"> </span><span class="m">48</span><span class="w"> </span><span class="m">11</span>
+<span class="w"> </span><span class="m">49</span><span class="w"> </span><span class="m">13</span>
+<span class="w"> </span><span class="m">50</span><span class="w"> </span><span class="m">14</span>
+</pre></div>
+</div>
+<p>Missing arguments:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bash<span class="w"> </span>p2.sh
+Usage:<span class="w"> </span>p2.sh<span class="w"> </span>SCHEDULE_FILE
+$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+<span class="m">1</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="problem-3-ward-section-directory-pack">
+<h2>Problem 3 - Ward/Section Directory Pack<a class="headerlink" href="#problem-3-ward-section-directory-pack" title="Link to this heading">¶</a></h2>
+<p>Inside <code class="docutils literal notranslate"><span class="pre">p3/p3.sh</span></code>, write a Bash script that, given a street-cleaning CSV, a <strong>ward</strong>, and a <strong>section</strong>, creates a top-level directory named from the ward/section (with <strong>leading zeros</strong>) and a month-by-month subfolder layout. Each month folder must contain a single file <code class="docutils literal notranslate"><span class="pre">dates.txt</span></code> holding the <strong>DATES</strong> string for that month.</p>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Usage:<span class="w"> </span>p3.sh<span class="w"> </span><span class="o">[</span>-z<span class="o">]</span><span class="w"> </span>SCHEDULE_FILE<span class="w"> </span>WARD<span class="w"> </span>SECTION
+</pre></div>
+</div>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">SCHEDULE_FILE</span></code>: path to the CSV (e.g., <code class="docutils literal notranslate"><span class="pre">data/orig_sched.csv</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WARD</span></code>: ward number (integer)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SECTION</span></code>: section number (integer)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-z</span></code> (optional): after creating the directory structure, zip it using the top-level name</p></li>
+<li><p>If arguments are missing, print:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Usage:</span> <span class="pre">p3.sh</span> <span class="pre">[-z]</span> <span class="pre">SCHEDULE_FILE</span> <span class="pre">WARD</span> <span class="pre">SECTION</span></code></p>
+<p>and <strong>exit 1</strong>.</p>
+</li>
+<li><p>You can assume the ward/section provided as command line arguments do exist in the given file CSV.</p></li>
+</ul>
+</section>
+<section id="naming-structure-requirements">
+<h3>Naming &amp; Structure Requirements<a class="headerlink" href="#naming-structure-requirements" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Top-level directory name</strong>: use two-digit, zero-padded ward and section with a clear prefix that starts with a <code class="docutils literal notranslate"><span class="pre">W</span></code> for the ward and <code class="docutils literal notranslate"><span class="pre">S</span></code> for the section, e.g.:</p>
+<ul>
+<li><p>Ward 1, Section 3 → <code class="docutils literal notranslate"><span class="pre">W01_S03</span></code></p></li>
+<li><p>Ward 12, Section 9 → <code class="docutils literal notranslate"><span class="pre">W12_S09</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Month directories</strong>: create a subdirectory <strong>for each month that appears in the CSV for that ward/section</strong>. The directory name must be the numeric month value with no leading zeros.</p></li>
+<li><p><strong>dates.txt</strong>: inside each month directory, write <strong>one file</strong> named <code class="docutils literal notranslate"><span class="pre">dates.txt</span></code> whose content is the <strong>exact DATES string</strong> from the CSV for that ward/section/month (e.g., <code class="docutils literal notranslate"><span class="pre">4,5</span></code>).
+- If multiple rows exist for the same month, you may write the <strong>first matching row’s</strong> DATES string.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">-z</span></code> is provided, create an archive named <code class="docutils literal notranslate"><span class="pre">WXX_SYY.zip</span></code> containing the whole tree.</p></li>
+<li><p>Do not create a top-level directory if the ward and section given has no records in the given file. Additionally if a top-level directory is not created and the <code class="docutils literal notranslate"><span class="pre">-z</span></code> is provided then do not make a zip file.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>Examples<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>Input:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bash<span class="w"> </span>p3.sh<span class="w"> </span>../data/orig_sched.csv<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">1</span>
+</pre></div>
+</div>
+<p>Creates:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>W01_S03/
+├── 4/
+│   └── dates.txt        # The file contains only the string:  &quot;4,5&quot; (notice the double quotes must remain)
+├── 5/
+│   └── dates.txt        # The file contains only the string: &quot;29,30&quot; (notice the double quotes must remain)
+├── 6/
+│   └── dates.txt
+└── 8/
+│   └── dates.txt
+└── 9/
+│   └── dates.txt
+└── 10/
+│   └── dates.txt
+└── 11/
+    └── dates.txt
+</pre></div>
+</div>
+<p>With zip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>bash<span class="w"> </span>p3.sh<span class="w"> </span>-z<span class="w"> </span>../data/orig_sched.csv<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span>
+<span class="c1"># Produces W01_S03/ ... and W01_S03.zip</span>
+</pre></div>
+</div>
+<section id="hint">
+<h4><strong>Hint</strong><a class="headerlink" href="#hint" title="Link to this heading">¶</a></h4>
+<p>When using the <code class="docutils literal notranslate"><span class="pre">cut</span></code> command with the <code class="docutils literal notranslate"><span class="pre">-f</span></code> option, you can select specific fields (columns) from a delimited file.
+If you want to select all remaining columns starting from a specific field, you can use a dash (<code class="docutils literal notranslate"><span class="pre">-</span></code>) after the field number.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cut</span> <span class="o">-</span><span class="n">f3</span><span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>This command selects the third field <strong>and all fields after it</strong> from each line of <code class="docutils literal notranslate"><span class="pre">data.txt</span></code>.</p>
+<p>To make a zip file of a directory: <code class="docutils literal notranslate"><span class="pre">zip</span> <span class="pre">-r</span> <span class="pre">FILE</span> <span class="pre">DIR</span></code>, where <code class="docutils literal notranslate"><span class="pre">FILE</span></code> is the name of the zip file and <code class="docutils literal notranslate"><span class="pre">DIR</span></code> is the directory to include.</p>
+</section>
+</section>
+</section>
+<section id="running-the-tests">
+<h2>Running the Tests<a class="headerlink" href="#running-the-tests" title="Link to this heading">¶</a></h2>
+<p>Inside your repository, there is a top-level <code class="docutils literal notranslate"><span class="pre">tests/</span></code>  directory that contains tests for each homework problem (separated into their own directories). Each test within a test problem directory consists of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">testXX.in</span></code> — one line with the exact command to run (paths are relative to the test folder).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">testXX.ans</span></code> — the expected output.</p></li>
+</ul>
+<p>the <strong>last line</strong> of <code class="docutils literal notranslate"><span class="pre">testXX.ans</span></code> is the <strong>expected exit status</strong>; all prior lines are the expected stdout.</p>
+<p>Each test directory has a runner file <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> that compares both stdout and exit status. A mismatch in either causes the test to fail. To run all the tests for a specific problem can run <code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">run.sh</span></code> in that specific directory. For example, from the top-level directory of your repository, you can run the problem 1 tests by performing the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>tests/p1
+$<span class="w"> </span>bash<span class="w"> </span>run.sh
+</pre></div>
+</div>
+<p>The runner will specify whether you passed a test case or if you failed it. Here’s a sample structure of what to expect to see after running the <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> file.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>test01 passed
+test02 failed.
+       test02.in: bash ../../p1/p1.sh ../data/bad.csv
+       got: 1
+       expected: 2
+       exit status got: 1
+       exit status expected: 0
+Total: 1/2
+</pre></div>
+</div>
+<section id="run-a-single-test-problem-1">
+<h3>Run a single test (Problem 1)<a class="headerlink" href="#run-a-single-test-problem-1" title="Link to this heading">¶</a></h3>
+<p>Each runner supports a <code class="docutils literal notranslate"><span class="pre">-t</span></code> flag to target one test by label (without <code class="docutils literal notranslate"><span class="pre">.in</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>tests/p1
+$<span class="w"> </span>bash<span class="w"> </span>run.sh<span class="w"> </span>-t<span class="w"> </span>test01
+</pre></div>
+</div>
+</section>
+</section>
+<section id="grading">
+<h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h2>
+<p>Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)</p>
+<p>The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:</p>
+<ul class="simple">
+<li><p><strong>Completeness</strong>: 75%</p></li>
+<li><p><strong>Correctness</strong>: 15%</p></li>
+<li><p><strong>Style/Design</strong>: 10%</p></li>
+</ul>
+</section>
+<section id="submission">
+<h2>Submission<a class="headerlink" href="#submission" title="Link to this heading">¶</a></h2>
+<p>Before submitting, make sure you’ve added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the “Homework #1” assignment page by linking your Github account to your Gradescope account and upload the correct repository based on the homework assignment. When you submit your homework, a pop window will appear. Click on “Github” and then  “Connect to Github” to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be “main” or “master”) for this course.</p>
+<p>Depending on the assignment, once you submit your work, an “autograder” will run. This autograder should produce the same test results as when you run the code yourself; if it doesn’t, please let us know so we can look into it. A few other notes:</p>
+<ul class="simple">
+<li><p>You are allowed to make as many submissions as you want before the deadline.</p></li>
+<li><p>Please make sure you have read and understood our <a class="reference internal" href="../../syllabus.html#late-submissions"><span class="std std-ref">Late Submission Policy</span></a>.</p></li>
+<li><p>Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).</p></li>
+<li><p>Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

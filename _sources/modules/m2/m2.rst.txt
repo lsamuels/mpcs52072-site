@@ -1,0 +1,80 @@
+M2: Unix Processes & Management
+================================
+This module explores Unix programs and processes—how they’re created, scheduled, grouped, signaled, and managed by the kernel. Students will use standard tools to inspect system activity, understand process lifecycles and job control, and connect concepts to practice with a brief, hands-on introduction to C. 
+
+By the end of this module, students will be able to:
+
+- Explain the difference between a program and a process, and describe process lifecycles (creation, running, waiting/sleeping, stopped, zombie).
+- Inspect and interpret process information using tools such as ps, top/htop. 
+- Define and distinguish process groups, sessions, and a controlling terminal. 
+- Use job control in the shell: background/foreground tasks (&, jobs, fg, bg), Ctrl+Z. 
+- Send and handle signals (SIGINT, SIGTERM, SIGKILL, SIGHUP, SIGTSTP, SIGCHLD, SIGPIPE) via kill; understand default actions and safe shutdown patterns.
+- Explain how the kernel schedules processes (priorities/niceness, time slices) and adjust behavior with nice/renice.
+
+Pre-recorded Lectures
+---------------------
+**Note: Professor Samuels will state on Ed when the precorded videos are ready to be viewed each week for a module.**
+
+The pre-recorded lectures are available here: `M2 Videos <https://uchicago.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=7eecdcae-e376-43ca-8cd0-b37f0188ad44>`_.
+You can also find the videos under the "Panopto" tab on the MPCS 51082 canvas site.
+
+The lectures are a series of approx 15-20 minute videos. **Please come back here weekly as the videos will be updated if a module spans multiple weeks.** This module includes the following videos: 
+
+Week 4 Videos 
+~~~~~~~~~~~~~~~
+`C Bootcamp Videos <https://uchicago.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=bf1ed42e-14b2-4286-8cd5-b3e100073623>`_
+
+C Bootcammp Outline
+- C Basics (Part 1)
+- C Basics (Part 2)
+
+
+Week 5 Videos
+~~~~~~~~~~~~~~~~
+`C Bootcamp Videos <https://uchicago.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=bf1ed42e-14b2-4286-8cd5-b3e100073623>`_
+- Advanced C (Part 1)
+- Advanced C (Part 2)
+- Advanced C (Part 3)
+- Advanced C (Part 4)
+- Advanced C (Part 5)
+
+The slides presented in these videos are accessible in the upstream repository and on Canvas.
+
+Resources/Readings 
+-------------------
+
+* The slides and code presented in this module are accessible in the upstream repository.
+* **The Linux Programming Interface: A Linux and UNIX System Programming Handbook readings:**
+   - Chapter 2.6,2.7
+   - Chapter 6.1-6.3,6.5,6.7
+
+Synchronous Sessions (In-person Lecture) 
+-----------------------------------------
+As a reminder here are the dates and times for the synchronous session for this module:
+
+Week 4 
+~~~~~~~
+- Dates/Times
+   -  Section 1: **Monday January 27th 5:30pm-7:30pm** 
+- Session Outline 
+   - Introduction to Processes 
+   - Job Control 
+   - Signals 
+   - Process Groups and Sessions
+
+Week 5 
+~~~~~~~
+- Dates/Times
+   -  Section 1: **Tuesday February 3rd 5:30pm-7:30pm** 
+- Session Outline 
+   - Memory Hierarchy 
+   - Process Management
+
+
+Assignment
+----------------------
+Assignments are always **due** on Friday evenings. 
+
+* `Homework #3 <../../assignments/hw3/index.html>`__, due January 28th at 11:59pm CDT
+* `Homework #4 <../../assignments/hw4/index.html>`__, due February 4th at 11:59pm *
+* `Homework #5 <../../assignments/hw5/index.html>`__, due February 11th at 11:59pm CDT

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Homework #6 &#8212; MPCS 51082 - Introduction to Unix Systems  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS 51082</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../../modules/index.html">Modules</a></li>
+                <li><a href="../index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Homework #6</a><ul>
+<li><a class="reference internal" href="#cs-linux-machine">CS Linux Machine</a></li>
+<li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a><ul>
+<li><a class="reference internal" href="#task-process-control-library-proclib">Task: Process Control Library (proclib)</a></li>
+<li><a class="reference internal" href="#the-command-structure">The Command Structure</a></li>
+<li><a class="reference internal" href="#problem-1-proclib-run-n-times">Problem 1: <code class="docutils literal notranslate"><span class="pre">proclib_run_n_times</span></code></a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#return-value">Return Value</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#problem-2-proclib-run-and-report">Problem 2: <code class="docutils literal notranslate"><span class="pre">proclib_run_and_report</span></code></a><ul>
+<li><a class="reference internal" href="#id1">Description</a></li>
+<li><a class="reference internal" href="#id2">Return Value</a></li>
+<li><a class="reference internal" href="#how-to-test">How to Test</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#problem-3-proclib-run-until-failure">Problem 3: <code class="docutils literal notranslate"><span class="pre">proclib_run_until_failure</span></code></a><ul>
+<li><a class="reference internal" href="#id3">Description</a></li>
+<li><a class="reference internal" href="#id4">Return Value</a></li>
+<li><a class="reference internal" href="#id5">How to Test</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#problem-4-proclib-run-parallel">Problem 4: <code class="docutils literal notranslate"><span class="pre">proclib_run_parallel</span></code></a><ul>
+<li><a class="reference internal" href="#id6">Description</a></li>
+<li><a class="reference internal" href="#id7">Return Value</a></li>
+<li><a class="reference internal" href="#id8">How to Test</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#problem-5-proclib-spawn-and-track">Problem 5: <code class="docutils literal notranslate"><span class="pre">proclib_spawn_and_track</span></code></a><ul>
+<li><a class="reference internal" href="#id9">Description</a></li>
+<li><a class="reference internal" href="#id10">Return Value</a></li>
+<li><a class="reference internal" href="#id11">How to Test</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compilation-instructions">Compilation Instructions</a></li>
+<li><a class="reference internal" href="#submission-requirements">Submission Requirements</a></li>
+<li><a class="reference internal" href="#grading">Grading</a></li>
+<li><a class="reference internal" href="#submission">Submission</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/assignments/hw6/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="homework-6">
+<h1>Homework #6<a class="headerlink" href="#homework-6" title="Link to this heading">¶</a></h1>
+<p><strong>Due: Wednesday, February 18th at 11:59pm</strong></p>
+<p>This homework reinforces your understanding of:</p>
+<ul class="simple">
+<li><p>How Unix creates processes</p></li>
+<li><p>How <code class="docutils literal notranslate"><span class="pre">execv()</span></code> replaces process memory</p></li>
+<li><p>How the kernel reports termination status</p></li>
+<li><p>Sequential vs parallel execution</p></li>
+<li><p>How shells manage process execution</p></li>
+</ul>
+<section id="cs-linux-machine">
+<h2>CS Linux Machine<a class="headerlink" href="#cs-linux-machine" title="Link to this heading">¶</a></h2>
+<p>You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments.
+Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.
+<strong>We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines.</strong>
+However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.</p>
+<p>Please follow the instructions provided here</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html">Using Visual Studio Code and SSH</a></p></li>
+</ul>
+</section>
+<section id="creating-your-private-repository">
+<h2>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h2>
+<p>For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a
+GitHub account. If you do not yet have one, you can get an account here: <a class="reference external" href="https://github.com/join">https://github.com/join</a>.</p>
+<p>To actually get your private repository, you will need this invitation URL:</p>
+<ul class="simple">
+<li><p><strong>HW6 invitation (Please check the Post “Homework #6 is ready” Ed)</strong></p></li>
+</ul>
+<p>When you click on an invitation URL, you will have to complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>You must click “Accept this assignment” or your repository will not actually be created.</p></li>
+<li><p>After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it’s ready within seconds and you can just refresh the page.</p></li>
+<li><dl class="simple">
+<dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
+<li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs51082-win26/hw6-GITHUB-USERNAME.git.</p></li>
+<li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.</p>
+<section id="task-process-control-library-proclib">
+<h3>Task: Process Control Library (proclib)<a class="headerlink" href="#task-process-control-library-proclib" title="Link to this heading">¶</a></h3>
+<p>In this assignment, you will implement a small process-control library
+called <code class="docutils literal notranslate"><span class="pre">proclib</span></code>.</p>
+<p>Inside your repository you will find:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hw6</span><span class="o">/</span>
+    <span class="n">proclib</span><span class="o">.</span><span class="n">h</span>
+    <span class="n">proclib</span><span class="o">.</span><span class="n">c</span>
+    <span class="n">test_proclib</span><span class="o">.</span><span class="n">c</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hw6/proclib.h</span></code> — contains the function prototypes and documentation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hw6/proclib.c</span></code> — you must implement the functions in this file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hw6/test_proclib.c</span></code> — a tester driver that validates your implementation.</p></li>
+</ul>
+<p>You should <strong>not modify</strong> <code class="docutils literal notranslate"><span class="pre">proclib.h</span></code>.
+You may use the tester to validate your implementation.</p>
+</section>
+<section id="the-command-structure">
+<h3>The Command Structure<a class="headerlink" href="#the-command-structure" title="Link to this heading">¶</a></h3>
+<p>The library uses the following structure (defined in <code class="docutils literal notranslate"><span class="pre">proclib.h</span></code>):</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">path</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">Command</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code> is the absolute path to the executable (e.g., <code class="docutils literal notranslate"><span class="pre">/bin/ls</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">argv</span></code> is a NULL-terminated argument array.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">argv[0]</span></code> should contain the program name.</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">args</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;/bin/ls&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;-l&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">};</span>
+<span class="n">Command</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;/bin/ls&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="problem-1-proclib-run-n-times">
+<h3>Problem 1: <code class="docutils literal notranslate"><span class="pre">proclib_run_n_times</span></code><a class="headerlink" href="#problem-1-proclib-run-n-times" title="Link to this heading">¶</a></h3>
+<p>Prototype (see <code class="docutils literal notranslate"><span class="pre">proclib.h</span></code>):</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">proclib_run_n_times</span><span class="p">(</span><span class="n">Command</span><span class="w"> </span><span class="n">cmd</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="description">
+<h4>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h4>
+<p>Executes the given command <code class="docutils literal notranslate"><span class="pre">n</span></code> times sequentially.</p>
+<p>For each execution:</p>
+<ul class="simple">
+<li><p>Call <code class="docutils literal notranslate"><span class="pre">fork()</span></code></p></li>
+<li><p>In the child, call <code class="docutils literal notranslate"><span class="pre">execv()</span></code></p></li>
+<li><p>In the parent, call <code class="docutils literal notranslate"><span class="pre">waitpid()</span></code></p></li>
+</ul>
+</section>
+<section id="return-value">
+<h4>Return Value<a class="headerlink" href="#return-value" title="Link to this heading">¶</a></h4>
+<p>Returns the number of successful executions (exit status 0).</p>
+</section>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h4>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">args</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;/bin/true&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">};</span>
+<span class="n">Command</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;/bin/true&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">};</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">proclib_run_n_times</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Expected:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">==</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="problem-2-proclib-run-and-report">
+<h3>Problem 2: <code class="docutils literal notranslate"><span class="pre">proclib_run_and_report</span></code><a class="headerlink" href="#problem-2-proclib-run-and-report" title="Link to this heading">¶</a></h3>
+<p>Prototype:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">proclib_run_and_report</span><span class="p">(</span><span class="n">Command</span><span class="w"> </span><span class="n">cmd</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="id1">
+<h4>Description<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
+<p>Executes a command and determines how it terminated.</p>
+<p>You must use:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">WIFEXITED()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WEXITSTATUS()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WIFSIGNALED()</span></code></p></li>
+</ul>
+</section>
+<section id="id2">
+<h4>Return Value<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> if child exited normally with status 0</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> if child exited normally with nonzero status</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code> if child terminated by signal or fork failed</p></li>
+</ul>
+</section>
+<section id="how-to-test">
+<h4>How to Test<a class="headerlink" href="#how-to-test" title="Link to this heading">¶</a></h4>
+<p>The tester file already includes test cases using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">true</span>  <span class="o">//</span> <span class="ow">is</span> <span class="n">program</span> <span class="n">that</span> <span class="n">returns</span> <span class="n">an</span> <span class="n">exit</span> <span class="n">status</span> <span class="n">of</span> <span class="mi">0</span> <span class="n">always</span><span class="o">.</span>
+<span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">false</span> <span class="o">//</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">program</span> <span class="n">that</span> <span class="n">returns</span> <span class="n">an</span> <span class="n">exit</span> <span class="n">status</span> <span class="n">of</span> <span class="mi">1</span> <span class="n">always</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>You can also create a small crashing program and modify the tester
+to verify signal detection.</p>
+</section>
+</section>
+<section id="problem-3-proclib-run-until-failure">
+<h3>Problem 3: <code class="docutils literal notranslate"><span class="pre">proclib_run_until_failure</span></code><a class="headerlink" href="#problem-3-proclib-run-until-failure" title="Link to this heading">¶</a></h3>
+<p>Prototype:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">proclib_run_until_failure</span><span class="p">(</span><span class="n">Command</span><span class="w"> </span><span class="n">cmds</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="id3">
+<h4>Description<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h4>
+<p>Executes multiple commands sequentially.</p>
+<p>Execution stops immediately when a command fails.</p>
+</section>
+<section id="id4">
+<h4>Return Value<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code> if all commands succeed</p></li>
+<li><p>Otherwise, return the index (0-based) of the first failing command</p></li>
+</ul>
+</section>
+<section id="id5">
+<h4>How to Test<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h4>
+<p>The provided tester verifies that:</p>
+<ul class="simple">
+<li><p>Execution stops at the correct index</p></li>
+<li><p>Later commands are not executed</p></li>
+</ul>
+<p>You may add additional <code class="docutils literal notranslate"><span class="pre">printf</span></code> statements if needed.</p>
+</section>
+</section>
+<section id="problem-4-proclib-run-parallel">
+<h3>Problem 4: <code class="docutils literal notranslate"><span class="pre">proclib_run_parallel</span></code><a class="headerlink" href="#problem-4-proclib-run-parallel" title="Link to this heading">¶</a></h3>
+<p>Prototype:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">proclib_run_parallel</span><span class="p">(</span><span class="n">Command</span><span class="w"> </span><span class="n">cmds</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="id6">
+<h4>Description<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h4>
+<p>Executes all commands in parallel.</p>
+<p>Important:
+- Fork all children first.
+- Then wait for all of them.</p>
+</section>
+<section id="id7">
+<h4>Return Value<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h4>
+<p>Returns the number of commands that exited successfully (status 0).</p>
+</section>
+<section id="id8">
+<h4>How to Test<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h4>
+<p>The tester includes a timing-based test using <code class="docutils literal notranslate"><span class="pre">/bin/sleep</span></code>.</p>
+<p>If implemented incorrectly (sequentially), runtime will be much longer.</p>
+<p>You may also run manually:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">time</span> <span class="o">./</span><span class="n">test_proclib</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="problem-5-proclib-spawn-and-track">
+<h3>Problem 5: <code class="docutils literal notranslate"><span class="pre">proclib_spawn_and_track</span></code><a class="headerlink" href="#problem-5-proclib-spawn-and-track" title="Link to this heading">¶</a></h3>
+<p>Prototype:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">proclib_spawn_and_track</span><span class="p">(</span><span class="n">Command</span><span class="w"> </span><span class="n">cmd</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="id9">
+<h4>Description<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h4>
+<p>Spawns a child process and prints how it terminated.</p>
+<p>The parent must print either:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Child</span> <span class="n">PID</span> <span class="o">&lt;</span><span class="n">pid</span><span class="o">&gt;</span> <span class="n">exited</span> <span class="k">with</span> <span class="n">status</span> <span class="o">&lt;</span><span class="n">status</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Child</span> <span class="n">PID</span> <span class="o">&lt;</span><span class="n">pid</span><span class="o">&gt;</span> <span class="n">terminated</span> <span class="n">by</span> <span class="n">signal</span> <span class="o">&lt;</span><span class="n">signal</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h4>Return Value<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Exit status if exited normally</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code> if terminated by signal or fork failed</p></li>
+</ul>
+</section>
+<section id="id11">
+<h4>How to Test<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h4>
+<p>The tester already validates:</p>
+<ul class="simple">
+<li><p>Correct return value</p></li>
+<li><p>Proper reporting behavior</p></li>
+</ul>
+<p>You should visually verify the printed PID message.</p>
+</section>
+</section>
+<section id="compilation-instructions">
+<h3>Compilation Instructions<a class="headerlink" href="#compilation-instructions" title="Link to this heading">¶</a></h3>
+<p>From inside the <code class="docutils literal notranslate"><span class="pre">hw6</span></code> directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gcc</span> <span class="n">proclib</span><span class="o">.</span><span class="n">c</span> <span class="n">test_proclib</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">test_proclib</span>
+</pre></div>
+</div>
+<p>Run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">test_proclib</span>
+</pre></div>
+</div>
+<p>If all tests pass, you will see a summary message.</p>
+</section>
+<section id="submission-requirements">
+<h3>Submission Requirements<a class="headerlink" href="#submission-requirements" title="Link to this heading">¶</a></h3>
+<p>Submit only:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hw6/proclib.c</span></code></p></li>
+</ul>
+<p>Do not modify. (unless specified by Professor Samuels):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">proclib.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_proclib.c</span></code></p></li>
+</ul>
+<p>Your implementation must:</p>
+<ul class="simple">
+<li><p>Check for <code class="docutils literal notranslate"><span class="pre">fork()</span></code> failure</p></li>
+<li><p>Correctly call <code class="docutils literal notranslate"><span class="pre">execv()</span></code></p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">waitpid()</span></code></p></li>
+<li><p>Correctly interpret exit status macros</p></li>
+<li><p>Avoid zombie processes</p></li>
+</ul>
+</section>
+<section id="grading">
+<h3>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h3>
+<p>Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)</p>
+<p>The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:</p>
+<ul class="simple">
+<li><p><strong>Completeness</strong>: 80%</p></li>
+<li><p><strong>Correctness</strong>: 10%</p></li>
+<li><p><strong>Design/Style</strong>: 10%</p></li>
+</ul>
+</section>
+<section id="submission">
+<h3>Submission<a class="headerlink" href="#submission" title="Link to this heading">¶</a></h3>
+<p>Before submitting, make sure you’ve added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the “Homework #6” assignment page by linking your Github account to your Gradescope account and upload the correct repository based on the homework assignment. When you submit your homework, a pop window will appear. Click on “Github” and then  “Connect to Github” to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be “main” or “master”) for this course.</p>
+<p>Depending on the assignment, once you submit your work, an “autograder” will run. This autograder should produce the same test results as when you run the code yourself; if it doesn’t, please let us know so we can look into it. A few other notes:</p>
+<ul class="simple">
+<li><p>You are allowed to make as many submissions as you want before the deadline.</p></li>
+<li><p>Please make sure you have read and understood our <a class="reference internal" href="../../syllabus.html#late-submissions"><span class="std std-ref">Late Submission Policy</span></a>.</p></li>
+<li><p>Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).</p></li>
+<li><p>Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

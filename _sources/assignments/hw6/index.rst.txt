@@ -1,0 +1,364 @@
+==========================================
+Homework #6
+==========================================
+
+**Due: Wednesday, February 18th at 11:59pm**
+
+This homework reinforces your understanding of:
+
+- How Unix creates processes
+- How ``execv()`` replaces process memory
+- How the kernel reports termination status
+- Sequential vs parallel execution
+- How shells manage process execution
+
+
+
+CS Linux Machine
+~~~~~~~~~~~~~~~~~
+You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or 
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments. 
+Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.
+**We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines.** 
+However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.
+
+Please follow the instructions provided here
+
+* `Using Visual Studio Code and SSH <https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html>`__
+
+Creating Your Private Repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a 
+GitHub account. If you do not yet have one, you can get an account here: https://github.com/join. 
+
+To actually get your private repository, you will need this invitation URL: 
+
+* **HW6 invitation (Please check the Post “Homework #6 is ready” Ed)**
+
+When you click on an invitation URL, you will have to complete the following steps:
+
+1. You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.
+
+.. note::
+
+   If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course. 
+
+
+2. You must click “Accept this assignment” or your repository will not actually be created.
+
+3. After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it's ready within seconds and you can just refresh the page. 
+
+4. You now need to clone your repository (i.e., download it to your machine). 
+    - Make sure you’ve set up `SSH access <https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh>`__ on your GitHub account.
+    
+    - For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: git@github.com:mpcs51082-win26/hw6-GITHUB-USERNAME.git. 
+
+    - If you do not know how to use ``git clone`` to clone your repository then follow this guide that Github provides: `Cloning a Repository <https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository>`__
+    
+
+If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.
+
+
+Task: Process Control Library (proclib)
+============================================
+In this assignment, you will implement a small process-control library
+called ``proclib``. 
+
+Inside your repository you will find:
+
+::
+
+   hw6/
+       proclib.h
+       proclib.c
+       test_proclib.c
+
+- ``hw6/proclib.h`` — contains the function prototypes and documentation.
+- ``hw6/proclib.c`` — you must implement the functions in this file.
+- ``hw6/test_proclib.c`` — a tester driver that validates your implementation.
+
+You should **not modify** ``proclib.h``.
+You may use the tester to validate your implementation.
+
+
+The Command Structure
+=======================
+
+The library uses the following structure (defined in ``proclib.h``):
+
+.. code-block:: c
+
+   typedef struct {
+       char *path;
+       char **argv;
+   } Command;
+
+- ``path`` is the absolute path to the executable (e.g., ``/bin/ls``).
+- ``argv`` is a NULL-terminated argument array.
+- ``argv[0]`` should contain the program name.
+
+Example:
+
+.. code-block:: c
+
+   char *args[] = {"/bin/ls", "-l", NULL};
+   Command cmd = {"/bin/ls", args};
+
+
+Problem 1: ``proclib_run_n_times``
+=================================
+
+Prototype (see ``proclib.h``):
+
+.. code-block:: c
+
+   int proclib_run_n_times(Command cmd, int n);
+
+Description
+-------------
+
+Executes the given command ``n`` times sequentially.
+
+For each execution:
+
+- Call ``fork()``
+- In the child, call ``execv()``
+- In the parent, call ``waitpid()``
+
+Return Value
+-------------
+
+Returns the number of successful executions (exit status 0).
+
+Example
+-------------
+
+.. code-block:: c
+
+   char *args[] = {"/bin/true", NULL};
+   Command cmd = {"/bin/true", args};
+
+   int result = proclib_run_n_times(cmd, 5);
+
+Expected:
+
+::
+
+   result == 5
+
+
+
+Problem 2: ``proclib_run_and_report``
+=======================================
+
+Prototype:
+
+.. code-block:: c
+
+   int proclib_run_and_report(Command cmd);
+
+Description
+-------------
+
+Executes a command and determines how it terminated.
+
+You must use:
+
+- ``WIFEXITED()``
+- ``WEXITSTATUS()``
+- ``WIFSIGNALED()``
+
+Return Value
+------------
+
+- ``0`` if child exited normally with status 0
+- ``1`` if child exited normally with nonzero status
+- ``-1`` if child terminated by signal or fork failed
+
+How to Test
+------------
+
+The tester file already includes test cases using:
+
+::
+
+   /bin/true  // is program that returns an exit status of 0 always. 
+   /bin/false // is a program that returns an exit status of 1 always. 
+
+You can also create a small crashing program and modify the tester
+to verify signal detection.
+
+
+Problem 3: ``proclib_run_until_failure``
+=======================================
+
+Prototype:
+
+.. code-block:: c
+
+   int proclib_run_until_failure(Command cmds[], int n);
+
+Description
+-------------
+
+Executes multiple commands sequentially.
+
+Execution stops immediately when a command fails.
+
+Return Value
+-------------
+
+- ``-1`` if all commands succeed
+- Otherwise, return the index (0-based) of the first failing command
+
+How to Test
+-------------
+
+The provided tester verifies that:
+
+- Execution stops at the correct index
+- Later commands are not executed
+
+You may add additional ``printf`` statements if needed.
+
+
+Problem 4: ``proclib_run_parallel``
+===================================
+
+Prototype:
+
+.. code-block:: c
+
+   int proclib_run_parallel(Command cmds[], int n);
+
+Description
+-------------  
+
+Executes all commands in parallel.
+
+Important:
+- Fork all children first.
+- Then wait for all of them.
+
+Return Value
+-------------
+
+Returns the number of commands that exited successfully (status 0).
+
+How to Test
+-------------
+
+The tester includes a timing-based test using ``/bin/sleep``.
+
+If implemented incorrectly (sequentially), runtime will be much longer.
+
+You may also run manually:
+
+::
+
+   time ./test_proclib
+
+
+Problem 5: ``proclib_spawn_and_track``
+======================================
+
+Prototype:
+
+.. code-block:: c
+
+   int proclib_spawn_and_track(Command cmd);
+
+Description
+-------------
+
+Spawns a child process and prints how it terminated.
+
+The parent must print either:
+
+::
+
+   Child PID <pid> exited with status <status>
+
+or
+
+::
+
+   Child PID <pid> terminated by signal <signal>
+
+Return Value
+-------------
+
+- Exit status if exited normally
+- ``-1`` if terminated by signal or fork failed
+
+How to Test
+-------------
+
+The tester already validates:
+
+- Correct return value
+- Proper reporting behavior
+
+You should visually verify the printed PID message.
+
+
+Compilation Instructions
+==========================
+
+From inside the ``hw6`` directory:
+
+::
+
+   gcc proclib.c test_proclib.c -o test_proclib
+
+Run:
+
+::
+
+   ./test_proclib
+
+If all tests pass, you will see a summary message.
+
+
+Submission Requirements
+=========================
+
+Submit only:
+
+- ``hw6/proclib.c``
+
+Do not modify. (unless specified by Professor Samuels):
+
+- ``proclib.h``
+- ``test_proclib.c``
+
+Your implementation must:
+
+- Check for ``fork()`` failure
+- Correctly call ``execv()``
+- Use ``waitpid()``
+- Correctly interpret exit status macros
+- Avoid zombie processes
+
+
+Grading
+=========
+Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)
+
+The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:
+
+- **Completeness**: 80%
+- **Correctness**: 10%
+- **Design/Style**: 10% 
+
+Submission
+============
+Before submitting, make sure you've added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the "Homework #6" assignment page by linking your Github account to your Gradescope account and upload the correct repository based on the homework assignment. When you submit your homework, a pop window will appear. Click on "Github" and then  "Connect to Github" to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be "main" or "master") for this course.  
+  
+Depending on the assignment, once you submit your work, an "autograder" will run. This autograder should produce the same test results as when you run the code yourself; if it doesn't, please let us know so we can look into it. A few other notes: 
+
+- You are allowed to make as many submissions as you want before the deadline.
+- Please make sure you have read and understood our :ref:`Late Submission Policy <late_submissions>`. 
+- Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).
+- Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.

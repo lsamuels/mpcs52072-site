@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Homework #2 &#8212; MPCS 51082 - Introduction to Unix Systems  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS 51082</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../../modules/index.html">Modules</a></li>
+                <li><a href="../index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Homework #2</a><ul>
+<li><a class="reference internal" href="#cs-linux-machine">CS Linux Machine</a></li>
+<li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a></li>
+<li><a class="reference internal" href="#important-eligible-commands-bash"><strong>IMPORTANT:</strong> Eligible Commands &amp; Bash</a></li>
+<li><a class="reference internal" href="#problem-1">Problem 1</a><ul>
+<li><a class="reference internal" href="#problem-1a-words-appearing-in-both-columns">Problem 1a — Words appearing in both columns</a></li>
+<li><a class="reference internal" href="#problem-1b-count-exact-named-txt-files-in-the-current-directory">Problem 1b — Count exact-named <code class="docutils literal notranslate"><span class="pre">.txt</span></code> files in the current directory</a></li>
+<li><a class="reference internal" href="#problem-1c-count-files-per-extension-non-recursive">Problem 1c — Count files per extension (non-recursive)</a></li>
+<li><a class="reference internal" href="#problem-1d-alphabet-slice-by-numeric-range">Problem 1d — Alphabet slice by numeric range</a></li>
+<li><a class="reference internal" href="#problem-1e-first-available-numeric-slot-for-a-stem">Problem 1e — First available numeric slot for a stem</a></li>
+<li><a class="reference internal" href="#problem-1-testing-structure">Problem 1 Testing Structure</a></li>
+<li><a class="reference internal" href="#run-a-single-test-problem-1">Run a single test (Problem 1)</a></li>
+<li><a class="reference internal" href="#problem-2-build-per-line-station-lists-from-cta-stops">Problem 2 — Build per-line station lists from  CTA stops</a><ul>
+<li><a class="reference internal" href="#csv-schema-assumed">CSV schema (assumed)</a></li>
+<li><a class="reference internal" href="#input">Input</a></li>
+<li><a class="reference internal" href="#output">Output</a></li>
+<li><a class="reference internal" href="#examples">Examples:</a></li>
+<li><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#problem-2-test-structure-how-to-run">Problem 2 — Test structure &amp; how to run</a><ul>
+<li><a class="reference internal" href="#runner">Runner</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grading">Grading</a></li>
+<li><a class="reference internal" href="#submission">Submission</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/assignments/hw2/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="homework-2">
+<h1>Homework #2<a class="headerlink" href="#homework-2" title="Link to this heading">¶</a></h1>
+<p><strong>Due: Wednesday January 21st at 11:59pm</strong></p>
+<p>This homework is intended to provide additional practice with writing Bash scripts. Specifically, using more advanced bash syntax and filtering (i.e., text processing) commands to process text.</p>
+<section id="cs-linux-machine">
+<h2>CS Linux Machine<a class="headerlink" href="#cs-linux-machine" title="Link to this heading">¶</a></h2>
+<p>You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments.
+Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.
+<strong>We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines.</strong>
+However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.</p>
+<p>Please follow the instructions provided here</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html">Using Visual Studio Code and SSH</a></p></li>
+</ul>
+</section>
+<section id="creating-your-private-repository">
+<h2>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h2>
+<p>For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a
+GitHub account. If you do not yet have one, you can get an account here: <a class="reference external" href="https://github.com/join">https://github.com/join</a>.</p>
+<p>To actually get your private repository, you will need this invitation URL:</p>
+<ul class="simple">
+<li><p><strong>HW2 invitation (Please check the Post “Homework #2 is ready” Ed)</strong></p></li>
+</ul>
+<p>When you click on an invitation URL, you will have to complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>You must click “Accept this assignment” or your repository will not actually be created.</p></li>
+<li><p>After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it’s ready within seconds and you can just refresh the page.</p></li>
+<li><dl class="simple">
+<dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
+<li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs51082-win26/hw2-GITHUB-USERNAME.git.</p></li>
+<li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.</p>
+</section>
+<section id="important-eligible-commands-bash">
+<h2><strong>IMPORTANT:</strong> Eligible Commands &amp; Bash<a class="headerlink" href="#important-eligible-commands-bash" title="Link to this heading">¶</a></h2>
+<p>For this homework assignment, you are only allowed to use the following commands with or without using their options in your scripts.</p>
+<ul class="simple">
+<li><p>All eligible commands provided in homework 1.</p></li>
+<li><p>All commands covered in the Module 1 week 2 slides.</p></li>
+</ul>
+<p><strong>Using any other command not specified in this list will result in a major penalty for that specific problem</strong>. You are free to use the entirety of the bash scripting language but are restricted to using only the above commands within your script files.  <strong>You also cannot use ``awk`` for this assignment</strong>.</p>
+<p>If you have any questions about using a command <strong>ask on Ed before you use it</strong>!</p>
+</section>
+<section id="problem-1">
+<h2>Problem 1<a class="headerlink" href="#problem-1" title="Link to this heading">¶</a></h2>
+<p>Problem 1 is composed of a series of subproblems (i.e., Problem 1a-1#). For each subproblem, you will do the following:</p>
+<ol class="arabic">
+<li><p>Write a Bash script that accepts a single argument, which can be either a <em>string</em> or a <em>path to a plain text file or directory</em>. The problem description for each subproblem will explicitly specify what this argument represents and how it should be used.  The script must <code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">1</span></code> if the single argument is not supplied. No error message is printed.</p></li>
+<li><p>Each script will begin with the following skeleton code</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#! /usr/bin/env bash</span>
+
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>errexit
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>nounset
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>pipefail
+
+<span class="c1"># TODO: Error-Check the command line argument is supplied.</span>
+
+<span class="c1"># ONE_LINE_COMMAND</span>
+</pre></div>
+</div>
+<p>however, <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">ONE_LINE_COMMAND</span></code> will be replaced with a <strong>one line command</strong> (this could also be a pipe of commands) that accomplishes the task of the subproblem. You can only use the commands listed in the Eligible Commands section below. For example, if the subproblem asked</p>
+<p><em>Find the top ten most frequently used words in the command line argument. The command line argument represents a filepath to a file that just contains words. Assume there is only one word on each line in the file. Place the solution in a file called example.sh</em></p>
+<p>The solution would be:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#! /usr/bin/env bash</span>
+
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>errexit
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>nounset
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>pipefail
+
+<span class="c1"># TODO: Error-Check the command line argument is supplied.</span>
+
+sort<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-n<span class="w"> </span>-r<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+</pre></div>
+</div>
+<p>You can also use the syntax of using a backlash <code class="docutils literal notranslate"><span class="pre">\</span></code> to make the pipes line up on seperate lines</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#! /usr/bin/env bash</span>
+
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>errexit
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>nounset
+<span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>pipefail
+
+<span class="c1"># TODO: Error-Check the command line argument is supplied.</span>
+
+sort<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\ </span><span class="c1"># Make sure there is no space/character after the backslash!</span>
+<span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-n<span class="w"> </span>-r<span class="w"> </span><span class="se">\</span>
+<span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+</pre></div>
+</div>
+<p>and one sample run (using the <code class="docutils literal notranslate"><span class="pre">indep.txt</span></code> from module 1) would be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bash example.sh indep.txt
+    77 of
+    75 the
+    64 to
+    55 and
+    25 our
+    20 their
+    20 has
+    20 for
+    18 in
+    18 He
+</pre></div>
+</div>
+</li>
+<li><p>We will refer to the single command line argument as <code class="docutils literal notranslate"><span class="pre">$1</span></code> in the problem descriptions. Assume if <code class="docutils literal notranslate"><span class="pre">$1</span></code> is a file that it always exist and is structured as specified in the problem.</p></li>
+<li><p>The one-liner can only be made of a command or series of commands (i.e., via pipes). <strong>You cannot define variables, use control flow structures, or use command chaining with semi-colons</strong>. You are allowed to use command chaining with <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code> and <code class="docutils literal notranslate"><span class="pre">||</span></code>.  If in doubt then ask on Ed discussion before you final submission.</p></li>
+</ol>
+<section id="problem-1a-words-appearing-in-both-columns">
+<h3>Problem 1a — Words appearing in both columns<a class="headerlink" href="#problem-1a-words-appearing-in-both-columns" title="Link to this heading">¶</a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">p1/a.sh</span></code> implement the following bash script:</p>
+<p><strong>Input:</strong> <code class="docutils literal notranslate"><span class="pre">$1</span></code> is the path to a plain text file. Each line contains exactly two words, separated by a single space. No headers.</p>
+<p><strong>Output:</strong>  Print the unique set of words that appear in both the first and second columns (i.e., the intersection of the two columns), one word per line, sorted in ascending lexicographic order.</p>
+<p><strong>Example.</strong></p>
+<p>Given a file <code class="docutils literal notranslate"><span class="pre">p1/data/a/pairs.txt</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apple</span> <span class="n">pear</span>
+<span class="n">banana</span> <span class="n">apple</span>
+<span class="n">pear</span> <span class="n">grape</span>
+<span class="n">fig</span> <span class="n">banana</span>
+</pre></div>
+</div>
+<p>Run inside <code class="docutils literal notranslate"><span class="pre">p1</span></code> directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bash a.sh data/a/pairs.txt
+apple
+banana
+pear
+</pre></div>
+</div>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>Treat words as <strong>case-sensitive</strong> (e.g., <code class="docutils literal notranslate"><span class="pre">Apple</span></code> and <code class="docutils literal notranslate"><span class="pre">apple</span></code> are different).</p></li>
+<li><p>If there are <strong>no</strong> common words, print nothing and exit successfully.</p></li>
+<li><p>Duplicate occurrences within a column do not change the output (set semantics).</p></li>
+</ul>
+</section>
+<section id="problem-1b-count-exact-named-txt-files-in-the-current-directory">
+<h3>Problem 1b — Count exact-named <code class="docutils literal notranslate"><span class="pre">.txt</span></code> files in the current directory<a class="headerlink" href="#problem-1b-count-exact-named-txt-files-in-the-current-directory" title="Link to this heading">¶</a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">p1/b.sh</span></code> implement the following bash script:</p>
+<p><strong>Input:</strong>  <code class="docutils literal notranslate"><span class="pre">$1</span></code> is the path to a plain text file. Each line contains exactly one word (no spaces). No headers.</p>
+<p><strong>Output:</strong>  Print a single integer which is the number of regular files in the current working directory whose names match exactly one of the words in <code class="docutils literal notranslate"><span class="pre">$1</span></code> with a <code class="docutils literal notranslate"><span class="pre">.txt</span></code> extension. For example, the word <code class="docutils literal notranslate"><span class="pre">apple</span></code> matches <code class="docutils literal notranslate"><span class="pre">apple.txt</span></code> but not <code class="docutils literal notranslate"><span class="pre">Apple.txt</span></code> (case-sensitive) and not <code class="docutils literal notranslate"><span class="pre">pineapple.txt</span></code> (must be an exact basename match). <strong>You are not allowed to use parameter substitution or any substitution method for this problem</strong>. You are allowed to use the <code class="docutils literal notranslate"><span class="pre">basename</span></code> command (e.g., <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">basename</span> <span class="pre">photo.jpeg</span> <span class="pre">.jpeg</span>&#160; <span class="pre">#</span> <span class="pre">-&gt;</span> <span class="pre">photo</span></code> ).</p>
+<p><strong>Example:</strong></p>
+<p>Input file <code class="docutils literal notranslate"><span class="pre">p1/data/b/words.txt</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apple</span>
+<span class="n">pear</span>
+<span class="n">grape</span>
+<span class="n">pear</span>
+</pre></div>
+</div>
+<p>Assume you are inside the <code class="docutils literal notranslate"><span class="pre">p1/data/b</span></code> directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd data/b/; ls -1
+apple.txt
+pear.txt
+Apple.txt
+pineapple.txt
+notes.md
+words.txt
+$ bash ../../b.sh words.txt
+2
+</pre></div>
+</div>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>Search is <strong>non-recursive</strong>: only the directory where the script runs.</p></li>
+<li><p>Count each matching file <strong>once</strong> even if its word appears multiple times in <code class="docutils literal notranslate"><span class="pre">$1</span></code>.</p></li>
+<li><p>Only files ending exactly in <code class="docutils literal notranslate"><span class="pre">.txt</span></code> count (directories or other extensions are ignored).</p></li>
+</ul>
+<p><strong>Helpful Hint: ``grep -F`` and ``grep -f``</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-F</span></code> makes <code class="docutils literal notranslate"><span class="pre">grep</span></code> treat patterns as fixed strings (literal text), not regular expressions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">&lt;file&gt;</span></code> tells <code class="docutils literal notranslate"><span class="pre">grep</span></code> to read patterns from a file (one per line). These are often combined to match literal words from a list efficiently.</p></li>
+</ul>
+</section>
+<section id="problem-1c-count-files-per-extension-non-recursive">
+<span id="p1c"></span><h3>Problem 1c — Count files per extension (non-recursive)<a class="headerlink" href="#problem-1c-count-files-per-extension-non-recursive" title="Link to this heading">¶</a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">p1/c.sh</span></code> implement the following bash script:</p>
+<p><strong>Input:</strong>  <code class="docutils literal notranslate"><span class="pre">$1</span></code> is the path to a <strong>directory</strong>. The script examines only items in that directory (not subdirectories).</p>
+<p><strong>Output:</strong>  For all regular files in <code class="docutils literal notranslate"><span class="pre">$1</span></code> that have an extension, compute how many files share the <strong>last</strong> extension (the substring after the final dot), and print one line per extension as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">count</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">extension</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Sort the output by the count in descending order; if counts tie, sort by extension in ascending lexicographic order.</p>
+<p><strong>Example:</strong></p>
+<p>Assume <code class="docutils literal notranslate"><span class="pre">p1/data/c</span></code> directory contains the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">log1</span><span class="o">.</span><span class="n">log</span>
+<span class="n">log2</span><span class="o">.</span><span class="n">log</span>
+<span class="n">words</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">my_markdown</span><span class="o">.</span><span class="n">md</span>
+<span class="n">hw1</span><span class="o">.</span><span class="n">html</span>
+<span class="n">hw2</span><span class="o">.</span><span class="n">html</span>
+<span class="n">hw3</span><span class="o">.</span><span class="n">html</span>
+</pre></div>
+</div>
+<p>Run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bash c.sh data/c
+3 html
+2 log
+1 md
+1 txt
+</pre></div>
+</div>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>Treat the extension as the text after the final dot in the filename (e.g., <code class="docutils literal notranslate"><span class="pre">archive.tar.gz</span></code> → <code class="docutils literal notranslate"><span class="pre">gz</span></code>).</p></li>
+<li><p>Ignore files without any dot in their basename (no extension).</p></li>
+<li><p>Make sure to use <code class="docutils literal notranslate"><span class="pre">LC_ALL=C</span></code> sort before the final sort. This ensures sorting is done in the C (POSIX) locale, which provides consistent and predictable ordering (e.g., Z sorts before a, and accented characters are sorted by byte value).</p></li>
+<li><p><strong>Spacing matters in Problem 1C</strong> — consider using <code class="docutils literal notranslate"><span class="pre">tr</span></code> and <code class="docutils literal notranslate"><span class="pre">xargs</span> <span class="pre">-L1</span></code> to help match the expected output format.</p></li>
+</ul>
+<p><strong>Hint (``rev``) command:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rev</span></code> command reverses each input line. It’s handy for “last-dot” extraction. <em>You may use this command just for this problem.</em></p>
+</section>
+<section id="problem-1d-alphabet-slice-by-numeric-range">
+<h3>Problem 1d — Alphabet slice by numeric range<a class="headerlink" href="#problem-1d-alphabet-slice-by-numeric-range" title="Link to this heading">¶</a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">p1/d.sh</span></code> implement the following bash script:</p>
+<p><strong>Input:</strong>  <code class="docutils literal notranslate"><span class="pre">$1</span></code> is the path to a plain text file that contains one line of the form <code class="docutils literal notranslate"><span class="pre">START,END</span></code> where both are integers in <code class="docutils literal notranslate"><span class="pre">[1,26]</span></code>.
+Assume <code class="docutils literal notranslate"><span class="pre">START</span> <span class="pre">≤</span> <span class="pre">END</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">2,4</span></code>).</p>
+<p><strong>Output:</strong>  Print the lowercase letters of the English alphabet beginning at index <code class="docutils literal notranslate"><span class="pre">START</span></code> and ending at index <code class="docutils literal notranslate"><span class="pre">END</span></code> (inclusive), where <code class="docutils literal notranslate"><span class="pre">a</span></code> is index 1 and <code class="docutils literal notranslate"><span class="pre">z</span></code> is index 26.
+Output the letters on one line, separated by a single space, with no trailing space.</p>
+<p><strong>Examples:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ echo &quot;2,4&quot; &gt; letters.txt
+$ bash d.sh letters.txt
+b c d
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ echo &quot;1,26&quot; &gt; letters.txt
+$ bash d.sh letters.txt
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ echo &quot;25,26&quot; &gt; letters.txt
+$ bash d.sh letters.txt
+y z
+</pre></div>
+</div>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>Treat indices as <strong>1-based</strong> and <strong>inclusive</strong>.</p></li>
+<li><p>Inputs are guaranteed to be valid by the contract; you do not need to handle out-of-range values.</p></li>
+</ul>
+</section>
+<section id="problem-1e-first-available-numeric-slot-for-a-stem">
+<h3>Problem 1e — First available numeric slot for a stem<a class="headerlink" href="#problem-1e-first-available-numeric-slot-for-a-stem" title="Link to this heading">¶</a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">p1/e.sh</span></code> implement the following bash script:</p>
+<p><strong>Input:</strong>  <code class="docutils literal notranslate"><span class="pre">$1</span></code> is a <strong>stem</strong> (a basename or path without the numeric suffix), e.g., <code class="docutils literal notranslate"><span class="pre">results</span></code> or <code class="docutils literal notranslate"><span class="pre">/tmp/checkpoint</span></code>.
+You will check for existing entries named <code class="docutils literal notranslate"><span class="pre">$1.001</span></code> through <code class="docutils literal notranslate"><span class="pre">$1.10</span></code> in the <strong>current directory</strong>.</p>
+<p><strong>Output:</strong>  Print the first filename in the zero-padded range <code class="docutils literal notranslate"><span class="pre">$1.{001..10}</span></code> that does <strong>not</strong> already exist.
+If all slots <code class="docutils literal notranslate"><span class="pre">001..100</span></code> exist, print <strong>nothing</strong> (empty output).</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ls data/e
+report.001  report.002  report.004  log.001 log.002 log.003 log.004 log.005 log.006 log.007 log.008 log.009 log.010
+$ bash e.sh data/e/report
+data/e/report.003
+$ bash e.sh data/e/log
+$ # (prints nothing)
+</pre></div>
+</div>
+</section>
+<section id="problem-1-testing-structure">
+<h3>Problem 1 Testing Structure<a class="headerlink" href="#problem-1-testing-structure" title="Link to this heading">¶</a></h3>
+<p>Inside your repository, there is a top-level <code class="docutils literal notranslate"><span class="pre">tests/</span></code>  directory that contains tests for each homework problem (separated into their own directories). For problem1, each subproblem is divided into its own directory based on its letter (e.g., <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, etc.).  Each test within a subdirectory consists of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">testXX.in</span></code> — one line with the exact command to run (paths are relative to the test folder).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">testXX.ans</span></code> — the expected output.</p></li>
+</ul>
+<p>the <strong>last line</strong> of <code class="docutils literal notranslate"><span class="pre">testXX.ans</span></code> is the <strong>expected exit status</strong>; all prior lines are the expected stdout.</p>
+<p>Each test directory has a runner file <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> that compares both stdout and exit status. A mismatch in either causes the test to fail. To run all the tests for a specific problem can run <code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">run.sh</span></code> in that specific directory. For example, from the top-level directory of your repository, you can run the problem 1 tests by performing the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>tests/p1/a
+$<span class="w"> </span>bash<span class="w"> </span>run.sh
+</pre></div>
+</div>
+<p>The  output will be similar to the test-cases provided in homework 1.</p>
+</section>
+<section id="run-a-single-test-problem-1">
+<h3>Run a single test (Problem 1)<a class="headerlink" href="#run-a-single-test-problem-1" title="Link to this heading">¶</a></h3>
+<p>Each runner supports a <code class="docutils literal notranslate"><span class="pre">-t</span></code> flag to target one test by label (without <code class="docutils literal notranslate"><span class="pre">.in</span></code>):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>tests/p1/a
+$<span class="w"> </span>bash<span class="w"> </span>run.sh<span class="w"> </span>-t<span class="w"> </span>test01
+</pre></div>
+</div>
+</section>
+<section id="problem-2-build-per-line-station-lists-from-cta-stops">
+<h3>Problem 2 — Build per-line station lists from  CTA stops<a class="headerlink" href="#problem-2-build-per-line-station-lists-from-cta-stops" title="Link to this heading">¶</a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">p2/p2.sh</span></code> file,  write a bash script that reads a single CTA “L” stops CSV and, for each requested train line, produces a file named <code class="docutils literal notranslate"><span class="pre">&lt;line&gt;.txt</span></code> containing the <strong>station names</strong> served by that line (one per line, sorted). Lines are specified on the command line and are <strong>case-insensitive</strong>.</p>
+<section id="csv-schema-assumed">
+<h4>CSV schema (assumed)<a class="headerlink" href="#csv-schema-assumed" title="Link to this heading">¶</a></h4>
+<p>The input CSV has a header and these columns:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">STOP_ID</span></code> (integer)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DIRECTION_ID</span></code> (single letter)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STATION_DESCRIPTIVE_NAME</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">Clark/Lake</span> <span class="pre">(Blue</span> <span class="pre">&amp;</span> <span class="pre">Brown</span> <span class="pre">&amp;</span> <span class="pre">…</span> <span class="pre">lines)</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MAP_ID</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Location</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;(lat,</span> <span class="pre">lon)&quot;</span></code>)</p></li>
+</ol>
+<p>You need to determine from these columns which ones will help you solve this specific problem.</p>
+</section>
+<section id="input">
+<h4>Input<a class="headerlink" href="#input" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">$1</span></code>: path to the CSV file (must exist). The file has a header row that should be ignored.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$2</span> <span class="pre">…</span></code>: zero or more line names (case-insensitive), each from the allowed set:
+<code class="docutils literal notranslate"><span class="pre">red</span></code>, <code class="docutils literal notranslate"><span class="pre">blue</span></code>, <code class="docutils literal notranslate"><span class="pre">brown</span></code>, <code class="docutils literal notranslate"><span class="pre">green</span></code>, <code class="docutils literal notranslate"><span class="pre">orange</span></code>, <code class="docutils literal notranslate"><span class="pre">pink</span></code>, <code class="docutils literal notranslate"><span class="pre">yellow</span></code>, <code class="docutils literal notranslate"><span class="pre">purple</span></code>.</p></li>
+</ul>
+</section>
+<section id="output">
+<h4>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h4>
+<p>For each requested line, create a file named <code class="docutils literal notranslate"><span class="pre">&lt;line&gt;.txt</span></code> (line name in lowercase) containing the base station names served by that line, which are sorted in ascending and each one on a separate line.
+The <em>base station name</em> is the text before the first <code class="docutils literal notranslate"><span class="pre">(</span></code> in <code class="docutils literal notranslate"><span class="pre">STATION_DESCRIPTIVE_NAME</span></code>, trimmed of trailing spaces. Here is the code for retrieving the basename:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="s2">&quot;Clark/Lake (Blue &amp; Brown &amp; … lines)&quot;</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">o</span> <span class="s1">&#39;^[^()]*&#39;</span> <span class="o">|</span> <span class="n">sed</span> <span class="s1">&#39;s/[[:space:]]*$//&#39;</span>
+</pre></div>
+</div>
+<p>will return</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Clark</span><span class="o">/</span><span class="n">Lake</span>
+</pre></div>
+</div>
+<p>You must use: <code class="docutils literal notranslate"><span class="pre">grep</span> <span class="pre">-o</span> <span class="pre">'^[^()]*'</span> <span class="pre">|</span> <span class="pre">sed</span> <span class="pre">'s/[[:space:]]*$//'</span></code> in your code to get the basename.</p>
+<p>If a requested line has no matching stations, do <strong>not</strong> create a file for that line. On success, the script prints nothing to stdout; all results are written to files.</p>
+<p><strong>Line membership rule:</strong></p>
+<p>A station is considered to serve a given line if the station’s <code class="docutils literal notranslate"><span class="pre">STATION_DESCRIPTIVE_NAME</span></code> contains that line’s name (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;(Red</span> <span class="pre">Line)&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;(Blue</span> <span class="pre">&amp;</span> <span class="pre">Brown</span> <span class="pre">lines)&quot;</span></code>), matched <strong>case-insensitively</strong>.</p>
+<p><strong>Validation &amp; errors:</strong></p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">$1</span></code> is missing then print <code class="docutils literal notranslate"><span class="pre">Error:</span> <span class="pre">missing</span> <span class="pre">required</span> <span class="pre">CTA</span> <span class="pre">stops</span> <span class="pre">file</span></code> <em>to stderr</em> and a usage line <em>to stdout</em>, then <code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">1</span></code>.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">$1</span></code> does not exist then print <code class="docutils literal notranslate"><span class="pre">&quot;Error:</span> <span class="pre">$1</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">exist&quot;</span></code> <em>to stderr</em> and a usage line <em>to stdout</em>, then <code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">1</span></code>.</p></li>
+<li><p>If any line name in <code class="docutils literal notranslate"><span class="pre">$2…</span></code> is not in the allowed set, print  <code class="docutils literal notranslate"><span class="pre">Error:</span> <span class="pre">invalid</span> <span class="pre">stop</span> <span class="pre">(&lt;name&gt;)</span></code> to <em>stderr</em>, print usage <em>to stdout</em>, then <code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">1</span></code>.</p></li>
+<li><p>Required usage text (printed to stderr on error): <code class="docutils literal notranslate"><span class="pre">Usage:</span> <span class="pre">p2.sh</span> <span class="pre">FILE</span> <span class="pre">[LINE]</span> <span class="pre">...</span></code></p></li>
+</ul>
+<p><strong>Output format:</strong></p>
+<ul class="simple">
+<li><p>For each requested line, write <code class="docutils literal notranslate"><span class="pre">&lt;line&gt;.txt</span></code> (lowercase) with content like:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Clark</span><span class="o">/</span><span class="n">Lake</span>
+<span class="n">Cumberland</span>
+<span class="n">Washington</span><span class="o">/</span><span class="n">Wells</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Sort station names alphabetically; emit each station once even if it appears multiple times in the CSV for that line.</p></li>
+<li><p>Do not print anything else to stdout.</p></li>
+</ul>
+</section>
+<section id="examples">
+<h4>Examples:<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h4>
+<p>Given an input file <code class="docutils literal notranslate"><span class="pre">p2/cta.csv</span></code> (header + rows):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">STOP_ID</span><span class="p">,</span><span class="n">DIRECTION_ID</span><span class="p">,</span><span class="n">STATION_DESCRIPTIVE_NAME</span><span class="p">,</span><span class="n">MAP_ID</span><span class="p">,</span><span class="n">Location</span>
+<span class="mi">30374</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">Clark</span><span class="o">/</span><span class="n">Lake</span> <span class="p">(</span><span class="n">Blue</span> <span class="o">&amp;</span> <span class="n">Brown</span> <span class="n">lines</span><span class="p">),</span><span class="mi">40380</span><span class="p">,</span><span class="s2">&quot;(41.885737, -87.630886)&quot;</span>
+<span class="mi">30173</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">Howard</span> <span class="p">(</span><span class="n">Red</span> <span class="o">&amp;</span> <span class="n">Purple</span> <span class="o">&amp;</span> <span class="n">Yellow</span> <span class="n">lines</span><span class="p">),</span><span class="mi">40900</span><span class="p">,</span><span class="s2">&quot;(42.019063, -87.672892)&quot;</span>
+<span class="mi">30151</span><span class="p">,</span><span class="n">E</span><span class="p">,</span><span class="n">Central</span> <span class="n">Park</span> <span class="p">(</span><span class="n">Pink</span> <span class="n">Line</span><span class="p">),</span><span class="mi">40780</span><span class="p">,</span><span class="s2">&quot;(41.853839, -87.714842)&quot;</span>
+<span class="mi">30184</span><span class="p">,</span><span class="n">W</span><span class="p">,</span><span class="n">Halsted</span> <span class="p">(</span><span class="n">Green</span> <span class="n">Line</span><span class="p">),</span><span class="mi">40940</span><span class="p">,</span><span class="s2">&quot;(41.778943, -87.644244)&quot;</span>
+<span class="mi">30252</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">Loyola</span> <span class="p">(</span><span class="n">Red</span> <span class="n">Line</span><span class="p">),</span><span class="mi">41300</span><span class="p">,</span><span class="s2">&quot;(42.001073, -87.661061)&quot;</span>
+<span class="mi">30374</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">Clark</span><span class="o">/</span><span class="n">Lake</span> <span class="p">(</span><span class="n">Pink</span> <span class="n">Line</span><span class="p">),</span><span class="mi">40380</span><span class="p">,</span><span class="s2">&quot;(41.885737, -87.630886)&quot;</span>
+<span class="mi">30044</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">Cumberland</span> <span class="p">(</span><span class="n">Blue</span> <span class="n">Line</span><span class="p">),</span><span class="mi">40230</span><span class="p">,</span><span class="s2">&quot;(41.984246, -87.838028)&quot;</span>
+<span class="mi">30374</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">Clark</span><span class="o">/</span><span class="n">Lake</span> <span class="p">(</span><span class="n">Blue</span> <span class="o">&amp;</span> <span class="n">Brown</span> <span class="o">&amp;</span> <span class="n">Green</span> <span class="o">&amp;</span> <span class="n">Orange</span> <span class="o">&amp;</span> <span class="n">Purple</span> <span class="o">&amp;</span> <span class="n">Pink</span> <span class="n">lines</span><span class="p">),</span><span class="mi">40380</span><span class="p">,</span><span class="s2">&quot;(41.885737, -87.630886)&quot;</span>
+<span class="mi">30374</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">Clark</span><span class="o">/</span><span class="n">Lake</span> <span class="p">(</span><span class="n">Green</span> <span class="o">&amp;</span> <span class="n">Orange</span> <span class="o">&amp;</span> <span class="n">Purple</span> <span class="n">lines</span><span class="p">),</span><span class="mi">40380</span><span class="p">,</span><span class="s2">&quot;(41.885737, -87.630886)&quot;</span>
+<span class="mi">30141</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">Washington</span><span class="o">/</span><span class="n">Wells</span> <span class="p">(</span><span class="n">Brown</span> <span class="o">&amp;</span> <span class="n">Orange</span> <span class="o">&amp;</span> <span class="n">Purple</span> <span class="o">&amp;</span> <span class="n">Pink</span> <span class="n">lines</span><span class="p">),</span><span class="mi">40730</span><span class="p">,</span><span class="s2">&quot;(41.882695, -87.63378)&quot;</span>
+</pre></div>
+</div>
+<p>Run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bash p2.sh cta.csv Red pink BLUE
+</pre></div>
+</div>
+<p>Creates the files:</p>
+<p><code class="docutils literal notranslate"><span class="pre">red.txt</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Howard</span>
+<span class="n">Loyola</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">blue.txt</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Clark</span><span class="o">/</span><span class="n">Lake</span>
+<span class="n">Cumberland</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pink.txt</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Central</span> <span class="n">Park</span>
+<span class="n">Clark</span><span class="o">/</span><span class="n">Lake</span>
+<span class="n">Washington</span><span class="o">/</span><span class="n">Wells</span>
+</pre></div>
+</div>
+<p>More examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bash p2.sh cta.csv Red pink tan
+Error: invalid stop (tan)
+Usage: p2.sh FILE [LINE] ...
+$ bash p2.sh
+Error: missing required CTA stops file
+Usage: p2.sh FILE [LINE] ...
+$ bash p2.sh RANDOMFILE
+Error: RANDOMFILE does not exist
+Usage: p2.sh FILE [LINE] ...
+$ bash p2.sh cta.csv
+$ # Nothing is created
+</pre></div>
+</div>
+</section>
+<section id="notes">
+<h4>Notes<a class="headerlink" href="#notes" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>A single station can serve multiple lines; your script should include it in each relevant <code class="docutils literal notranslate"><span class="pre">&lt;line&gt;.txt</span></code>.</p></li>
+<li><p>Some stations and stop IDs are listed multiple times in the CSV.</p></li>
+<li><p>Case handling: treat both the <strong>requested line names</strong> and the <strong>membership check</strong> as <strong>case-insensitive</strong>.</p></li>
+<li><p>No files are created when no lines are provided or when none of the requested lines are present in the input.</p></li>
+</ul>
+</section>
+</section>
+<section id="problem-2-test-structure-how-to-run">
+<h3>Problem 2 — Test structure &amp; how to run<a class="headerlink" href="#problem-2-test-structure-how-to-run" title="Link to this heading">¶</a></h3>
+<p>Each test lives in its own directory:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">test01/</span></code>, <code class="docutils literal notranslate"><span class="pre">test02/</span></code>, …</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">cta.csv</span></code> — input CSV (with header)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">args.txt</span></code> — arguments passed to your script (everything after the script name)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expected/</span></code>
+- <code class="docutils literal notranslate"><span class="pre">&lt;line&gt;.txt</span></code> files — expected outputs for requested lines (e.g., <code class="docutils literal notranslate"><span class="pre">red.txt</span></code>)
+- <code class="docutils literal notranslate"><span class="pre">stdout.txt</span></code> — expected stdout (usually empty)
+- <code class="docutils literal notranslate"><span class="pre">status.txt</span></code> — expected exit code (<code class="docutils literal notranslate"><span class="pre">0</span></code> on success, <code class="docutils literal notranslate"><span class="pre">1</span></code> on error)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<section id="runner">
+<h4>Runner<a class="headerlink" href="#runner" title="Link to this heading">¶</a></h4>
+<p>You can run all the tests by going into the <code class="docutils literal notranslate"><span class="pre">tests/p2</span></code> directory and executing:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>bash<span class="w"> </span>run.sh
+</pre></div>
+</div>
+<p>By default it runs your solution at <code class="docutils literal notranslate"><span class="pre">../../p2/p2.sh</span></code> (resolved to an absolute path).
+You can override with an absolute path:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">P2_SCRIPT</span><span class="o">=</span>/full/path/to/p2.sh<span class="w"> </span>bash<span class="w"> </span>run.sh
+</pre></div>
+</div>
+<p><strong>What it does:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Discovers <code class="docutils literal notranslate"><span class="pre">test*/</span></code> directories, runs each as:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">$P2_SCRIPT</span> <span class="pre">$(cat</span> <span class="pre">args.txt)</span> <span class="pre">&gt;</span> <span class="pre">got.stdout</span> <span class="pre">2&gt;</span> <span class="pre">got.stderr;</span> <span class="pre">echo</span> <span class="pre">$?</span> <span class="pre">&gt;</span> <span class="pre">got.status</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Compares:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">expected/stdout.txt</span></code> ↔ <code class="docutils literal notranslate"><span class="pre">got.stdout</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expected/status.txt</span></code> ↔ <code class="docutils literal notranslate"><span class="pre">got.status</span></code></p></li>
+<li><p>Every expected <code class="docutils literal notranslate"><span class="pre">*.txt</span></code> (except <code class="docutils literal notranslate"><span class="pre">stdout.txt</span></code>/<code class="docutils literal notranslate"><span class="pre">status.txt</span></code>) ↔ produced file of the same name</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Fails a test if an expected file is missing or if extra top-level <code class="docutils literal notranslate"><span class="pre">*.txt</span></code> files were produced.</p></li>
+</ul>
+</section>
+</section>
+<section id="grading">
+<h3>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h3>
+<p>Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)</p>
+<p>The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:</p>
+<ul class="simple">
+<li><p><strong>Completeness</strong>: 70%</p></li>
+<li><p><strong>Correctness</strong>: 15%</p></li>
+<li><p><strong>Style/Design</strong>: 15%</p></li>
+</ul>
+</section>
+<section id="submission">
+<h3>Submission<a class="headerlink" href="#submission" title="Link to this heading">¶</a></h3>
+<p>Before submitting, make sure you’ve added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the “Homework #2” assignment page by linking your Github account to your Gradescope account and upload the correct repository based on the homework assignment. When you submit your homework, a pop window will appear. Click on “Github” and then  “Connect to Github” to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be “main” or “master”) for this course.</p>
+<p>Depending on the assignment, once you submit your work, an “autograder” will run. This autograder should produce the same test results as when you run the code yourself; if it doesn’t, please let us know so we can look into it. A few other notes:</p>
+<ul class="simple">
+<li><p>You are allowed to make as many submissions as you want before the deadline.</p></li>
+<li><p>Please make sure you have read and understood our <a class="reference internal" href="../../syllabus.html#late-submissions"><span class="std std-ref">Late Submission Policy</span></a>.</p></li>
+<li><p>Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).</p></li>
+<li><p>Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,317 @@
+==========================================
+Homework #4
+==========================================
+
+**Due: Wednesday, February 4th at 11:59pm**
+
+This homework provides pratcice with job control and signals and is intended to server as an introduction to C programming language. This assignment is not meant to cover everything in the C language. 
+It solely serves as a way for you to get familiar with working with C basics. 
+
+
+CS Linux Machine
+~~~~~~~~~~~~~~~~~
+You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or 
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments. 
+Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.
+**We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines.** 
+However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.
+
+Please follow the instructions provided here
+
+* `Using Visual Studio Code and SSH <https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html>`__
+
+Creating Your Private Repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a 
+GitHub account. If you do not yet have one, you can get an account here: https://github.com/join. 
+
+To actually get your private repository, you will need this invitation URL: 
+
+* **HW4 invitation (Please check the Post “Homework #4 is ready” Ed)**
+
+When you click on an invitation URL, you will have to complete the following steps:
+
+1. You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.
+
+.. note::
+
+   If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course. 
+
+
+2. You must click “Accept this assignment” or your repository will not actually be created.
+
+3. After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it's ready within seconds and you can just refresh the page. 
+
+4. You now need to clone your repository (i.e., download it to your machine). 
+    - Make sure you’ve set up `SSH access <https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh>`__ on your GitHub account.
+    
+    - For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: git@github.com:mpcs51082-win26/hw4-GITHUB-USERNAME.git. 
+
+    - If you do not know how to use ``git clone`` to clone your repository then follow this guide that Github provides: `Cloning a Repository <https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository>`__
+    
+
+If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.
+
+Problem 1
+==============
+For this problem you will update your homework 3 solution to include signal handling for reloading and print a message when the script exits. To start copy over your solution ``p1/p1.sh`` from your homework 3 repository into your ``p1/p1.sh`` file inside your homework 4 repository and update your script such that it does not exit after processing the files. 
+
+Instead, after your script finishes processing all files in the directory the first time, it **must not exit**. Instead, it should poll by sleeping for a second:
+
+.. code-block:: bash
+
+
+   while :; do
+     sleep 1
+   done
+
+
+The script **does not** exit on its own. It must be terminated by the user (``CTRL+C``) or via a ``kill`` command.
+
+Update your solution (if necessary) to ensure files inside log file appear in Lexicographical order. For example, if the following files: ``data001.in``, ``data002.in``, and ``data003.in``are inside the directory given to the script then ensure the info line for ``data001.in`` appears first followed by  ``data002.in`` and lastly   ``data003.in``. 
+
+
+Task : Signal Handling 
+-------------------------
+Your script must also handle catching signals. Specifically, it must do the following 
+
+1. If the kernel sends a ``SIGUSR1`` signal to the script then it must first output the entry: ``%s,WARN,[RELOAD],Script reloading...``, where ``%s`` is current timestamp. After printing out the warning entry, the script must then process the directory of files again.
+2. If the kernel sends a ``SIGCONT`` signal to the script then it must output the entry: ``%s,WARN,[RESUME],Script resuming...``, where ``%s`` is current timestamp. **Do not** process the directory of files again. 
+3. Catch a graceful exit using ``EXIT`` pseudo-signal and then prints the ``%s,WARN,[EXIT],Script exiting..."``, where ``%s`` is current timestamp. Do not reprocess the files. 
+
+Testcases are already provided to for testing this implementation inside ``p1/tests``. You can run the tests  
+
+.. code-block:: console
+
+
+   $ cd p1/tests
+   $ bash run.sh  
+
+
+Problem 2: Word Count 
+=====================
+In this problem, you will write a simple Unix-style program in C that reads
+input from **standard input** and counts the number of lines, words, and
+characters it receives.
+
+This program is inspired by the Unix ``wc`` (word count) utility that we have discussed and used, but you will implement a simplified version from scratch.
+
+Your task is to write a program called ``p2/p2.c``.
+
+Program Behavior
+----------------
+
+Your program must:
+
+- Read input from standard input until end-of-file (EOF)
+- Count:
+   - Number of lines
+   - Number of words
+   - Number of characters
+- Support an optional leading control sequence read from standard input
+  that determines what is printed
+
+Your program should compile without warnings using:
+::
+
+   gcc -Wall -Wextra -o p2 p2.c
+
+
+Make sure you are inside your ``p2`` directory when compiling the program. 
+
+Input Control Sequence
+----------------------
+
+If the first two characters read from standard input are one of the
+following:
+
+- ``-l`` : print only the number of lines
+- ``-w`` : print only the number of words
+- ``-c`` : print only the number of characters
+
+then your program must change its output behavior accordingly.
+
+If no such control sequence is present, your program should print all three
+counts.
+
+Important Counting Rule
+-----------------------
+
+If a control sequence (``-l``, ``-w``, or ``-c``) is present at the beginning of
+the input:
+
+- The characters ``'-'`` and the letter following it **must not be counted**
+- Counting begins **after** the control sequence
+- Only the remaining input contributes to the line, word, and character counts
+- You can assume if a control sequence that it is a valid sequence specified above. For example, we will not give you ``-a``. 
+
+
+Output Format
+-------------
+
+If **no control sequence** is present, print **exactly**:
+
+::
+
+  <num>, <num>, <num>
+
+where the first <num> is lines, followed by words, and chars counts. 
+
+If a control sequence **is present**, print **only** the requested count:
+
+- ``-l`` lines count output:
+
+::
+
+  <num>
+
+- ``-w`` word count output:
+
+::
+
+    <num>
+
+- ``-c`` chars count output:
+
+::
+
+    <num>
+
+No additional output should be printed.
+
+
+Definitions
+-----------
+
+- A **character** is any byte read from standard input, including whitespace.
+- A **line** is any sequence of characters terminated by a newline character
+  (``'\n'``).
+- A **word** is a sequence of one or more non-whitespace characters separated by
+  spaces, tabs, or newlines.
+
+Whitespace characters include:
+- Space (``' '``)
+- Tab (``'\t'``)
+- Newline (``'\n'``)
+
+
+
+Example Usage
+-------------
+Inside your ``p2`` directory contains a file ``input.txt`` that contains the following text: 
+
+:: 
+
+  Hello world
+  This is a simple test file.
+  It has multiple   spaces.
+
+  And even a blank line.
+
+
+
+Then the Default behavior (no control sequence):
+
+::
+
+   $ ./problem2 < input.txt
+   5,17,90
+
+Print only words:
+
+::
+
+   $ echo "-w hello world" | ./p2
+    2
+
+Print only characters:
+
+::
+
+   $ printf -e "-cHello\nWorld\n" | ./p2
+   12
+
+---
+
+Using ``getchar()``
+-------------------
+
+You must use the C standard library function ``getchar()`` to read input.
+
+``getchar()``:
+
+- Reads one character at a time from standard input
+- Returns the character read as an ``char``
+- Returns ``EOF`` when no more input is available
+
+A typical usage pattern looks like this:
+
+::
+
+   char c;
+   while ((c = getchar()) != EOF) {
+       /* process character c */
+   }
+
+This allows your program to work correctly with pipes and input redirection.
+
+
+
+Detecting Whitespace with ``isspace()``
+--------------------------------------
+
+To determine whether a character is whitespace, use the function ``isspace()``
+from ``<ctype.h>``.
+
+``isspace()``:
+
+- Returns non-zero if the character is whitespace
+- Returns zero otherwise
+
+Example usage:
+
+::
+
+   if (isspace(c)) {
+       /* c is whitespace */
+   }
+
+You may use ``isspace()`` to help determine word boundaries.
+
+
+Constraints
+-----------
+
+Your solution must adhere to the following constraints:
+
+- Use ``getchar()`` to read input
+- Use ``isspace()`` to detect whitespace
+- No use of ``scanf``, ``fgets``, or ``getline``
+
+
+
+
+
+
+
+Grading
+=========
+Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)
+
+The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:
+
+- **Completeness**: 80%
+- **Correctness**: 10%
+- **Design/Style**: 10% 
+
+Submission
+============
+Before submitting, make sure you've added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the "Homework #4" assignment page by linking your Github account to your Gradescope account and upload the correct repository based on the homework assignment. When you submit your homework, a pop window will appear. Click on "Github" and then  "Connect to Github" to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be "main" or "master") for this course.  
+  
+Depending on the assignment, once you submit your work, an "autograder" will run. This autograder should produce the same test results as when you run the code yourself; if it doesn't, please let us know so we can look into it. A few other notes: 
+
+- You are allowed to make as many submissions as you want before the deadline.
+- Please make sure you have read and understood our :ref:`Late Submission Policy <late_submissions>`. 
+- Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).
+- Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.

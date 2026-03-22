@@ -1,0 +1,64 @@
+Module 4: Advanced Unix Kernel Subsystems
+=========================================
+
+- Deep dive into filesystem architecture (including VFS), file I/O in C, virtual memory, and basic Unix networking tools.
+
+
+By the end of this module, students will be able to:
+
+- Explain how the Virtual File System (VFS) abstracts concrete filesystems.
+- Write robust C programs that open, modify, and close files using POSIX APIs with correct error handling.
+- Describe virtual memory concepts (paging, page cache).
+- Use core Unix networking commands to inspect connectivity, and name resolution. 
+
+
+Pre-recorded Lectures
+---------------------
+**Note: Professor Samuels will state on Ed when the prerecorded videos are ready to be viewed each week for a module.**
+
+The pre-recorded lectures are available here: `M4 Videos <https://uchicago.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=43577bb9-fbb5-46ad-bee4-b39c000b5992>`_.
+You can also find the videos under the "Panopto" tab on the MPCS 51082 canvas site.
+
+The lectures are a series of approx 15-20 minute videos. **Please come back here weekly as the videos will be updated if a module spans multiple weeks.** This module includes the following videos: 
+
+Week 8
+~~~~~~~~~
+- 4.0: Introduction to File I/O 
+- 4.1: Unix I/O Functions 
+- 4.2: Standard I/O Functions 
+
+
+The slides presented in these videos are accessible in the upstream repository.
+
+Resources/Readings 
+-------------------
+
+* The slides and code presented in this module are accessible in the upstream repository.
+* **The Linux Programming Interface: A Linux and UNIX System Programming Handbook readings:**
+   - Chapter 4.1-4.6op
+   - Chapter 5.4 - 5.5
+   - Chapter 20.1 - 20.8
+
+Synchronous Sessions (In-person Lecture) 
+-----------------------------------------
+As a reminder here are the dates and times for the synchronous session for this module:
+
+Week 8 
+~~~~~~~
+- Dates/Times
+   - **Tuesday February 24th 5:30pm-7:30pm** 
+- Session Outline 
+   - Exam 
+
+Week 9 
+~~~~~~~
+- Dates/Times
+   - **Tuesday March 3rd 05:30pm-7:30pm** 
+- Session Outline 
+   - Virtual Memory 
+   - Unix File systems  
+   - Course recap 
+
+Assignment
+----------------------
+* See Assignment Page 

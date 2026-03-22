@@ -1,0 +1,216 @@
+==========================================
+Homework #5
+==========================================
+
+**Due: Wednesday, February 11th at 11:59pm**
+
+This homework is intended to server as an introduction to C programming language. This assignment is not meant to cover everything in the C language. 
+It solely serves as a way for you to get familiar with working with C, and continue learning about shell scripting.
+
+
+CS Linux Machine
+~~~~~~~~~~~~~~~~~
+You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or 
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments. 
+Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.
+**We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines.** 
+However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.
+
+Please follow the instructions provided here
+
+* `Using Visual Studio Code and SSH <https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html>`__
+
+Creating Your Private Repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a 
+GitHub account. If you do not yet have one, you can get an account here: https://github.com/join. 
+
+To actually get your private repository, you will need this invitation URL: 
+
+* **HW4 invitation (Please check the Post “Homework #5 is ready” Ed)**
+
+When you click on an invitation URL, you will have to complete the following steps:
+
+1. You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.
+
+.. note::
+
+   If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course. 
+
+
+2. You must click “Accept this assignment” or your repository will not actually be created.
+
+3. After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it's ready within seconds and you can just refresh the page. 
+
+4. You now need to clone your repository (i.e., download it to your machine). 
+    - Make sure you’ve set up `SSH access <https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh>`__ on your GitHub account.
+    
+    - For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: git@github.com:mpcs51082-win26/hw5-GITHUB-USERNAME.git. 
+
+    - If you do not know how to use ``git clone`` to clone your repository then follow this guide that Github provides: `Cloning a Repository <https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository>`__
+    
+
+If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.
+
+
+Problem 
+==========
+You will implement functions that parse command lines and retrieve information about them (e.g., the total number of arguments). For example, 
+
+.. code-block:: console  
+
+  $ ls -la ~/mpcs51082-aut24 
+
+The command line is ``ls -la ~/mpcs51082-aut24 ``, where the command is ``ls`` and has two arguments: ``-la``, and ``~/mpcs51082-aut24`` . 
+
+
+The stubs for the functions you are already inside ``parse.c``. The ``parse.c`` already contains a main function with test cases to test the functions you will implement. You only need to implement the required functions. You can comment out (e.g.,``//``) test-cases such that only the ones you want to test currently run.  
+
+Implement the ``compute_num_args`` function 
+--------------------------------------------
+Copy the following function documentation above the definition inside ``parse.c``: 
+
+.. code-block:: c 
+  
+  /*
+  * compute_num_args - computes the number of arguments in the provided command line string 
+  * 
+  * line: a string that represents text from a shell's command line 
+  * 
+  * Assumptions: You can assume the line does not contain more than a single command (i.e., we do not have "&&" or "||" or ";" in the line string). 
+  * 
+  * Returns: the total number of arguments for the command including the command name
+  */
+  int compute_num_args(const char *line); 
+
+This function counts the total number of arguments including the program name. For example, if ``line ="ls -la ~/mpcs51082-aut24 "`` then ``compute_num_args`` will return ``3``.  For this function, you 
+can assume there will not be multiple commands executed on a single line (e.g., ``ls ; echo -e hw & cd ..`` will never be given). Here are few test-cases to try 
+
+.. code-block:: c 
+  
+  printf("%d\n",compute_num_args("ls -la ~/mpcs51082-aut24 "));  // prints 3
+  printf("%d\n",compute_num_args("cd ..")); // prints 2 
+  printf("%d\n",compute_num_args("ls")); // prints 1 
+
+
+**hint**: Look up the ``str_tok`` function in the string library. 
+
+
+Implement tht ``find_arg`` function 
+--------------------------------------
+
+Copy the following function documentation above the definition inside ``parse.c``: 
+
+.. code-block:: c 
+  
+ /*
+ * find_arg - finds the argument at a specific index from within the command line string
+ * 
+ * line: a string that represents text from a shell's command line 
+ *
+ * index: the index of the argument that is being requested. 
+ *
+ * argument: the string to copy the requested argument into. 
+ * 
+ * Assumptions: O-indexing is assumed. The parameter ("argument") is big enough to hold its value. 
+ *              You can assume the line does not contain more than a single command (i.e., we do not have "&" or ";" in the line string). 
+ * Returns: the following error codes based on execution: 
+ *      0 - success. Was able to find the argument as the specified index 
+ *      1 - failure. Index was not valid (i.e., not within the range of 0 to maximum number of arguments in the line)
+ */
+ int find_arg(const char *line, const int index, char *argument);
+
+
+This function finds a specific argument on the command line and copies the argument into the ``argument`` parameter. For example, if ``line ="ls -la ~/mpcs51082-aut24 "`` then ``find_arg`` at ``index=0`` will copy ``ls`` and will return ``0`` to indicate
+it was able to find the argument. Otherwise, if ``find_arg`` is given an invalid index (i.e., outside the bounds of the ``line`` arguments) then the function returns ``1``. For this function, you 
+can assume there will not be multiple commands executed on a single line (e..g, ``ls ; echo -e hw & cd ..`` will never be given). Also you can assume ``argument`` will always be big enough to hold the argument being copied. Here are few test-cases to try 
+
+.. code-block:: c 
+  
+    char argument[10]; 
+    printf("%d\n",find_arg("ls -la ~/mpcs51082-aut24 ",0,argument)); // prints 0 
+    printf("%s\n", argument); // prints ls
+    printf("%d\n",find_arg("ls -la ~/mpcs51082-aut24 ",1,argument)); // prints 0
+    printf("%s\n", argument); // prints -la 
+    printf("%d\n",find_arg("ls -la ~/mpcs51082-aut24 ",10,argument)); // prints 1 
+
+
+``parse_lines`` function 
+----------------------------
+Copy the following function documentation above the definition inside ``parse.c``: 
+
+.. code-block:: c 
+  
+  /*
+  * parse_lines - Counts the total number of background and foreground jobs in the array of lines provided. 
+  *
+  * lines: an array of strings that contain strings representing command line strings 
+  * 
+  * lines_len: the length of the lines array. 
+  *
+  * Assumption: You can assume that the command line strings will only contain "&" and ";" characters to run multiple commands on a single line. 
+  * 
+  * Returns: a shellinfo_t with the total counts of the the number of background and foreground jobs. 
+  */
+  shellinfo_t parse_lines(const char*lines[], const int lines_len); 
+
+This function determines the total number foreground and background jobs across all command lines within the array of strings. This function uses the ``shellinfo_t`` type to return the total number of foreground and background jobs. For example, if given the following
+
+.. code-block:: c 
+
+  const char *lines2[2] = {"ls -la ~/mpcs51082-aut24 & cd ..; ls", 
+                     "echo -e \"Hello\""};
+  results = parse_lines(lines2,2); 
+  printf("fg=%d, bg=%d\n",results.fg, results.bg);
+
+This will return ``fg=3, bg=1`` because: 
+
+1. ``ls -la ~/mpcs51082-aut24 `` is background jobs since ``&`` follows the command. 
+2. ``cd ..`` is a foreground job since it ends in a ``;``. 
+3. ``ls`` is the last command on the line and it is a foreground job since it does not end in a ``&``
+4. ``echo -e \"Hello\"`` is a foreground job. 
+
+You can assume for this problem the lines will only contain ``;`` or ``&``  to represent running multiple commands on a single line. Here are few test-cases to try 
+
+.. code-block:: c 
+  
+    shellinfo_t results; 
+    const char *lines1[1] = {"ls -la ~/mpcs51082-aut24 & cd .. "};
+    results = parse_lines(lines1,1); 
+    printf("fg=%d, bg=%d\n",results.fg, results.bg); //prints fg=1,bg=1
+
+    const char *lines2[2] = {"ls -la ~/mpcs51082-aut24 & cd .. ", 
+                        "echo -e \"Hello\";ls;ls;cat file.txt > out.txt &"};
+    results = parse_lines(lines2,2); 
+    printf("fg=%d, bg=%d\n",results.fg, results.bg); // prints fg=4,bg=2
+
+
+    const char *lines3[3] = {"ls -la ~/mpcs51082-aut24 & cd .. ; ./crawler &", 
+                       "echo -e \"Hello\";ls;ls;cat file.txt > out.txt &", 
+                       "cd .."}; 
+    results = parse_lines(lines3,3); 
+    printf("fg=%d, bg=%d\n",results.fg, results.bg); // prints fg=5,bg=3
+
+To help you understand how to work with an array of strings, I have given you a sample program  ``vowels.c`` that counts the total number of vowels inside an array of strings. Look at and compile/execute this program before you start implementing: ``parse_lines``. 
+
+Grading
+=========
+Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)
+
+The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:
+
+- **Completeness**: 80%
+- **Correctness**: 10%
+- **Design/Style**: 10% 
+
+Submission
+============
+Before submitting, make sure you've added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the "Homework #5" assignment page by linking your Github account to your Gradescope account and upload the correct repository based on the homework assignment. When you submit your homework, a pop window will appear. Click on "Github" and then  "Connect to Github" to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be "main" or "master") for this course.  
+  
+Depending on the assignment, once you submit your work, an "autograder" will run. This autograder should produce the same test results as when you run the code yourself; if it doesn't, please let us know so we can look into it. A few other notes: 
+
+- You are allowed to make as many submissions as you want before the deadline.
+- Please make sure you have read and understood our :ref:`Late Submission Policy <late_submissions>`. 
+- Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).
+- Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.

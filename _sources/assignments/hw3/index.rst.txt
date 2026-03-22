@@ -1,0 +1,212 @@
+==========================================
+Homework #3
+==========================================
+
+**Due: Wednesday January 28th at 11:59pm**
+
+This homework is intended to give practice filtering out information from the process status command. 
+
+CS Linux Machine
+~~~~~~~~~~~~~~~~~
+You will need access to an Linux based machine when working on your homework assignments. You should not test your programs on macOS or 
+Windows Linux because these operating systems do not provide all utility commands necessary for completing this and possibly future assignments. 
+Additionally, if they do provide a command then it may not contain all options that a Unix-like system provides.
+**We will use and grade all assignments on the CS Linux machines and all programming assignments must work correctly on these machines.** 
+However, you can work locally on a Unix or Unix-like machine but ensure that you test your final solutions on a CS Linux machine.
+
+Please follow the instructions provided here
+
+* `Using Visual Studio Code and SSH <https://uchicago-cs.github.io/student-resource-guide/vscode/ssh.html>`__
+
+Creating Your Private Repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a 
+GitHub account. If you do not yet have one, you can get an account here: https://github.com/join. 
+
+To actually get your private repository, you will need this invitation URL: 
+
+* **HW3 invitation (Please check the Post “Homework #3 is ready” Ed)**
+
+When you click on an invitation URL, you will have to complete the following steps:
+
+1. You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.
+
+.. note::
+
+   If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course. 
+
+
+2. You must click “Accept this assignment” or your repository will not actually be created.
+
+3. After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it's ready within seconds and you can just refresh the page. 
+
+4. You now need to clone your repository (i.e., download it to your machine). 
+    - Make sure you’ve set up `SSH access <https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh>`__ on your GitHub account.
+    
+    - For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: git@github.com:mpcs51082-aut25/hw3-GITHUB-USERNAME.git. 
+
+    - If you do not know how to use ``git clone`` to clone your repository then follow this guide that Github provides: `Cloning a Repository <https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository>`__
+    
+
+If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.
+
+
+Programming Problem 
+~~~~~~~~~~~~~~~~~~~~
+**Note: For this assignment, you are not allowed to use the ``awk`` command. Many of you are over using this command to solve problems that can be done with simple Unix commands.** However, you are allowed to use any other unix commands (except for ``awk``) for this assignment, regardless if it was or was not discussed in class. 
+
+For this problem, you will be writing a script that filters out information coming from the ``ps aux`` command (which shows the running programs for all users logged into that specific machine). One sample output from running this command is the following 
+
+.. code-block:: console 
+
+  USER     PID     %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+  lamonts  3058393  0.0  0.0  19416  9468 ?        Ss   06:51   0:00 /lib/systemd/systemd --user
+  lamonts  3058396  0.0  0.0 202588  7632 ?        S    06:51   0:00 vim test.c
+  root     3080732  0.0  0.0  40724 10044 ?        Ss   09:54   0:00 sshd: lamonts [priv]
+  maxg     3813528  0.0  0.0  35468  9716 pts/570  S+   Oct05   0:00 vim library.c
+  maxg     3813981  0.0  0.0  19192  5484 pts/598  Ss   Oct05   0:00 -bash
+  maxg     3814003  0.0  0.0  34840  9124 pts/598  S+   Oct05   0:00 vim test.c
+  lamonts  3080750  0.0  0.0  40724  6984 ?        S    09:54   0:01 vim test.c
+  sallyf+  3292195  0.0  0.0    544     0 pts/2661 TN   May10   0:00 grep -o -E [0-9]+
+  sallyf+  3292196  0.0  0.0    392     0 pts/2661 TN   May10   0:00 head -1
+
+Each line excluding the header line, represnts one running program that the user specified in the ``USER`` column. 
+
+Logging Structure 
+------------------------
+Your task for this assignment is to implement a bash script inside the ``p1/p1.sh`` file that by default displays the top 10 users with the most processes inside file(s) that contain ``ps aux`` output. The output will be a log entry in a ``log.csv`` file. The script will also produce additional warning entries in the ``log.csv`` file. The structure of the log file is as follows: 
+
+.. code-block:: csv 
+
+  Timestamp,LogLevel,Status,Message
+
+
+1. **Timestamp** - Date and time of the log entry (e.g., ``2024-10-19 11:10:34``). You must use the following code ``echo "$(date +"%Y-%m-%d %H:%M:%S")"`` to produce a timestamp for each entry in the log file. 
+2. **Log Level**: This column can be only one of two strings: ``INFO`` or ``WARN``. It indicates the severity or nature of the entry. 
+3. **Status**: The meta-information related to the log entry. This value always be a string defined within ``[ ]`` brackets. For example, ``[START]``, and ``[FILE=data/data02]``. 
+4. **Message**: Descriptive text explaining the event that occurred. 
+
+We will discuss the **Log Level**, **Status**, and **Message** columns in further details in the next section. 
+
+The ``p1/p1.sh`` takes in a single argument that represents a directory. For example, ``$ ./p1.sh ./data``. The argument ``./data`` is that ``data`` directory located in your ``p1`` directory in your repository. The script creates and writes to a file named ``log.csv`` that must be created (if it does not already exist) inside the directory specified by command line argument. For example, if the script was ran as such ``./p1.sh ./data`` then the script will create the a log file located under ``p1/data/log.csv``. **If the log file already exists then the script will always append to the end of the log file**. If a new log file is created then the above header must always be the first line in the file. 
+
+When the script begins to run, then the first entry must always be the following: 
+
+.. code-block:: csv 
+
+  2024-10-19 11:10:33,WARN,[START],Script starting...
+
+
+Before the script exits,the log file must include the below ``WARN`` line: 
+
+.. code-block:: csv 
+
+  2024-10-19 11:11:00,WARN,[END],Script exiting...
+
+**Note**: The ``timestamp`` will be different based on when you run the script; however, everything else within the line must be exactly as shown above.  
+
+Task: Counting Users Processes  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Your script must iterate through the provided directory and for each file inside the directory, it will create a single ``INFO`` log entry that represents the top 10 users with the most processes. For example, 
+
+Inside the ``p1/data/data00`` file, it contains 
+
+.. code-block:: console 
+
+  USER     PID     %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+  lamonts  3058393  0.0  0.0  19416  9468 ?        Ss   06:51   0:00 /lib/systemd/systemd --user
+  lamonts  3058396  0.0  0.0 202588  7632 ?        S    06:51   0:00 vim test.c
+  root     3080732  0.0  0.0  40724 10044 ?        Ss   09:54   0:00 sshd: lamonts [priv]
+  maxg     3813528  0.0  0.0  35468  9716 pts/570  S+   Oct05   0:00 vim library.c
+  maxg     3813981  0.0  0.0  19192  5484 pts/598  Ss   Oct05   0:00 grep -o -E [0-9]
+  maxg     3814003  0.0  0.0  34840  9124 pts/598  S+   Oct05   0:00 vim test.c
+  lamonts  3080750  0.0  0.0  40724  6984 ?        S    09:54   0:01 vim test.c
+  sallyf+  3292195  0.0  0.0    544     0 pts/2661 TN   May10   0:00 grep -o -E [0-9]+
+  sallyf+  3292196  0.0  0.0    392     0 pts/2661 TN   May10   0:00 head -1
+
+and ``p1/data/data01`` contains 
+
+.. code-block:: console 
+
+  USER     PID     %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+  lamonts  3058393  0.0  0.0  19416  9468 ?        Ss   06:51   0:00 /lib/systemd/systemd --user
+
+then running the script file as such 
+
+.. code-block:: console 
+
+  $ chmod +x p1.sh #Make sure to make the script executable. Only needs to be done once. 
+  $  ./p1.sh ./data 
+
+will create it a ``data/log.csv`` (if only does not already exist) with two entries as such: 
+
+.. code-block:: console 
+
+  2024-10-19 11:10:34,INFO,[FILE=data/data00],"lamonts 3,maxg 3,sallyf+ 2,root 1"
+  2024-10-19 11:10:35,INFO,[FILE=data/data01],"lamonts 1"
+
+For each entry, the first column contains the timestamp (**Note**: This will be different based on when you are running your script!). The second column will always be equal to ``INFO``. The third column will always be structured as ``[FILE=%s]``, where ``%s`` represents the file currently being processed. and the last column is structured ``USER TOTAL_PROCESSES`` where the **Message** output is sorted by ``TOTAL_PROCESSES`` in descending order. If a ``USER`` is tied with another ``USER`` then sort them by username lexicographically. Each user is separated by a single comma. **The entire message string is embedded within double quotes**. Do not include the ``log.csv`` file as an entry. If a file does produces an empty string (i.e., no list of users) then do not include a log entry for that file. 
+
+After processing all files the script exits. 
+
+In totality, after running ``./p1.sh data``, the ``data/log.csv1`` file will look like this: 
+
+
+.. code-block:: console 
+  
+  Timestamp,LogLevel,Status,Message
+  2024-10-19 11:10:33,WARN,[START],Script starting...
+  2024-10-19 11:10:34,INFO,[FILE=data/data00],"lamonts 3,maxg 3,sallyf+ 2,root 1"
+  2024-10-19 11:10:35,INFO,[FILE=data/data01],"lamonts 1"
+  2024-10-19 11:11:00,WARN,[END],Script exiting...
+
+Again please ignore the timestamps here since they will be different when you run it. 
+
+
+Options 
+--------
+The script will have the following command line options that will change the output of script as follows: 
+
+- ``-n NUMBER``: Changes the number of shown lines in the output. By default the command shows the top ten users; however, similar to the head/tail command, ``-n`` will only display ``NUMBER`` of lines to the console. You can assume number will always be a positive integer (i.e., an integer greater than zero). 
+- ``-e USER_1,USER_2,...,USER_N``: Excludes the usernames defined in the ``USER_1,USER_2,...,USER_N`` comma separated list from the output. If a ``USER`` is not seen in the ``ps aux`` output then ignore that user.  
+
+
+Assumptions/Hints
+-------------------
+
+1. You can assume we will always give exactly one command line argument that will always be a directory (i.e., ``p1.sh /some/directory/path``). You do not have to error check for this in your script file. 
+2. You can assume that all files inside the directory will always contain output coming from running the ``ps aux`` command. You can assume that the directory will only contain text files (i.e., no other types of files or subdirectories). 
+3. ``ps aux`` produces a lot of consecutive spaces to align the columns of its output. Use the ``tr -s ' '`` command to delimit the ``ps aux`` output to be a single space between each column.  
+4. You may want to use the ``printf`` command to nicely produce log entries. You can research it on your own. 
+
+5. I recommend you use a dictionary and research the ``shift`` command to help process command line options/arguments. 
+
+6. You can assume the options will always come before the required command line argument.
+
+7. You can assume that we will test this giving you the correct format for an option. This means you will never see something like ``-n lamont``. However, the options can come in any order and multiple can be supplied on the same command line. If given a file as input then you can assume the file will always be the last argument to ``p1.sh``. 
+
+Test cases 
+-------------
+As always, Professor Samuels will provide testcases on Saturday of Week 3 to help test your code. We want you to learn how to test your own code first for this specific assignment. This means you should create you own data files. Try running ``ps aux`` on the servers and copying over a portion of the output for various users to ensure the log file is generating the correct counts.
+
+Grading
+-------
+Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)
+
+The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:
+
+- **Completeness**: 70%
+- **Correctness**: 20%
+- **Design/Style**: 10% 
+
+Submission
+----------
+Before submitting, make sure you've added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the "Homework #3" assignment page by linking your Github account to your Gradescope account and upload the correct repository based on the homework assignment. When you submit your homework, a pop window will appear. Click on "Github" and then  "Connect to Github" to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be "main" or "master") for this course.  
+  
+Depending on the assignment, once you submit your work, an "autograder" will run. This autograder should produce the same test results as when you run the code yourself; if it doesn't, please let us know so we can look into it. A few other notes: 
+
+- You are allowed to make as many submissions as you want before the deadline.
+- Please make sure you have read and understood our :ref:`Late Submission Policy <late_submissions>`. 
+- Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).
+- Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.
