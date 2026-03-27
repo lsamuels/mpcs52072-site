@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Homework #1 &#8212; MPCS 52072 - GPU Programming  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS52072</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../../modules/index.html">Modules</a></li>
+                <li><a href="../index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Homework #1</a><ul>
+<li><a class="reference internal" href="#getting-started">Getting started</a><ul>
+<li><a class="reference internal" href="#peanut-cluster-and-gpu-partitions">Peanut Cluster and GPU Partitions</a></li>
+<li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a></li>
+<li><a class="reference internal" href="#problem-1-estimating-pi-using-the-leibniz-formula">Problem 1: Estimating Pi using the Leibniz formula</a></li>
+<li><a class="reference internal" href="#phase-1-calculate-local-estimates">Phase 1: Calculate local estimates</a></li>
+<li><a class="reference internal" href="#phase-2-aggregation">Phase 2: Aggregation</a></li>
+<li><a class="reference internal" href="#problem-2-2d-translations">Problem 2: 2D Translations</a></li>
+<li><a class="reference internal" href="#task">Task</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#grading">Grading</a></li>
+<li><a class="reference internal" href="#submission">Submission</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/assignments/hw1/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="homework-1">
+<h1>Homework #1<a class="headerlink" href="#homework-1" title="Link to this heading">¶</a></h1>
+<p><strong>Due: Friday, April 3rd at 11:59pm</strong></p>
+<p>This homework is intended to server as an introduction to CUDA programming model. It also allows for you to understand how to submit and run your CUDA programs on clusters using SLURM.</p>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
+<p>The following two sections explain the process of setting up your homework workspace for the course and how to retrieve your private Github repository.</p>
+<section id="peanut-cluster-and-gpu-partitions">
+<h3>Peanut Cluster and GPU Partitions<a class="headerlink" href="#peanut-cluster-and-gpu-partitions" title="Link to this heading">¶</a></h3>
+<p>If you are not familiar with submitting jobs to a cluster (i.e., the Peanut cluster) please make sure to watch the following video and read over the SLURM documentation provided by our tech-staff <strong>before</strong> beginning the assignment:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://uchicago.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=60b13a81-f7f8-4c44-91b9-b2ae01292688">1.0 Using a Cluster and SLURM</a></p></li>
+<li><p><a class="reference external" href="https://howto.cs.uchicago.edu/slurm?s[]=%2Aslurm%2Al">Using Visual Studio Code and SSH</a></p></li>
+</ul>
+<p><strong>We will grade all assignments using the Peanut cluster’s GPUs and all programming assignments must work correctly on one of these machines.</strong>  If you have a NVIDIA GPU installed on your local machine then you can work; however, <strong>your program must still work on one of the cluster’s GPU nodes, no exceptions.</strong></p>
+</section>
+<section id="creating-your-private-repository">
+<h3>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h3>
+<p>For each assignment, a Git repository will be created for you on GitHub. However, before that repository can be created for you, you need to have a
+GitHub account. If you do not yet have one, you can get an account here: <a class="reference external" href="https://github.com/join">https://github.com/join</a>.</p>
+<p>To actually get your private repository, you will need this invitation URL:</p>
+<ul class="simple">
+<li><p><strong>HW1 invitation (Please check the Post “HW 1 is ready” Ed)</strong></p></li>
+</ul>
+<p>When you click on an invitation URL, you will have to complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>You must click “Accept this assignment” or your repository will not actually be created.</p></li>
+<li><p>After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it’s ready within seconds and you can just refresh the page.</p></li>
+<li><dl class="simple">
+<dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
+<li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-spr26/hw1-GITHUB-USERNAME.git.</p></li>
+<li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.</p>
+</section>
+<section id="problem-1-estimating-pi-using-the-leibniz-formula">
+<h3>Problem 1: Estimating Pi using the Leibniz formula<a class="headerlink" href="#problem-1-estimating-pi-using-the-leibniz-formula" title="Link to this heading">¶</a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">p1</span></code> directory, open the file called <code class="docutils literal notranslate"><span class="pre">pi.cu</span></code> and write a CUDA program that uses an infinite series method to estimate pi. One of the most widely known infinite series that can be used for this is the Leibniz formula, as described here:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Leibniz_formula_for_π">How To Make Pi</a></p></li>
+</ul>
+<p><strong>Your program should use this formula</strong>, and must use the following usage and have the these required command-line arguments:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Usage: pi terms num_blocks</span>
+<span class="go">terms = the number of iterations (i.e., intervals) to perform</span>
+<span class="go">num_blocks = the number of blocks to launch</span>
+</pre></div>
+</div>
+<p>The program should read in the <code class="docutils literal notranslate"><span class="pre">terms</span></code> and <code class="docutils literal notranslate"><span class="pre">num_blocks</span></code> argument argument and <strong>only</strong> print the estimate of pi. The program will run in two phases:</p>
+</section>
+<section id="phase-1-calculate-local-estimates">
+<h3>Phase 1: Calculate local estimates<a class="headerlink" href="#phase-1-calculate-local-estimates" title="Link to this heading">¶</a></h3>
+<p>Define a kernel named <code class="docutils literal notranslate"><span class="pre">compute_estimates</span></code> that launches with a grid dimension equal to <code class="docutils literal notranslate"><span class="pre">num_blocks</span></code> and a block dimension of one. The single thread in each block computes its own local estimate of pi and stores the result in an output array named <code class="docutils literal notranslate"><span class="pre">estimates</span></code>. The single thread in each block <strong>must</strong> perform an equal amount of terms computations. This means for each block you will need to compute its start (inclusive) and end (exclusive) indices based on how much work each block must compute (i.e., <code class="docutils literal notranslate"><span class="pre">terms\num_blocks</span></code> ). For example,  if <code class="docutils literal notranslate"><span class="pre">terms=1000</span></code> and <code class="docutils literal notranslate"><span class="pre">num_blocks=4</span></code> then  the chart shows the breakdown for each block’s start and end interval.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Block ID</p></th>
+<th class="head"><p>Start (Inclusive)</p></th>
+<th class="head"><p>End (Exclusive)</p></th>
+<th class="head"><p>Number of iterations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>250</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>250</p></td>
+<td><p>500</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>500</p></td>
+<td><p>750</p></td>
+<td><p>250</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>750</p></td>
+<td><p>1000</p></td>
+<td><p>250</p></td>
+</tr>
+</tbody>
+</table>
+<p>If <code class="docutils literal notranslate"><span class="pre">terms/num_blocks</span></code> does not divide evenly then have one block perform the necessary additional iterations to equal <code class="docutils literal notranslate"><span class="pre">terms</span></code>.</p>
+<p>You have full control over the arguments passed to <code class="docutils literal notranslate"><span class="pre">compute_estimates</span></code>, how memory is allocated, and how the interval is divided among the blocks. Please keep in mind that we are not looking at performance in this first homework assignment, so you do not need to come up with the most optimal solution.</p>
+</section>
+<section id="phase-2-aggregation">
+<h3>Phase 2: Aggregation<a class="headerlink" href="#phase-2-aggregation" title="Link to this heading">¶</a></h3>
+<p>Each block will produce a partial local-sum of pi. After the <code class="docutils literal notranslate"><span class="pre">compute_estimates</span></code> completes, the host-side adds up the partial sums and outputs the final computation for <code class="docutils literal notranslate"><span class="pre">pi</span></code>.</p>
+<p><strong>Requirements</strong>:</p>
+<ol class="arabic simple">
+<li><p><strong>All local-sum computations must be done on the GPU</strong>. The host-side code only reads in the data, prepares it to be transferred to the GPU, launches kernels, and finally aggregates the local-sums to output the final estimate of pi.</p></li>
+<li><p>Please make sure you are verifying your CUDA calls by checking the error codes as I described in the videos.</p></li>
+<li><p>Please make sure to print out pi to 10 decimal places so we can better check the precision.</p></li>
+</ol>
+<p><strong>Assumptions</strong>: You can assume that <code class="docutils literal notranslate"><span class="pre">terms</span></code> and <code class="docutils literal notranslate"><span class="pre">num_blocks</span></code> will always be given as integers and be provided. Thus, you do not need to perform error checking on those arguments. You also will not need to print out the usage statement for this problem. The usage is given here for clarification purposes. Please note the given points will never exceed maxGridSize in x.</p>
+</section>
+<section id="problem-2-2d-translations">
+<h3>Problem 2: 2D Translations<a class="headerlink" href="#problem-2-2d-translations" title="Link to this heading">¶</a></h3>
+<p>2D translation is a process of moving an object from one position to another in a two dimensional plane. In this problem, you will write a program that performs 2D translation on a set of points using 3D homogeneous transformation matrices.</p>
+<p><strong>What is 2D Translation with Homogeneous Coordinates?</strong></p>
+<p>In computer graphics, homogeneous coordinates allow for the representation of translations, rotations, and other transformations using matrix multiplication. A 2D point <span class="math notranslate nohighlight">\((x,y)\)</span> can be represented in homogeneous coordinates as <span class="math notranslate nohighlight">\((x,y,1)\)</span>.</p>
+<p>A 2D translation can be represented as a <span class="math notranslate nohighlight">\(3x3\)</span> matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+1 &amp; 0 &amp; t_x \\
+0 &amp; 1 &amp; t_y \\
+0 &amp; 0 &amp; 1
+\end{bmatrix}\end{split}\]</div>
+<p>When this matrix multiplies the homogeneous coordinate <span class="math notranslate nohighlight">\((x,y,1)\)</span>, the result is a translated point <span class="math notranslate nohighlight">\((x',y',1)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+1 &amp; 0 &amp; t_x \\
+0 &amp; 1 &amp; t_y \\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+x \\
+y \\
+1
+\end{bmatrix}
+=
+\begin{bmatrix}
+x + t_x \\
+y + t_y \\
+1
+\end{bmatrix}\end{split}\]</div>
+<p>For example, consider we had the points <span class="math notranslate nohighlight">\((1, 1)\)</span>, <span class="math notranslate nohighlight">\((2,3)\)</span>, and <span class="math notranslate nohighlight">\((3, 1)\)</span>. If we apply a translation vector <span class="math notranslate nohighlight">\((2, 1)\)</span> to this shape using the homogeneous transformation matrix, each point of the triangle will move 2 units to the right and 1 unit up. The new positions of the vertices will be <span class="math notranslate nohighlight">\((3, 2)\)</span>, <span class="math notranslate nohighlight">\((4, 4)\)</span>, and <span class="math notranslate nohighlight">\((5, 2)\)</span>, respectively.</p>
+<p><strong>Make sure you understand how to perform matrix and vector multiplication.</strong> You may want to do a google search as refresher on that formula.</p>
+</section>
+<section id="task">
+<h3>Task<a class="headerlink" href="#task" title="Link to this heading">¶</a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">p2/translate.cu</span></code> directory, implement a CUDA program that performs 2D translation on a set of points using 3D homogeneous transformation matrices. The program will take in three command line arguments: <code class="docutils literal notranslate"><span class="pre">points_file</span></code>, <code class="docutils literal notranslate"><span class="pre">matrix_file</span></code>, and <code class="docutils literal notranslate"><span class="pre">iterations</span></code> with the program having the following usage statement:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Usage: translate points_file matrix_file iterations</span>
+<span class="go">   points_file - the filepath to the file containing all the points</span>
+<span class="go">   matrix_file - the filepath to the file containing the 3D matrix</span>
+<span class="go">   iterations  - an integer representing how many times to translate the points</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">points_file</span></code> file has the following format</p>
+<ul class="simple">
+<li><p>The first line represents the total number of points in the file.</p></li>
+<li><p>All remaining lines represent a 2D point where each integer coordinate is separated by a single whitespace.</p></li>
+</ul>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">p2</span></code> directory, there is a file named <code class="docutils literal notranslate"><span class="pre">points-001.in</span></code> that provides an example of this format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span>
+<span class="mi">1</span> <span class="mi">1</span>
+<span class="mi">2</span> <span class="mi">3</span>
+<span class="mi">3</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">matrix_file</span></code> contains a single <span class="math notranslate nohighlight">\(3x3\)</span> matrix, where each line represents a single row of integers, where the columns are separated by a single whitespace. For example, inside <code class="docutils literal notranslate"><span class="pre">p2/matrix-001.in</span></code> provides an example of this format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span>
+<span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Finally, <code class="docutils literal notranslate"><span class="pre">iterations</span></code> represents how many times to translate a point by the provided matrix. For example, if <code class="docutils literal notranslate"><span class="pre">iterations=3</span></code> then given point <span class="math notranslate nohighlight">\((1, 1)\)</span> and a translation vector <span class="math notranslate nohighlight">\((2, 1)\)</span> then the following represents the final location for the given point:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\((1, 1)\)</span> + <span class="math notranslate nohighlight">\((2, 1)\)</span> =  <span class="math notranslate nohighlight">\((3, 2)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\((3, 2)\)</span> + <span class="math notranslate nohighlight">\((2, 1)\)</span> = <span class="math notranslate nohighlight">\((5, 3)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\((5, 3)\)</span> + <span class="math notranslate nohighlight">\((2, 1)\)</span> = <span class="math notranslate nohighlight">\((7, 4)\)</span></p></li>
+</ol>
+<p>The program outputs the final translated location for each point after applying the matrix to it <code class="docutils literal notranslate"><span class="pre">iterations</span></code> number of times. The order of the output must be the same order of how the points appeared in the original <code class="docutils literal notranslate"><span class="pre">points_file</span></code>.  Each point in the output is on a single line and each coordinate is separated by a single whitespace.</p>
+<p><strong>Requirements</strong></p>
+<ol class="arabic simple">
+<li><p><strong>All computation must be done on the GPU</strong>. The host-side code only reads in the data, prepares it to be transferred to the GPU and finally prints out the final locations of the points.</p></li>
+<li><p>There can only be a single kernel launch in this program unlike in problem 1.</p></li>
+<li><p>How you format the data in memory and determine the grid and block dimensions is up to you.</p></li>
+<li><p>You must write the CUDA code for performing matrix and vector multiplication. You can not just retrieve the <code class="docutils literal notranslate"><span class="pre">tx</span></code> and <code class="docutils literal notranslate"><span class="pre">ty</span></code> values directly from the matrix and add it to the vector coordinates.</p></li>
+<li><p>Please make sure you are verifying your CUDA calls by checking the error codes as I described in the videos.</p></li>
+</ol>
+<p>To help think about what to make your block and grid sizes for problem 2. You may want to query the device for the  maximum number of blocks and threads per block in CUDA.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">int device;</span>
+<span class="go">cudaDeviceProp prop;</span>
+
+<span class="go">// Get the current CUDA device</span>
+<span class="go">cudaGetDevice(&amp;device);</span>
+
+<span class="go">// Get device properties</span>
+<span class="go">cudaGetDeviceProperties(&amp;prop, device);</span>
+
+<span class="go">// Query max threads per block</span>
+<span class="go">int maxThreadsPerBlock = prop.maxThreadsPerBlock;</span>
+
+<span class="go">// Query max blocks per dimension (grid size)</span>
+<span class="go">int maxGridSizeX = prop.maxGridSize[0];</span>
+<span class="go">int maxGridSizeY = prop.maxGridSize[1];</span>
+<span class="go">int maxGridSizeZ = prop.maxGridSize[2];</span>
+</pre></div>
+</div>
+<p><strong>Assumptions</strong>: We will always provide <code class="docutils literal notranslate"><span class="pre">translate</span></code> with the correct number of arguments and valid input. The file arguments <code class="docutils literal notranslate"><span class="pre">points_file</span></code> and <code class="docutils literal notranslate"><span class="pre">matrix_file</span></code> will always be formatted as specified in the above description and iterations will always be a positive integer.</p>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h2>
+<p>Inside each problem directory, there is a <code class="docutils literal notranslate"><span class="pre">test-data</span></code> directory that contains some sample test cases. You can run these test cases by running the provided <code class="docutils literal notranslate"><span class="pre">run_tests.sh</span></code> script. This script will run your program on each of the test cases and compare your output to the expected output. you’ll see the a directory test-data inside each problem folder. You must update each problem’s SBATCH <code class="docutils literal notranslate"><span class="pre">px-submit.sh</span></code> script to run the test cases on the cluster.</p>
+<p>Each test-<a href="#id1"><span class="problematic" id="id2">**</span></a>* is split into a .in and .ans file.  The  .in  represents that command I used to run the program executable with any additional arguments necessary. The .ans  shows the STDOUT after running the command (this is the answer).</p>
+</section>
+<section id="grading">
+<h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h2>
+<p>Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)</p>
+<p>The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:</p>
+<ul class="simple">
+<li><p><strong>Problem 1</strong>: 50%</p></li>
+<li><p><strong>Problem 2</strong>: 50%</p></li>
+</ul>
+</section>
+<section id="submission">
+<h2>Submission<a class="headerlink" href="#submission" title="Link to this heading">¶</a></h2>
+<p>Before submitting, make sure you’ve added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the “Homework #1” assignment page via two ways,</p>
+<ol class="arabic simple">
+<li><p><strong>Uploading from Github directly (recommended way)</strong>: You can link your Github account to your Gradescope account and upload the correct repository based on
+the homework assignment. When you submit your homework, a pop window will appear. Click on “Github” and then  “Connect to Github” to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be “main” or “master”) for this course.</p></li>
+<li><p><strong>Uploading via a Zip file</strong>: You can also upload a zip file of the homework directory. Please make sure you upload the entire directory and keep the initial structure the <strong>same</strong> as the starter code; otherwise, you run the risk of not passing the automated tests.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For either option, you must upload the entire directory structure; otherwise, your automated test grade will not run correctly and you will
+be <strong>penalized</strong> if we have to manually run the tests. Going with the first option will do this automatically for you. You can always add additional directories and files (and even files/directories inside the stater directories) but the default directory/file structure must not change.</p>
+</div>
+<p>Please note there is not Gradescope Autograder for this assignment. A few other notes:</p>
+<ul class="simple">
+<li><p>You are allowed to make as many submissions as you want before the deadline.</p></li>
+<li><p>Please make sure you have read and understood our <a class="reference internal" href="../../syllabus.html#late-submissions"><span class="std std-ref">Late Submission Policy</span></a>.</p></li>
+<li><p>Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).</p></li>
+<li><p>Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
