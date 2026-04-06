@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Homework #2 &#8212; MPCS 52072 - GPU Programming  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS52072</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../../modules/index.html">Modules</a></li>
+                <li><a href="../index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Homework #2</a><ul>
+<li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a></li>
+<li><a class="reference internal" href="#grayscale-conversion-and-histogram-cuda-overview">Grayscale Conversion and Histogram (CUDA) Overview</a><ul>
+<li><a class="reference internal" href="#repository-structure">Repository Structure</a></li>
+<li><a class="reference internal" href="#directory-description">Directory Description</a></li>
+<li><a class="reference internal" href="#png-handling-provided-code">PNG Handling (Provided Code)</a></li>
+<li><a class="reference internal" href="#image-representation">Image Representation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grayscale-conversion">Grayscale Conversion</a><ul>
+<li><a class="reference internal" href="#important-notes">Important Notes</a></li>
+<li><a class="reference internal" href="#grayscale-program-usage-and-behavior">Grayscale Program: Usage and Behavior</a></li>
+<li><a class="reference internal" href="#compiling-and-running">Compiling and Running</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#task-1-implement-a-gpu-version">Task 1: Implement a GPU Version</a><ul>
+<li><a class="reference internal" href="#verifying-correctness">Verifying Correctness</a></li>
+<li><a class="reference internal" href="#floating-point-differences">Floating Point Differences</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#histogram-computation">Histogram Computation</a><ul>
+<li><a class="reference internal" href="#what-is-a-histogram">What is a Histogram?</a></li>
+<li><a class="reference internal" href="#why-is-this-important">Why is this Important?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#task-2-compute-histogram-on-the-gpu">Task 2: Compute Histogram on the GPU</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#output-format-stdout">Output Format (stdout)</a></li>
+<li><a class="reference internal" href="#visualizing-the-histogram">Visualizing the Histogram</a></li>
+<li><a class="reference internal" href="#verifying-histogram-correctness">Verifying Histogram Correctness</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grading">Grading</a></li>
+<li><a class="reference internal" href="#submission">Submission</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/assignments/hw2/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="homework-2">
+<h1>Homework #2<a class="headerlink" href="#homework-2" title="Link to this heading">¶</a></h1>
+<p><strong>Due: Friday, April 10th at 11:59pm</strong></p>
+<p>In this assignment, you will implement a CUDA-based program that processes images in two stages:</p>
+<ol class="arabic simple">
+<li><p>Convert a color image (PNG) to grayscale</p></li>
+<li><p>Compute a histogram of grayscale pixel intensities and print the result</p></li>
+</ol>
+<p>You will work with real image data and use Unix tools to validate and visualize your results.</p>
+<section id="creating-your-private-repository">
+<h2>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h2>
+<p>To actually get your private repository, you will need this invitation URL:</p>
+<ul class="simple">
+<li><p><strong>HW2 invitation (Please check the Post “HW 2 is ready” Ed)</strong></p></li>
+</ul>
+<p>When you click on an invitation URL, you will have to complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>You must click “Accept this assignment” or your repository will not actually be created.</p></li>
+<li><p>After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it’s ready within seconds and you can just refresh the page.</p></li>
+<li><dl class="simple">
+<dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
+<li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-spr26/hw2-GITHUB-USERNAME.git.</p></li>
+<li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.</p>
+</section>
+<section id="grayscale-conversion-and-histogram-cuda-overview">
+<h2>Grayscale Conversion and Histogram (CUDA) Overview<a class="headerlink" href="#grayscale-conversion-and-histogram-cuda-overview" title="Link to this heading">¶</a></h2>
+<p>In this assignment, you will implement a CUDA-based program that processes images in two stages:</p>
+<ol class="arabic simple">
+<li><p>Convert a color image (PNG) to grayscale</p></li>
+<li><p>Compute a histogram of grayscale pixel intensities and print the result</p></li>
+</ol>
+<p>You will work with real image data and use Unix tools to validate and visualize your results.</p>
+<section id="repository-structure">
+<h3>Repository Structure<a class="headerlink" href="#repository-structure" title="Link to this heading">¶</a></h3>
+<p>The repository is organized as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.
+├── bin
+│   └── grayscale
+├── data
+│   ├── IMG_2029.png
+│   ├── IMG_2724.png
+│   ├── IMG_3695.png
+│   ├── IMG_3696.png
+│   ├── IMG_3996.png
+│   ├── IMG_4061.png
+│   ├── IMG_4065.png
+│   ├── IMG_4066.png
+│   ├── IMG_4067.png
+│   ├── IMG_4069.png
+│   ├── output
+│   │   └── test_img_out.png
+│   └── test_img.png
+├── include
+│   └── png_flatten.h
+├── Makefile
+├── README.md
+├── script
+│   └── hw2-job.sh
+└── src
+    ├── grayscale.cu
+    └── png_flatten.c
+</pre></div>
+</div>
+</section>
+<section id="directory-description">
+<h3>Directory Description<a class="headerlink" href="#directory-description" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bin/</span></code>
+Contains the compiled executable (<code class="docutils literal notranslate"><span class="pre">grayscale</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data/</span></code>
+Contains input images you can use for testing.
+You will convert these color images into grayscale and write the results to: <code class="docutils literal notranslate"><span class="pre">data/output/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">include/png_flatten.h</span></code> and <code class="docutils literal notranslate"><span class="pre">src/png_flatten.c</span></code>
+Provide helper functions for loading and saving PNG images.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/grayscale.cu</span></code>
+Main CUDA source file where you will implement your solution.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Makefile</span></code>
+Used to build the project.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">script/hw2-job.sh</span></code>
+Example script for running your program on the cluster.</p></li>
+</ul>
+</section>
+<section id="png-handling-provided-code">
+<h3>PNG Handling (Provided Code)<a class="headerlink" href="#png-handling-provided-code" title="Link to this heading">¶</a></h3>
+<p>The repository includes helper functions for working with PNG images.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">png_flatten_load</span></code> (in <code class="docutils literal notranslate"><span class="pre">png_flatten.h</span></code>)
+Loads a PNG image and returns:</p>
+<ul class="simple">
+<li><p>A flattened 1D array of pixel data</p></li>
+<li><p>Image width</p></li>
+<li><p>Image height</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">png_flatten_save</span></code> (in <code class="docutils literal notranslate"><span class="pre">png_flatten.h</span></code>)
+Saves a flattened image array back to a PNG file.</p></li>
+</ol>
+<p>You should treat these as <strong>black-box utilities</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not modify <code class="docutils literal notranslate"><span class="pre">png_flatten.h</span></code> or <code class="docutils literal notranslate"><span class="pre">png_flatten.c</span></code>. These files are provided
+to simplify image I/O and must remain unchanged.</p>
+</div>
+</section>
+<section id="image-representation">
+<h3>Image Representation<a class="headerlink" href="#image-representation" title="Link to this heading">¶</a></h3>
+<p>Images are stored as a <strong>flattened 1D array</strong>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">image</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Each pixel consists of 4 components:</p>
+<ul class="simple">
+<li><p>Red (R)</p></li>
+<li><p>Green (G)</p></li>
+<li><p>Blue (B)</p></li>
+<li><p>Alpha (A)</p></li>
+</ul>
+<p>These are stored consecutively in memory:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[R, G, B, A,  R, G, B, A,  R, G, B, A, ...]
+</pre></div>
+</div>
+<p>Therefore:
+- Each pixel occupies 4 bytes
+- The starting index of pixel <code class="docutils literal notranslate"><span class="pre">i</span></code> is:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can see how this indexing works by examining the provided
+<code class="docutils literal notranslate"><span class="pre">image_to_grayscale</span></code> function.</p>
+</section>
+</section>
+<section id="grayscale-conversion">
+<h2>Grayscale Conversion<a class="headerlink" href="#grayscale-conversion" title="Link to this heading">¶</a></h2>
+<p>The file <code class="docutils literal notranslate"><span class="pre">src/grayscale.cu</span></code> includes a host-side function:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_grayscale</span><span class="p">(...)</span>
+</pre></div>
+</div>
+<p>This function converts a flattened RGB image into grayscale.</p>
+<p>The program:
+ma
+1. Loads an input PNG file
+2. Converts it to grayscale
+3. Saves the result to the specified output file</p>
+<p>The executable takes two arguments:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./bin/grayscale<span class="w"> </span>&lt;input.png&gt;<span class="w"> </span>&lt;output.png&gt;
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./bin/grayscale<span class="w"> </span>data/test_img.png<span class="w"> </span>data/output/test_img_out.png
+</pre></div>
+</div>
+<p>For the remainder of this assignment, you will <strong>augment</strong>
+<code class="docutils literal notranslate"><span class="pre">grayscale.cu</span></code> to perform additional processing.</p>
+<section id="important-notes">
+<h3>Important Notes<a class="headerlink" href="#important-notes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>You must operate on the <strong>flattened image representation</strong></p></li>
+<li><p>You must <strong>not modify</strong> the PNG helper files</p></li>
+<li><p>All new functionality should be implemented inside <code class="docutils literal notranslate"><span class="pre">grayscale.cu</span></code></p></li>
+</ul>
+</section>
+<section id="grayscale-program-usage-and-behavior">
+<h3>Grayscale Program: Usage and Behavior<a class="headerlink" href="#grayscale-program-usage-and-behavior" title="Link to this heading">¶</a></h3>
+<p>Your <code class="docutils literal notranslate"><span class="pre">grayscale.cu</span></code> program must support the following command-line usage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./grayscale<span class="w"> </span><span class="o">[</span>-g<span class="w"> </span>BLOCK<span class="o">]</span><span class="w"> </span>input.png<span class="w"> </span>output.png
+</pre></div>
+</div>
+<p>The purpose of this program is to convert a color image (<code class="docutils literal notranslate"><span class="pre">input.png</span></code>) into a
+grayscale image (<code class="docutils literal notranslate"><span class="pre">output.png</span></code>), using either a sequential CPU implementation
+or a parallel GPU implementation.</p>
+<p>The command-line arguments modify how the program runs:</p>
+<ul>
+<li><p><strong>Default (no flags)</strong>:</p>
+<p>Runs the <strong>sequential (CPU)</strong> version of the grayscale algorithm. This version
+reads <code class="docutils literal notranslate"><span class="pre">input.png</span></code>, converts it to grayscale using host code, and saves the
+result to <code class="docutils literal notranslate"><span class="pre">output.png</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do <strong>not</strong> produce the histogram in the CPU version.</p>
+</div>
+</li>
+<li><p><strong>``-g BLOCK`` flag</strong>:</p>
+<p>Enables the <strong>GPU version</strong> of the grayscale algorithm. This version uses CUDA
+and launches a kernel with a one-to-one mapping of <strong>one thread per pixel</strong>.
+The number of threads per block is specified by <code class="docutils literal notranslate"><span class="pre">BLOCK</span></code>.</p>
+<p>After computing the grayscale image, the GPU version must also compute a
+histogram of pixel intensities (0–255) and print the results to <strong>standard
+output</strong>.</p>
+<p>Each histogram bin and its corresponding count should be printed on its own
+line, separated by a space.</p>
+<p>For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./grayscale<span class="w"> </span>-g<span class="w"> </span><span class="m">16</span><span class="w"> </span>input.png<span class="w"> </span>output.png
+</pre></div>
+</div>
+<p>This runs the GPU version with a block size of 16 threads per block. By default, I recommend using a block size of a warp (32 threads) or a multiple of a warp (e.g., 64, 128, 256) for better performance, but you can experiment with different block sizes to see how it affects performance.</p>
+</li>
+</ul>
+<p><strong>Assumptions</strong></p>
+<ul class="simple">
+<li><p>You <strong>do not need to perform error checking</strong> on the command-line arguments.</p></li>
+<li><p>You can assume all inputs (including block sizes and filenames) are valid.</p></li>
+<li><p>Your program should apply the appropriate logic based on the presence or
+absence of the <code class="docutils literal notranslate"><span class="pre">-g</span></code> flag.</p></li>
+</ul>
+</section>
+<section id="compiling-and-running">
+<h3>Compiling and Running<a class="headerlink" href="#compiling-and-running" title="Link to this heading">¶</a></h3>
+<p>We have provided a <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> to compile your CUDA program named
+<code class="docutils literal notranslate"><span class="pre">grayscale</span></code>. Update the <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> script file named <code class="docutils literal notranslate"><span class="pre">hw2-job.sh</span></code> with your
+directory structure and CNet credentials (similar to HW1), then submit the job:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sbatch<span class="w"> </span>hw2-job.sh
+</pre></div>
+</div>
+<p>The script builds and executes the <code class="docutils literal notranslate"><span class="pre">grayscale</span></code> program on a GPU partition.</p>
+<p>The program uses the provided test file <code class="docutils literal notranslate"><span class="pre">test_img.png</span></code> to produce a grayscale
+image saved as:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>data/output/test_img_out.png
+</pre></div>
+</div>
+<p>If you are connected to the CS servers using Visual Studio Code, you can view
+the output image using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>code<span class="w"> </span>data/output/test_img_out.png
+</pre></div>
+</div>
+</section>
+</section>
+<section id="task-1-implement-a-gpu-version">
+<h2>Task 1: Implement a GPU Version<a class="headerlink" href="#task-1-implement-a-gpu-version" title="Link to this heading">¶</a></h2>
+<p>Inside <code class="docutils literal notranslate"><span class="pre">grayscale.cu</span></code>, implement a CUDA kernel named:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_grayscale_kern</span>
+</pre></div>
+</div>
+<p>Your goal is to perform grayscale conversion on the GPU using a <strong>one-to-one
+mapping of threads to pixels</strong>.</p>
+<p>Each thread should:
+- Compute its global index
+- Map to a pixel
+- Convert that pixel to grayscale</p>
+<p>You must use the specified block size (<code class="docutils literal notranslate"><span class="pre">BLOCK</span></code>) when launching your kernel.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In a future assignment, we will analyze performance and experiment with
+different configurations. For now, focus only on correctness.</p>
+</div>
+<section id="verifying-correctness">
+<h3>Verifying Correctness<a class="headerlink" href="#verifying-correctness" title="Link to this heading">¶</a></h3>
+<p>To test your implementation, implement a function:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">verify_gpu_results</span><span class="p">(...)</span>
+</pre></div>
+</div>
+<p>This function should compare the GPU output against the CPU implementation
+provided by <code class="docutils literal notranslate"><span class="pre">image_to_grayscale</span></code>.</p>
+<p>You may define the function arguments and return type.</p>
+<p>The goal is to ensure your GPU implementation produces correct results.</p>
+</section>
+<section id="floating-point-differences">
+<h3>Floating Point Differences<a class="headerlink" href="#floating-point-differences" title="Link to this heading">¶</a></h3>
+<p>When comparing CPU and GPU outputs, you may observe small differences—typically
+within ±1 for 8-bit image values (0–255). This is expected.</p>
+<p>Reasons include:
+- Differences in floating-point hardware
+- Rounding behavior
+- Optimization strategies</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Differences of ±1 between CPU and GPU outputs are acceptable. You do <strong>not</strong>
+need to eliminate them.</p>
+</div>
+</section>
+</section>
+<section id="histogram-computation">
+<h2>Histogram Computation<a class="headerlink" href="#histogram-computation" title="Link to this heading">¶</a></h2>
+<p>After converting the image to grayscale on the GPU, you will compute a
+<strong>histogram</strong> of pixel intensities.</p>
+<section id="what-is-a-histogram">
+<h3>What is a Histogram?<a class="headerlink" href="#what-is-a-histogram" title="Link to this heading">¶</a></h3>
+<p>A histogram represents the <strong>distribution of values</strong> in a dataset.</p>
+<p>For a grayscale image:
+- Pixel values range from 0 to 255
+- The histogram counts how many pixels have each intensity</p>
+<p>Formally:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">hist</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hist[i]</span></code> = number of pixels with intensity <code class="docutils literal notranslate"><span class="pre">i</span></code></p></li>
+</ul>
+<p>The total count should equal the number of pixels:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sum(hist) == width * height
+</pre></div>
+</div>
+</section>
+<section id="why-is-this-important">
+<h3>Why is this Important?<a class="headerlink" href="#why-is-this-important" title="Link to this heading">¶</a></h3>
+<p>Histograms are widely used in image processing to analyze brightness and contrast:</p>
+<ul class="simple">
+<li><p>Values concentrated near 0 → dark image</p></li>
+<li><p>Values concentrated near 255 → bright image</p></li>
+<li><p>Values spread across the range → high contrast</p></li>
+</ul>
+<p>Histograms summarize the distribution of values, but do not capture spatial
+information.</p>
+</section>
+</section>
+<section id="task-2-compute-histogram-on-the-gpu">
+<h2>Task 2: Compute Histogram on the GPU<a class="headerlink" href="#task-2-compute-histogram-on-the-gpu" title="Link to this heading">¶</a></h2>
+<p>Inside <code class="docutils literal notranslate"><span class="pre">grayscale.cu</span></code>, implement a CUDA kernel named:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">compute_histogram_kern</span>
+</pre></div>
+</div>
+<p>This kernel computes the histogram of the grayscale image.</p>
+<section id="requirements">
+<h3>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Use a <strong>one-to-one mapping of threads to pixels</strong></p></li>
+<li><p>Each thread should:
+- Read one grayscale pixel
+- Increment the corresponding histogram bin</p></li>
+</ul>
+</section>
+<section id="output-format-stdout">
+<h3>Output Format (stdout)<a class="headerlink" href="#output-format-stdout" title="Link to this heading">¶</a></h3>
+<p>When running the GPU version, print the histogram to standard output.</p>
+<p>Each line must contain:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;intensity&gt; &lt;count&gt;
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>0 1234
+1 1402
+...
+255 980
+</pre></div>
+</div>
+<p>There must be exactly 256 lines.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The histogram should only be printed in the GPU version.</p>
+</div>
+</section>
+<section id="visualizing-the-histogram">
+<h3>Visualizing the Histogram<a class="headerlink" href="#visualizing-the-histogram" title="Link to this heading">¶</a></h3>
+<p>You can visualize your histogram using <code class="docutils literal notranslate"><span class="pre">gnuplot</span></code>.</p>
+<p>First, save the output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./grayscale<span class="w"> </span>-g<span class="w"> </span><span class="m">256</span><span class="w"> </span>input.png<span class="w"> </span>output.png<span class="w"> </span>&gt;<span class="w"> </span>hist.txt
+</pre></div>
+</div>
+<p>Then generate a PNG:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gnuplot<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span>
+<span class="s2">set terminal png size 800,600;</span>
+<span class="s2">set output &#39;hist.png&#39;;</span>
+<span class="s2">set title &#39;Grayscale Histogram&#39;;</span>
+<span class="s2">set xlabel &#39;Intensity&#39;;</span>
+<span class="s2">set ylabel &#39;Pixel Count&#39;;</span>
+<span class="s2">set xrange [0:255];</span>
+<span class="s2">set yrange [0:*];</span>
+<span class="s2">set boxwidth 0.9;</span>
+<span class="s2">set style fill solid;</span>
+<span class="s2">set style data boxes;</span>
+<span class="s2">plot &#39;hist.txt&#39; using 1:2 notitle</span>
+<span class="s2">&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="verifying-histogram-correctness">
+<h3>Verifying Histogram Correctness<a class="headerlink" href="#verifying-histogram-correctness" title="Link to this heading">¶</a></h3>
+<p>You can validate your histogram using Unix tools.</p>
+<p>Check total pixel count:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./grayscale<span class="w"> </span>-g<span class="w"> </span><span class="m">256</span><span class="w"> </span>input.png<span class="w"> </span>output.png<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum += $2} END {print sum}&#39;</span>
+</pre></div>
+</div>
+<p>This should equal:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>width * height
+</pre></div>
+</div>
+<p>Check determinism:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./grayscale<span class="w"> </span>-g<span class="w"> </span><span class="m">256</span><span class="w"> </span>input.png<span class="w"> </span>output.png<span class="w"> </span>&gt;<span class="w"> </span>run1.txt
+./grayscale<span class="w"> </span>-g<span class="w"> </span><span class="m">256</span><span class="w"> </span>input.png<span class="w"> </span>output.png<span class="w"> </span>&gt;<span class="w"> </span>run2.txt
+diff<span class="w"> </span>run1.txt<span class="w"> </span>run2.txt
+</pre></div>
+</div>
+<p>If the outputs differ, your implementation likely contains a race condition.</p>
+</section>
+</section>
+<section id="grading">
+<h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h2>
+<p>Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)</p>
+<p>The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:</p>
+<ul class="simple">
+<li><p>Completeness: 75%</p></li>
+<li><p>Correctness: 15%</p></li>
+<li><p>Design &amp; Style: 10%</p></li>
+</ul>
+</section>
+<section id="submission">
+<h2>Submission<a class="headerlink" href="#submission" title="Link to this heading">¶</a></h2>
+<p>Before submitting, make sure you’ve added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the “Homework #2” assignment page via two ways,</p>
+<ol class="arabic simple">
+<li><p><strong>Uploading from Github directly (recommended way)</strong>: You can link your Github account to your Gradescope account and upload the correct repository based on
+the homework assignment. When you submit your homework, a pop window will appear. Click on “Github” and then  “Connect to Github” to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be “main” or “master”) for this course.</p></li>
+<li><p><strong>Uploading via a Zip file</strong>: You can also upload a zip file of the homework directory. Please make sure you upload the entire directory and keep the initial structure the <strong>same</strong> as the starter code; otherwise, you run the risk of not passing the automated tests.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For either option, you must upload the entire directory structure; otherwise, your automated test grade will not run correctly and you will
+be <strong>penalized</strong> if we have to manually run the tests. Going with the first option will do this automatically for you. You can always add additional directories and files (and even files/directories inside the stater directories) but the default directory/file structure must not change.</p>
+</div>
+<p>Depending on the assignment, once you submit your work, an “autograder” will run. This autograder should produce the same test results as when you run the code yourself; if it doesn’t, please let us know so we can look into it. A few other notes:</p>
+<ul class="simple">
+<li><p>You are allowed to make as many submissions as you want before the deadline.</p></li>
+<li><p>Please make sure you have read and understood our <a class="reference internal" href="../../syllabus.html#late-submissions"><span class="std std-ref">Late Submission Policy</span></a>.</p></li>
+<li><p>Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).</p></li>
+<li><p>Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
