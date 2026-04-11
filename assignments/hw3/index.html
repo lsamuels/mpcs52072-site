@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Homework #3 &#8212; MPCS 52072 - GPU Programming  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS52072</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../../modules/index.html">Modules</a></li>
+                <li><a href="../index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Homework #3</a><ul>
+<li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a></li>
+<li><a class="reference internal" href="#programming-problem-convolution-based-edge-detection">Programming Problem:  Convolution-Based Edge Detection</a><ul>
+<li><a class="reference internal" href="#directory-structure">Directory Structure</a></li>
+<li><a class="reference internal" href="#stencil-input-format">Stencil Input Format</a></li>
+<li><a class="reference internal" href="#shared-memory-dynamic-allocation">Shared Memory: Dynamic Allocation</a></li>
+<li><a class="reference internal" href="#preprocessing-grayscale-conversion">Preprocessing: Grayscale Conversion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#program-usage-command-line-interface">Program Usage: Command-Line Interface</a><ul>
+<li><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#measuring-kernel-execution-time-with-cuda-events">Measuring Kernel Execution Time with CUDA Events</a><ul>
+<li><a class="reference internal" href="#basic-timing-workflow">Basic Timing Workflow</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#report-submit-as-report-md">Report (Submit as <code class="docutils literal notranslate"><span class="pre">report.md</span></code>)</a></li>
+<li><a class="reference internal" href="#grading">Grading</a></li>
+<li><a class="reference internal" href="#submission">Submission</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/assignments/hw3/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="homework-3">
+<h1>Homework #3<a class="headerlink" href="#homework-3" title="Link to this heading">¶</a></h1>
+<p><strong>Due: Friday, April 17th at 11:59pm</strong></p>
+<p>In this assignment, you will implement an edge detection algorithm on grayscale images using
+2D convolution on the GPU. Your implementation will support:</p>
+<ul class="simple">
+<li><p>Arbitrary <strong>stencil sizes</strong>: 3×3, 5×5, 7×7, loaded at runtime from a file</p></li>
+<li><p><strong>Zero-padding</strong> boundary handling</p></li>
+<li><p>Both <strong>global memory</strong> and <strong>shared memory</strong> kernel variants</p></li>
+</ul>
+<p>This assignment is designed to help you understand how stencil-based image operations interact
+with CUDA memory models and how optimization strategies like shared memory tiling can accelerate performance.</p>
+<p>AWS Instances and GPU Profiling</p>
+<p>We are still working on configuring the AWS instances so we are temporarily <strong>suspending GPU profiling requirements</strong> for this assignment. We expect to begin performing profiling-based performance analysis in future assignments once the AWS instances are fully configured and consistent across both platforms.</p>
+<section id="creating-your-private-repository">
+<h2>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h2>
+<p>To actually get your private repository, you will need this invitation URL:</p>
+<ul class="simple">
+<li><p><strong>HW3 invitation (Please check the Post “HW 3 is ready” Ed)</strong></p></li>
+</ul>
+<p>When you click on an invitation URL, you will have to complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>You must click “Accept this assignment” or your repository will not actually be created.</p></li>
+<li><p>After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it’s ready within seconds and you can just refresh the page.</p></li>
+<li><dl class="simple">
+<dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
+<li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-spr26/hw3-GITHUB-USERNAME.git.</p></li>
+<li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.</p>
+</section>
+<section id="programming-problem-convolution-based-edge-detection">
+<h2>Programming Problem:  Convolution-Based Edge Detection<a class="headerlink" href="#programming-problem-convolution-based-edge-detection" title="Link to this heading">¶</a></h2>
+<p>Convolution is a common image processing operation used to detect edges, smooth images, or extract
+features. It works by sliding a filter (also called a kernel or stencil) over an image and computing
+a weighted sum of neighboring pixel values.</p>
+<p>Given an image <code class="docutils literal notranslate"><span class="pre">I</span></code> and a convolution kernel <code class="docutils literal notranslate"><span class="pre">K</span></code> of size <code class="docutils literal notranslate"><span class="pre">n×n</span></code>, the output at pixel position
+<code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> is:</p>
+<div class="math notranslate nohighlight">
+\[\text{output}(x, y) = \sum_{i=-r}^{r} \sum_{j=-r}^{r} I(x+i, y+j) \cdot K(i+r, j+r)\]</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">=</span> <span class="pre">n</span> <span class="pre">//</span> <span class="pre">2</span></code> is the stencil radius. At the edges, some of the neighborhood may fall
+outside the image bounds. In this assignment, you will handle this case using <strong>zero-padding</strong>—
+i.e., treat out-of-bounds pixels as having value 0.</p>
+<p><strong>Tasks</strong>: Here is what you will need to accomplish for this assignment:</p>
+<ol class="arabic simple">
+<li><p>Implement both global and shared memory convolution kernels. The global kernel will only use global memory and the shared memory convolution kernel will use a mixture of shared and global memory. You are required to use 2D grids and blocks for this assignment. <strong>Please note that the image data itself is still a 1D arrray, but you will need to use 2D indexing to access the image data in your kernels.</strong></p></li>
+<li><p>Load the stencil from a file on the host</p></li>
+<li><p>Copy the stencil to device constant memory</p></li>
+<li><p>Use your existing <code class="docutils literal notranslate"><span class="pre">image_to_grayscale_kern</span></code> to convert the input image to grayscale. You are not required to update this kernel to use 2D indexing, but you can if you want to. You can also choose to write a new kernel that uses 2D indexing for the grayscale conversion if you prefer.</p></li>
+<li><p>Implement zero-padding in both kernels</p></li>
+<li><p>Dynamically allocate shared memory for the shared memory version</p></li>
+<li><p>Measure and report kernel execution time using CUDA events</p></li>
+</ol>
+<p>The following sections will provide guidance on how to implement these tasks.</p>
+<section id="directory-structure">
+<h3>Directory Structure<a class="headerlink" href="#directory-structure" title="Link to this heading">¶</a></h3>
+<p>After cloning your repository, the assignment should follow the structure outlined below:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>├── bin
+├── data
+│   ├── stencil3x3.txt
+│   ├── stencil5x5.txt
+│   ├── stencil7x7.txt
+│   └── test_img.png
+├── include
+│   └── png_flatten.h
+├── scripts
+│   └── hw3-job.sh
+├── src
+│   ├── edge_detect.cu
+│   └── png_flatten.c
+├── Makefile
+├── report.md
+└── README.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">src/</span></code> contains all source code files, including your CUDA and C utilities</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">include/</span></code> contains any header files your project uses</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data/</span></code> holds input images or other data (e.g., stencils)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/</span></code> may include any SLURM or job submission scripts</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bin/</span></code> is where the final executable binary (e.g., <code class="docutils literal notranslate"><span class="pre">edge_detect</span></code>) will be placed after building</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Makefile</span></code> automates compilation and linking</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">report.md</span></code> The report file that includes answers to the questions described below.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">README.md</span></code> should describe how to build and run your project, and indicate which GPU cluster (Midway3 or Peanut) you used.</p></li>
+</ul>
+<p>Feel free to add additional files are needed. Additionally feel free to use the hw2 images while working on this assignment.</p>
+</section>
+<section id="stencil-input-format">
+<h3>Stencil Input Format<a class="headerlink" href="#stencil-input-format" title="Link to this heading">¶</a></h3>
+<p>The stencil will be stored in a text file containing space-separated integers with one row per line.
+The number of rows must equal the number of columns (i.e., the stencil must be square). The first line will specify the dimension followed by the line representing the space-separated integers with one row per line.</p>
+<p><strong>Example: A 3×3 Laplacian stencil (``data/stencil3x3.txt``)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> 0 -1  0
+-1  4 -1
+ 0 -1  0
+</pre></div>
+</div>
+<p>Your CUDA kernel must use <code class="docutils literal notranslate"><span class="pre">__constant__</span></code> memory to store the stencil coefficients.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">__constant__</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">stencil</span><span class="p">[</span><span class="mi">49</span><span class="p">];</span><span class="w">  </span><span class="c1">// Supports up to 7×7</span>
+</pre></div>
+</div>
+<p>Then copy data to the device like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">cudaMemcpyToSymbol</span><span class="p">(</span><span class="n">stencil</span><span class="p">,</span><span class="w"> </span><span class="n">h_stencil</span><span class="p">,</span><span class="w"> </span><span class="n">stencil_size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">stencil_size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>You may assume the maximum stencil size is 7×7 (49 elements total). You may include a runtime check
+to validate that the loaded stencil is 3×3, 5×5, or 7×7 but this is not required. Inside the <code class="docutils literal notranslate"><span class="pre">data</span></code> directory, we have provide example stencils for all dimensions. <strong>We will only use these stencil files when grading.</strong></p>
+</section>
+<section id="shared-memory-dynamic-allocation">
+<h3>Shared Memory: Dynamic Allocation<a class="headerlink" href="#shared-memory-dynamic-allocation" title="Link to this heading">¶</a></h3>
+<p>In your <strong>shared memory</strong> version of the convolution kernel, you will use dynamically allocated
+shared memory to load a tile and its halo.</p>
+<p>Declare shared memory like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">extern</span><span class="w"> </span><span class="n">__shared__</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">tile</span><span class="p">[];</span>
+</pre></div>
+</div>
+<p>Then, compute the amount of shared memory needed during kernel launch:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">shared_mem_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">BLOCK_SIZE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">radius</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">BLOCK_SIZE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">radius</span><span class="p">);</span>
+<span class="n">edge_detect_shared</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid</span><span class="p">,</span><span class="w"> </span><span class="n">block</span><span class="p">,</span><span class="w"> </span><span class="n">shared_mem_size</span><span class="o">&gt;&gt;&gt;</span><span class="p">(...);</span>
+</pre></div>
+</div>
+<p>This ensures that the kernel has enough space to store the current tile of the image,
+including the halo around it needed for stencil operations.</p>
+</section>
+<section id="preprocessing-grayscale-conversion">
+<h3>Preprocessing: Grayscale Conversion<a class="headerlink" href="#preprocessing-grayscale-conversion" title="Link to this heading">¶</a></h3>
+<p>Before launching your convolution kernel, you must first convert the input image to grayscale
+<strong>on the GPU</strong> using your kernel from the previous homework assignment:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_grayscale_kern</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid</span><span class="p">,</span><span class="w"> </span><span class="n">block</span><span class="o">&gt;&gt;&gt;</span><span class="p">(...);</span>
+</pre></div>
+</div>
+<p>Only the grayscale image should be passed into your convolution kernels. As mentioned above, you can choose to update your existing grayscale kernel to use 2D indexing; however, you are not required to do so.</p>
+</section>
+</section>
+<section id="program-usage-command-line-interface">
+<h2>Program Usage: Command-Line Interface<a class="headerlink" href="#program-usage-command-line-interface" title="Link to this heading">¶</a></h2>
+<p>Your program should support the following CLI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./edge_detect<span class="w"> </span>global<span class="p">|</span>shared<span class="w"> </span>stencil.txt<span class="w"> </span>input.png<span class="w"> </span>output.png
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">global|shared</span></code>: Run a single convolution kernel: <code class="docutils literal notranslate"><span class="pre">global</span></code> or <code class="docutils literal notranslate"><span class="pre">shared</span></code> and produce its execution time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">input.png</span></code>: Path to the input RGB PNG image</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output.png</span></code>: Path to the output PNG image</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stencil.txt</span></code>: Path to the stencil file (e.g., <code class="docutils literal notranslate"><span class="pre">data/stencil3x3.txt</span></code>)</p></li>
+</ul>
+<p>As with the prior assignments, you do not need to have error-handling code for your arguments. You can assume we will run your program as specified by the usage statement above and will provide it with valid command-line arguments.</p>
+<section id="output">
+<h3>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>A edge detected output PNG image after convolution</p></li>
+<li><p>A printed performance summary, e.g.:</p></li>
+</ul>
+</section>
+</section>
+<section id="measuring-kernel-execution-time-with-cuda-events">
+<h2>Measuring Kernel Execution Time with CUDA Events<a class="headerlink" href="#measuring-kernel-execution-time-with-cuda-events" title="Link to this heading">¶</a></h2>
+<p>For this assignment, you will measure and report the <strong>execution time</strong> of both your global memory and shared memory convolution kernels using CUDA Events.</p>
+<p>CUDA events are a simple and effective way to measure elapsed time between two points in your GPU code.Although we will revisit CUDA Events in more detail in a later module (to explore advanced uses like stream synchronization and multi-kernel coordination), for now we will <strong>only use them for basic performance timing</strong>.</p>
+<section id="basic-timing-workflow">
+<h3>Basic Timing Workflow<a class="headerlink" href="#basic-timing-workflow" title="Link to this heading">¶</a></h3>
+<p>Here’s how you can time a kernel using CUDA events:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">cudaEvent_t</span><span class="w"> </span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="n">stop</span><span class="p">;</span>
+<span class="n">cudaEventCreate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">start</span><span class="p">);</span>
+<span class="n">cudaEventCreate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">stop</span><span class="p">);</span>
+
+<span class="n">cudaEventRecord</span><span class="p">(</span><span class="n">start</span><span class="p">);</span>
+
+<span class="c1">// Kernel launch</span>
+<span class="n">convolution_kernel</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid</span><span class="p">,</span><span class="w"> </span><span class="n">block</span><span class="o">&gt;&gt;&gt;</span><span class="p">(...);</span>
+
+<span class="n">cudaEventRecord</span><span class="p">(</span><span class="n">stop</span><span class="p">);</span>
+<span class="n">cudaEventSynchronize</span><span class="p">(</span><span class="n">stop</span><span class="p">);</span>
+
+<span class="kt">float</span><span class="w"> </span><span class="n">elapsed_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+<span class="n">cudaEventElapsedTime</span><span class="p">(</span><span class="o">&amp;</span><span class="n">elapsed_ms</span><span class="p">,</span><span class="w"> </span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="n">stop</span><span class="p">);</span>
+
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Kernel execution time: %.3f ms</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">elapsed_ms</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You should wrap the timing around <strong>only the kernel launch</strong>, not memory allocations or file I/O.</p>
+</section>
+</section>
+<section id="report-submit-as-report-md">
+<h2>Report (Submit as <code class="docutils literal notranslate"><span class="pre">report.md</span></code>)<a class="headerlink" href="#report-submit-as-report-md" title="Link to this heading">¶</a></h2>
+<p>Answer the following:</p>
+<ol class="arabic simple">
+<li><p>What is the average runtime for each stencil using both global and shared memory?</p></li>
+<li><p>How does performance scale with stencil size?</p></li>
+<li><p>What speedup (if any) does shared memory provide?</p></li>
+<li><p>What implementation issues did you encounter with:
+- Loading the stencil from file?
+- Allocating shared memory?
+- Managing kernel launch arguments?
+- Using constant memory?</p></li>
+</ol>
+<p><strong>You are not required to produce graphs or provide the timing measurements for this specific assignment</strong>. Please provide a brief overview of what’s happening in your implementation and execution when answering the above questions. However, feel free to provide timings and graphs in your report to justify your answers. As you answer these questions, We want to provide more insight into the timing differences between the shared memory and global memory kernel runtimes. One thing we’ll mention is that it’s perfectly fine if the global memory version outperforms the shared memory version in some executions. However, you need to explain why you think that’s happening. I won’t spell it out for you because that’s part of what we’re grading you on, so you need to think carefully about what might be going on.</p>
+<p>Also, I recommend downloading even larger images (e.g., 15MB or greater) and considering how that might affect the timing results.</p>
+</section>
+<section id="grading">
+<h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h2>
+<p>Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)</p>
+<p>The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:</p>
+<ul class="simple">
+<li><p><strong>Completeness</strong>: 60%</p></li>
+<li><p><strong>Correctness</strong>: 15%</p></li>
+<li><p><strong>Design/Style</strong>: 10%</p></li>
+<li><p><strong>report.md</strong>: 15%</p></li>
+</ul>
+</section>
+<section id="submission">
+<h2>Submission<a class="headerlink" href="#submission" title="Link to this heading">¶</a></h2>
+<p>Before submitting, make sure you’ve added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the “Homework #3” assignment page via two ways,</p>
+<ol class="arabic simple">
+<li><p><strong>Uploading from Github directly (recommended way)</strong>: You can link your Github account to your Gradescope account and upload the correct repository based on
+the homework assignment. When you submit your homework, a pop window will appear. Click on “Github” and then  “Connect to Github” to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be “main” or “master”) for this course.</p></li>
+<li><p><strong>Uploading via a Zip file</strong>: You can also upload a zip file of the homework directory. Please make sure you upload the entire directory and keep the initial structure the <strong>same</strong> as the starter code; otherwise, you run the risk of not passing the automated tests.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For either option, you must upload the entire directory structure; otherwise, your automated test grade will not run correctly and you will
+be <strong>penalized</strong> if we have to manually run the tests. Going with the first option will do this automatically for you. You can always add additional directories and files (and even files/directories inside the stater directories) but the default directory/file structure must not change.</p>
+</div>
+<p>Depending on the assignment, once you submit your work, an “autograder” will run. This autograder should produce the same test results as when you run the code yourself; if it doesn’t, please let us know so we can look into it. A few other notes:</p>
+<ul class="simple">
+<li><p>You are allowed to make as many submissions as you want before the deadline.</p></li>
+<li><p>Please make sure you have read and understood our <a class="reference internal" href="../../syllabus.html#late-submissions"><span class="std std-ref">Late Submission Policy</span></a>.</p></li>
+<li><p>Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).</p></li>
+<li><p>Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
