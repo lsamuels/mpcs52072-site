@@ -290,6 +290,13 @@ including the halo around it needed for stencil operations.</p>
 <li><p>A edge detected output PNG image after convolution</p></li>
 <li><p>A printed performance summary, e.g.:</p></li>
 </ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ ./edge_detect shared data/stencil5x5.txt data/test_img.png output.png
+shared memory version (stencil 5x5): 3.215 ms
+
+$ ./edge_detect global data/stencil5x5.txt data/test_img.png output.png
+global memory version (stencil 5x5): 6.848 ms
+</pre></div>
+</div>
 </section>
 </section>
 <section id="measuring-kernel-execution-time-with-cuda-events">
