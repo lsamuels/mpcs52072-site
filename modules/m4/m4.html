@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>M4: GPU Patterns and Structures &#8212; MPCS 52072 - GPU Programming  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS52072</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../index.html">Modules</a></li>
+                <li><a href="../../assignments/index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">M4: GPU Patterns and Structures</a><ul>
+<li><a class="reference internal" href="#pre-recorded-lectures">Pre-recorded Lectures</a></li>
+<li><a class="reference internal" href="#resources-readings">Resources/Readings</a></li>
+<li><a class="reference internal" href="#synchronous-session-in-person-lecture">Synchronous Session (In-Person Lecture)</a><ul>
+<li><a class="reference internal" href="#week-5">Week 5</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#assignment">Assignment</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/modules/m4/m4.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="m4-gpu-patterns-and-structures">
+<h1>M4: GPU Patterns and Structures<a class="headerlink" href="#m4-gpu-patterns-and-structures" title="Link to this heading">¶</a></h1>
+<p>In this fourth module, we focus on parallel patterns and structures that benefit from GPU acceleration. The patterns discussed in this module can be applied across many different algorithms to help solve them on a GPU. We will provide the naive implementation and then show how each can be improved via optimizations discussed in previous modules. The module will cover the following:</p>
+<ul class="simple">
+<li><p>Histograms</p></li>
+<li><p>Reductions</p></li>
+<li><p>Map</p></li>
+<li><p>Tiling (Stencil)</p></li>
+<li><p>Scan</p></li>
+<li><p>Gather/Scatter</p></li>
+<li><p>Stream compaction</p></li>
+</ul>
+<section id="pre-recorded-lectures">
+<h2>Pre-recorded Lectures<a class="headerlink" href="#pre-recorded-lectures" title="Link to this heading">¶</a></h2>
+<p><strong>Note: The pre-recorded videos for M4 will be posted after Tuesday’s lecture</strong>.</p>
+<p>The pre-recorded lectures are available here: <a class="reference external" href="...">M4 Videos</a>.
+You can also find the videos under the “Panopto” tab on the MPCS 52072 canvas site.</p>
+<p>The lectures are a series of approx 20-30 minute videos divided into the following sections:</p>
+<ul class="simple">
+<li><p>4.1 Parallel Prefix Scan (Part 1)</p></li>
+<li><p>4.2 Parallel Prefix Scan (Part 2)</p></li>
+</ul>
+</section>
+<section id="resources-readings">
+<h2>Resources/Readings<a class="headerlink" href="#resources-readings" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Programming Massively Parallel Processors: A Hands-on Approach</strong></dt><dd><ul>
+<li><p>Chapter 9</p></li>
+<li><p>Chapter 10</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>All slide and code materials will be accessible via the course repository.</p>
+</section>
+<section id="synchronous-session-in-person-lecture">
+<h2>Synchronous Session (In-Person Lecture)<a class="headerlink" href="#synchronous-session-in-person-lecture" title="Link to this heading">¶</a></h2>
+<p>As a reminder here are the dates and times for the synchronous session for this module:</p>
+<section id="week-5">
+<h3>Week 5<a class="headerlink" href="#week-5" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Dates/Times</dt><dd><ul>
+<li><p><strong>Tuesday April 23rd &#64; 2:00pm-4:00pm</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Session Outline</dt><dd><ul>
+<li><p>Histograms</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+</section>
+<section id="assignment">
+<h2>Assignment<a class="headerlink" href="#assignment" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="../../assignments/proj1/index.html">Homework #3</a>, due Friday May 1st at 11:59pm CDT</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
