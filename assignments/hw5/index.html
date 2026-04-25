@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Homework #5 &#8212; MPCS 52072 - GPU Programming  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS52072</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../../modules/index.html">Modules</a></li>
+                <li><a href="../index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Homework #5</a><ul>
+<li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a></li>
+<li><a class="reference internal" href="#assignment-focus">Assignment Focus</a></li>
+<li><a class="reference internal" href="#warp-level-primitives">Warp-Level Primitives</a><ul>
+<li><a class="reference internal" href="#ballot-sync">__ballot_sync</a></li>
+<li><a class="reference internal" href="#popc">__popc</a></li>
+<li><a class="reference internal" href="#computing-a-local-rank">Computing a Local Rank</a></li>
+<li><a class="reference internal" href="#example-kernel">Example Kernel</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#assignment-overview">Assignment Overview</a><ul>
+<li><a class="reference internal" href="#posts-format">Posts Format</a></li>
+<li><a class="reference internal" href="#trending-definition">Trending Definition</a></li>
+<li><a class="reference internal" href="#pipeline">Pipeline</a></li>
+<li><a class="reference internal" href="#command-line-interface">Command Line Interface</a></li>
+<li><a class="reference internal" href="#output">Output</a></li>
+<li><a class="reference internal" href="#example-cli">Example CLI</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#task-1-file-parsing-cpu">Task 1: File Parsing (CPU)</a></li>
+<li><a class="reference internal" href="#task-2-host-side-setup">Task 2: Host-Side Setup</a></li>
+<li><a class="reference internal" href="#task-3-flagging-kernel-gpu">Task 3: Flagging Kernel (GPU)</a></li>
+<li><a class="reference internal" href="#task-4-prefix-scan-gpu">Task 4: Prefix Scan (GPU)</a><ul>
+<li><a class="reference internal" href="#note-on-prefix-scan-usage">Note on Prefix Scan Usage</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#task-5-histogram-kernels">Task 5: Histogram Kernels</a><ul>
+<li><a class="reference internal" href="#command-line-flag">Command Line Flag</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#testing-and-directory-structure">Testing and Directory Structure</a><ul>
+<li><a class="reference internal" href="#running-a-single-test">Running a Single Test</a></li>
+<li><a class="reference internal" href="#running-all-tests">Running All Tests</a></li>
+<li><a class="reference internal" href="#optional-warp-version-testing">Optional: Warp Version Testing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grading">Grading</a></li>
+<li><a class="reference internal" href="#submission">Submission</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/assignments/hw5/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="homework-5">
+<h1>Homework #5<a class="headerlink" href="#homework-5" title="Link to this heading">¶</a></h1>
+<p><strong>Due: Friday, May 1st at 11:59pm</strong></p>
+<p>This assignment introduces several important GPU programming patterns:</p>
+<ul class="simple">
+<li><p>Prefix scan (exclusive scan)</p></li>
+<li><p>Histogram computation with atomics</p></li>
+<li><p>Shared memory usage</p></li>
+<li><p>Warp-level primitives (e.g., <code class="docutils literal notranslate"><span class="pre">__ballot_sync</span></code> and <code class="docutils literal notranslate"><span class="pre">__popc</span></code>)</p></li>
+</ul>
+<section id="creating-your-private-repository">
+<h2>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h2>
+<p>To actually get your private repository, you will need this invitation URL:</p>
+<ul class="simple">
+<li><p><strong>HW5 invitation (Please check the Post “HW 5 is ready” Ed)</strong></p></li>
+</ul>
+<p>When you click on an invitation URL, you will have to complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>You must click “Accept this assignment” or your repository will not actually be created.</p></li>
+<li><p>After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it’s ready within seconds and you can just refresh the page.</p></li>
+<li><dl class="simple">
+<dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
+<li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-spr26/hw5-GITHUB-USERNAME.git.</p></li>
+<li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.</p>
+</section>
+<section id="assignment-focus">
+<h2>Assignment Focus<a class="headerlink" href="#assignment-focus" title="Link to this heading">¶</a></h2>
+<p>This assignment is designed to help you become familiar with common GPU programming patterns, including:</p>
+<ul class="simple">
+<li><p>Prefix scan</p></li>
+<li><p>Histogram computation</p></li>
+<li><p>Warp-level primitives</p></li>
+</ul>
+<p>The primary goal is to build a correct and functional implementation of these patterns in a realistic pipeline.</p>
+<p><strong>You are not required to profile or optimize performance for this assignment.</strong></p>
+<p>While you will implement multiple GPU techniques (e.g., shared memory and warp-level primitives), the emphasis is on understanding how these patterns work and not on achieving maximum performance.</p>
+<p>We will return to performance analysis and profiling in future assignments.</p>
+</section>
+<section id="warp-level-primitives">
+<h2>Warp-Level Primitives<a class="headerlink" href="#warp-level-primitives" title="Link to this heading">¶</a></h2>
+<p>In this assignment, you will use warp-level primitives to improve the efficiency
+of your GPU implementation.</p>
+<p>Two important primitives are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">__ballot_sync</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__popc</span></code></p></li>
+</ul>
+<section id="ballot-sync">
+<h3>__ballot_sync<a class="headerlink" href="#ballot-sync" title="Link to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">unsigned</span><span class="w"> </span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">__ballot_sync</span><span class="p">(</span><span class="mh">0xffffffff</span><span class="p">,</span><span class="w"> </span><span class="n">predicate</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This function evaluates <code class="docutils literal notranslate"><span class="pre">predicate</span></code> for all threads in the warp and returns
+a 32-bit integer (mask).</p>
+<ul class="simple">
+<li><p>Each bit corresponds to a thread (lane) in the warp</p></li>
+<li><p>If a thread’s predicate is true, its bit is set to 1</p></li>
+<li><p>Otherwise, the bit is 0</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>lane:        0  1  2  3  4  5  6  7
+predicate:   1  0  1  1  0  0  1  0
+</pre></div>
+</div>
+<p>The resulting mask encodes which threads satisfied the condition.</p>
+</section>
+<section id="popc">
+<h3>__popc<a class="headerlink" href="#popc" title="Link to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">__popc</span><span class="p">(</span><span class="n">mask</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This function counts the number of bits set to 1 in <code class="docutils literal notranslate"><span class="pre">mask</span></code>.</p>
+<p>Using the previous example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>count = 4
+</pre></div>
+</div>
+<p>This means 4 threads in the warp satisfied the condition.</p>
+</section>
+<section id="computing-a-local-rank">
+<h3>Computing a Local Rank<a class="headerlink" href="#computing-a-local-rank" title="Link to this heading">¶</a></h3>
+<p>You can compute how many threads before the current thread satisfy the condition:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">lane</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">warpSize</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">local_rank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">__popc</span><span class="p">(</span><span class="n">mask</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">((</span><span class="mi">1u</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">lane</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>This gives each thread a position among the threads where <code class="docutils literal notranslate"><span class="pre">predicate</span> <span class="pre">==</span> <span class="pre">true</span></code>.</p>
+</section>
+<section id="example-kernel">
+<h3>Example Kernel<a class="headerlink" href="#example-kernel" title="Link to this heading">¶</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">warp_example</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">output</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">is_even</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">__ballot_sync</span><span class="p">(</span><span class="mh">0xffffffff</span><span class="p">,</span><span class="w"> </span><span class="n">is_even</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">lane</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">warpSize</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">total_in_warp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">__popc</span><span class="p">(</span><span class="n">mask</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">local_rank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">__popc</span><span class="p">(</span><span class="n">mask</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">((</span><span class="mi">1u</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">lane</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">total_in_warp</span><span class="p">;</span>
+<span class="w">        </span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">local_rank</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For each thread:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">total_in_warp</span></code> = number of threads in the warp where the condition is true</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">local_rank</span></code> = number of threads before this one that satisfy the condition</p></li>
+</ul>
+</section>
+</section>
+<section id="assignment-overview">
+<h2>Assignment Overview<a class="headerlink" href="#assignment-overview" title="Link to this heading">¶</a></h2>
+<p>In this assignment, you will implement a GPU-based pipeline for processing a large stream of social media posts. The goal is to identify “trending” posts and compute summary statistics using histograms. The following subsections explain the structure of the data, formulas for computing various statistics and the overall pipeline structure for implementing the program.</p>
+<section id="posts-format">
+<h3>Posts Format<a class="headerlink" href="#posts-format" title="Link to this heading">¶</a></h3>
+<p>Your program will read social media post input from a file with the following format:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Num_Of_Posts
+post_id
+user_id
+content_type
+likes
+shares
+comments
+...
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The first line specifies the total number of posts.</p></li>
+<li><p>Each post is described by <strong>6 consecutive lines</strong>.</p></li>
+<li><p>There are exactly <code class="docutils literal notranslate"><span class="pre">Num_Of_Posts</span></code> posts in the file.</p></li>
+<li><p>The file will be provided as an argument to the program.</p></li>
+</ul>
+<p>The program will construct <code class="docutils literal notranslate"><span class="pre">Post</span></code> structs. (<code class="docutils literal notranslate"><span class="pre">hw5/include/post.h</span></code>) based off reading in the data from the file.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Post</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">post_id</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">user_id</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">content_type</span><span class="p">;</span><span class="w">   </span><span class="c1">// 0=text, 1=image, 2=video, 3=link</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">likes</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">shares</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">comments</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="trending-definition">
+<h3>Trending Definition<a class="headerlink" href="#trending-definition" title="Link to this heading">¶</a></h3>
+<p>Each post is assigned an engagement score:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">likes</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">shares</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">comments</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>A post is considered <strong>trending</strong> if:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">threshold</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">threshold</span></code> value will be provided as an argument to the program.</p>
+</section>
+<section id="pipeline">
+<h3>Pipeline<a class="headerlink" href="#pipeline" title="Link to this heading">¶</a></h3>
+<p>The structure for the application will be as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Input File
+   ↓
+Load Posts (CPU)
+   ↓
+Copy to GPU
+   ↓
+Compute Score + Flag
+   ↓
+Prefix Scan
+   ↓
+Compute Histograms (Shared Memory/Warp Prims)
+   ↓
+Copy Results Back
+   ↓
+Print Output
+</pre></div>
+</div>
+</section>
+<section id="command-line-interface">
+<h3>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading">¶</a></h3>
+<p>The program’s usage is as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./feed_filter<span class="w"> </span>&lt;input_file&gt;<span class="w"> </span>&lt;threshold&gt;<span class="w"> </span>&lt;block_size&gt;
+</pre></div>
+</div>
+<p>Arguments:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">input_file</span></code>
+Path to the input file containing post data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">threshold</span></code>
+Integer value used to determine whether a post is trending.
+A post is considered trending if:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">threshold</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">block_size</span></code>
+Number of threads per block used when launching CUDA kernels.</p></li>
+</ul>
+<p>You can assume we will provide valid and correctly ordered arguments. You do not need to error test the command line arguments.</p>
+</section>
+<section id="output">
+<h3>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h3>
+<p>Each line of output represents a summary of the processed posts.</p>
+<p><strong>Line 1: Trending Posts Count</strong></p>
+<ul class="simple">
+<li><p>The total number of posts whose engagement score meets or exceeds the threshold.</p></li>
+</ul>
+<p>—</p>
+<p><strong>Line 2: Content Type Histogram</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TEXT_COUNT,IMAGE_COUNT,VIDEO_COUNT,LINK_COUNT
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TEXT_COUNT</span></code>: number of posts with <code class="docutils literal notranslate"><span class="pre">content_type</span> <span class="pre">=</span> <span class="pre">0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IMAGE_COUNT</span></code>: number of posts with <code class="docutils literal notranslate"><span class="pre">content_type</span> <span class="pre">=</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VIDEO_COUNT</span></code>: number of posts with <code class="docutils literal notranslate"><span class="pre">content_type</span> <span class="pre">=</span> <span class="pre">2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LINK_COUNT</span></code>: number of posts with <code class="docutils literal notranslate"><span class="pre">content_type</span> <span class="pre">=</span> <span class="pre">3</span></code></p></li>
+</ul>
+<p>This histogram counts <strong>all posts</strong>, not just trending ones.</p>
+<p>—</p>
+<p><strong>Line 3: Engagement Histogram</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ENG_0_99_COUNT,ENG_100_499_COUNT,ENG_500_999_COUNT,ENG_1000_PLUS_COUNT
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ENG_0_99_COUNT</span></code>: number of posts with engagement score between 0 and 99</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ENG_100_499_COUNT</span></code>: number of posts with engagement score between 100 and 499</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ENG_500_999_COUNT</span></code>: number of posts with engagement score between 500 and 999</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ENG_1000_PLUS_COUNT</span></code>: number of posts with engagement score 1000 or greater</p></li>
+</ul>
+<p>This histogram also counts <strong>all posts</strong>, not just trending ones.</p>
+</section>
+<section id="example-cli">
+<h3>Example CLI<a class="headerlink" href="#example-cli" title="Link to this heading">¶</a></h3>
+<p>To run the program using one of the provided test cases:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./feed_filter<span class="w"> </span>tests/test01_basic/input.txt<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="m">256</span>
+</pre></div>
+</div>
+<p>This will:</p>
+<ol class="arabic simple">
+<li><p>Read post data from <code class="docutils literal notranslate"><span class="pre">tests/test01_basic/input.txt</span></code></p></li>
+<li><p>Use a trending threshold of <code class="docutils literal notranslate"><span class="pre">1000</span></code></p></li>
+<li><p>Launch CUDA kernels with a block size of <code class="docutils literal notranslate"><span class="pre">256</span></code></p></li>
+</ol>
+<p>Expected output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>2
+2,1,1,1
+1,1,1,2
+</pre></div>
+</div>
+</section>
+</section>
+<section id="task-1-file-parsing-cpu">
+<h2>Task 1: File Parsing (CPU)<a class="headerlink" href="#task-1-file-parsing-cpu" title="Link to this heading">¶</a></h2>
+<p>You must read the input file and store the data into an array of <code class="docutils literal notranslate"><span class="pre">Post</span></code> structures.</p>
+<p>Input format:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Num_Of_Posts
+post_id
+user_id
+content_type
+likes
+shares
+comments
+...
+</pre></div>
+</div>
+<p>Hints:</p>
+<ul class="simple">
+<li><p>Use standard C/C++ file I/O (e.g., <code class="docutils literal notranslate"><span class="pre">ifstream</span></code> or <code class="docutils literal notranslate"><span class="pre">fscanf</span></code>)</p></li>
+<li><p>Validate that you successfully read all values</p></li>
+<li><p>Ensure that <code class="docutils literal notranslate"><span class="pre">content_type</span></code> is in the range [0, 3]</p></li>
+</ul>
+</section>
+<section id="task-2-host-side-setup">
+<h2>Task 2: Host-Side Setup<a class="headerlink" href="#task-2-host-side-setup" title="Link to this heading">¶</a></h2>
+<p>You will need device arrays for:</p>
+<ul class="simple">
+<li><p>Posts</p></li>
+<li><p>Flags</p></li>
+<li><p>Scan results</p></li>
+<li><p>Content histogram (size 4)</p></li>
+<li><p>Engagement histogram (size 4)</p></li>
+</ul>
+</section>
+<section id="task-3-flagging-kernel-gpu">
+<h2>Task 3: Flagging Kernel (GPU)<a class="headerlink" href="#task-3-flagging-kernel-gpu" title="Link to this heading">¶</a></h2>
+<p>Compute a binary flag array:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">flags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">post</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">trending</span>
+<span class="n">flags</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">otherwise</span>
+</pre></div>
+</div>
+<p>Each thread should:</p>
+<ul class="simple">
+<li><p>Compute the engagement score</p></li>
+<li><p>Compare against the threshold</p></li>
+<li><p>Write 0 or 1 into the flags array</p></li>
+</ul>
+</section>
+<section id="task-4-prefix-scan-gpu">
+<h2>Task 4: Prefix Scan (GPU)<a class="headerlink" href="#task-4-prefix-scan-gpu" title="Link to this heading">¶</a></h2>
+<p>Implement an <strong>exclusive prefix scan</strong> over the flags array.</p>
+<p>Definition:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>scan[i] = number of 1s in flags[0 ... i-1]
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>flags: [0, 1, 1, 0, 1]
+scan:  [0, 0, 1, 2, 2]
+</pre></div>
+</div>
+<p>Requirements:</p>
+<ul class="simple">
+<li><p>Must be an <strong>exclusive scan</strong></p></li>
+<li><p>You may implement this using one or more kernels</p></li>
+<li><p>You may not use Thrust or other libraries</p></li>
+</ul>
+<section id="note-on-prefix-scan-usage">
+<h3>Note on Prefix Scan Usage<a class="headerlink" href="#note-on-prefix-scan-usage" title="Link to this heading">¶</a></h3>
+<p>the prefix scan is used to compute the total number of trending posts.</p>
+<p>Given a binary flag array:</p>
+<blockquote>
+<div><p>flags[i] = 1 if post i is trending
+flags[i] = 0 otherwise</p>
+</div></blockquote>
+<p>The exclusive prefix scan produces:</p>
+<blockquote>
+<div><p>scan[i] = number of trending posts before index i</p>
+</div></blockquote>
+<p>The total number of trending posts can then be computed as:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scan</span><span class="p">[</span><span class="n">n</span><span class="mi">-1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">flags</span><span class="p">[</span><span class="n">n</span><span class="mi">-1</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>This allows you to compute the total number of selected elements
+without using atomic operations.</p>
+<p>Although prefix scan is often used for stream compaction (filtering),
+you will explore that use case in a future assignment.</p>
+</section>
+</section>
+<section id="task-5-histogram-kernels">
+<h2>Task 5: Histogram Kernels<a class="headerlink" href="#task-5-histogram-kernels" title="Link to this heading">¶</a></h2>
+<p>You must implement <strong>two versions of the histogram kernel</strong>:</p>
+<ol class="arabic simple">
+<li><p><strong>Shared Memory Histogram (Baseline)</strong></p>
+<ul class="simple">
+<li><p>Uses shared memory privatization</p></li>
+<li><p>Uses atomic operations in shared and global memory</p></li>
+</ul>
+</li>
+<li><p><strong>Warp-Optimized Histogram</strong></p>
+<ul class="simple">
+<li><p>Uses <code class="docutils literal notranslate"><span class="pre">__ballot_sync</span></code> and <code class="docutils literal notranslate"><span class="pre">__popc</span></code></p></li>
+<li><p>Reduces redundant atomic operations by aggregating work within a warp</p></li>
+</ul>
+</li>
+</ol>
+<p>The warp-optimized version should demonstrate that threads within a warp can
+cooperate before updating histogram bins.</p>
+<section id="command-line-flag">
+<h3>Command Line Flag<a class="headerlink" href="#command-line-flag" title="Link to this heading">¶</a></h3>
+<p>Your program must support an optional <code class="docutils literal notranslate"><span class="pre">-w</span></code> flag:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./feed_filter<span class="w"> </span>&lt;input_file&gt;<span class="w"> </span>&lt;threshold&gt;<span class="w"> </span>&lt;block_size&gt;<span class="w"> </span><span class="o">[</span>-w<span class="o">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">-w</span></code> is provided:
+- Run the <strong>warp-optimized histogram kernel</strong></p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">-w</span></code> is NOT provided:
+- Run the <strong>shared memory histogram kernel</strong></p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./feed_filter<span class="w"> </span>tests/test01_basic/input.txt<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="m">256</span>
+./feed_filter<span class="w"> </span>tests/test01_basic/input.txt<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="m">256</span><span class="w"> </span>-w
+</pre></div>
+</div>
+<p>Both versions must produce <strong>identical output</strong>.</p>
+</section>
+</section>
+<section id="testing-and-directory-structure">
+<h2>Testing and Directory Structure<a class="headerlink" href="#testing-and-directory-structure" title="Link to this heading">¶</a></h2>
+<p>Your starter code includes a <code class="docutils literal notranslate"><span class="pre">tests/</span></code> directory containing multiple test cases.</p>
+<p>Each test case is stored in its own subdirectory:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tests/
+    test001/
+        input.txt
+        expected.txt
+    test002/
+        input.txt
+        expected.txt
+    test003/
+        input.txt
+        expected.txt
+    ...
+</pre></div>
+</div>
+<p>Each test directory contains:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input.txt</span></code>
+The input file that should be passed to your program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expected.txt</span></code>
+The expected output for that test case.</p></li>
+</ul>
+<section id="running-a-single-test">
+<h3>Running a Single Test<a class="headerlink" href="#running-a-single-test" title="Link to this heading">¶</a></h3>
+<p>You can run your program manually on a single test case:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./feed_filter<span class="w"> </span>tests/test001/input.txt<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="m">256</span>
+</pre></div>
+</div>
+<p>This will print the output for that test case. You can compare it against:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>tests/test001/expected.txt
+</pre></div>
+</div>
+</section>
+<section id="running-all-tests">
+<h3>Running All Tests<a class="headerlink" href="#running-all-tests" title="Link to this heading">¶</a></h3>
+<p>A script is provided to automatically run all test cases:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./scripts/run_tests.sh
+</pre></div>
+</div>
+<p>This script will:</p>
+<ol class="arabic simple">
+<li><p>Run your program on every test case in the <code class="docutils literal notranslate"><span class="pre">tests/</span></code> directory</p></li>
+<li><p>Compare your output with the expected output using <code class="docutils literal notranslate"><span class="pre">diff</span></code></p></li>
+<li><p>Report whether each test passes or fails</p></li>
+</ol>
+<p>Example output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[PASS] test001
+[PASS] test002
+[FAIL] test003
+
+Passed: 2
+Failed: 1
+</pre></div>
+</div>
+</section>
+<section id="optional-warp-version-testing">
+<h3>Optional: Warp Version Testing<a class="headerlink" href="#optional-warp-version-testing" title="Link to this heading">¶</a></h3>
+<p>To test the warp-optimized version of your histogram, you can run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./feed_filter<span class="w"> </span>tests/test001/input.txt<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="m">256</span><span class="w"> </span>-w
+</pre></div>
+</div>
+<p>Both the default and <code class="docutils literal notranslate"><span class="pre">-w</span></code> versions must produce identical output.</p>
+<p>You may modify the test script to include the <code class="docutils literal notranslate"><span class="pre">-w</span></code> flag if you want to verify both implementations automatically.</p>
+</section>
+</section>
+<section id="grading">
+<h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h2>
+<p>Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)</p>
+<p>The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:</p>
+<ul class="simple">
+<li><p>Completeness: 75%</p></li>
+<li><p>Correctness: 15%</p></li>
+<li><p>Design/Style: 10%</p></li>
+</ul>
+</section>
+<section id="submission">
+<h2>Submission<a class="headerlink" href="#submission" title="Link to this heading">¶</a></h2>
+<p>Before submitting, make sure you’ve added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the “Homework #5” assignment page via two ways,</p>
+<ol class="arabic simple">
+<li><p><strong>Uploading from Github directly (recommended way)</strong>: You can link your Github account to your Gradescope account and upload the correct repository based on
+the homework assignment. When you submit your homework, a pop window will appear. Click on “Github” and then  “Connect to Github” to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be “main” or “master”) for this course.</p></li>
+<li><p><strong>Uploading via a Zip file</strong>: You can also upload a zip file of the homework directory. Please make sure you upload the entire directory and keep the initial structure the <strong>same</strong> as the starter code; otherwise, you run the risk of not passing the automated tests.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For either option, you must upload the entire directory structure; otherwise, your automated test grade will not run correctly and you will
+be <strong>penalized</strong> if we have to manually run the tests. Going with the first option will do this automatically for you. You can always add additional directories and files (and even files/directories inside the stater directories) but the default directory/file structure must not change.</p>
+</div>
+<p>Depending on the assignment, once you submit your work, an “autograder” will run. This autograder should produce the same test results as when you run the code yourself; if it doesn’t, please let us know so we can look into it. A few other notes:</p>
+<ul class="simple">
+<li><p>You are allowed to make as many submissions as you want before the deadline.</p></li>
+<li><p>Please make sure you have read and understood our <a class="reference internal" href="../../syllabus.html#late-submissions"><span class="std std-ref">Late Submission Policy</span></a>.</p></li>
+<li><p>Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).</p></li>
+<li><p>Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
