@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Project 1: Smart Traffic Monitoring &#8212; MPCS 52072 - GPU Programming  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/chiweb.css?v=9805d56b" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script defer="defer" src="../../_static/rmsearch.js?v=9704a757"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          MPCS52072</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../syllabus.html">Syllabus</a></li>
+                <li><a href="../../calendar.html">Calendar</a></li>
+                <li><a href="../../modules/index.html">Modules</a></li>
+                <li><a href="../index.html">Assignments</a></li>
+                <li><a href="../../office-hours.html">Office Hours</a></li>
+                <li><a href="https://uchicago-cs.github.io/student-resource-guide/">CS Student Resources</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Project 1: Smart Traffic Monitoring</a><ul>
+<li><a class="reference internal" href="#using-a-gpu-resource">Using a GPU Resource</a></li>
+<li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a></li>
+<li><a class="reference internal" href="#project-2-smart-traffic-monitoring-overview">Project 2: Smart Traffic Monitoring Overview</a></li>
+<li><a class="reference internal" href="#task-1-understanding-the-program-usage">Task 1: Understanding the Program Usage</a><ul>
+<li><a class="reference internal" href="#input-file-format">Input File Format</a></li>
+<li><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#task-2-implementing-the-traffic-monitoring-system">Task 2: Implementing the Traffic Monitoring System</a><ul>
+<li><a class="reference internal" href="#hazard-score-calculation">Hazard Score Calculation</a></li>
+<li><a class="reference internal" href="#severity-classification">Severity Classification</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#task-3-output-logging">Task 3: Output Logging</a><ul>
+<li><a class="reference internal" href="#log-output-format">Log Output Format</a></li>
+<li><a class="reference internal" href="#example-input-and-output">Example Input and Output</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#testing-and-validation">Testing and Validation</a><ul>
+<li><a class="reference internal" href="#running-all-tests">Running All Tests</a></li>
+<li><a class="reference internal" href="#running-an-individual-test">Running an Individual Test</a></li>
+<li><a class="reference internal" href="#handling-delays">Handling Delays</a></li>
+<li><a class="reference internal" href="#understanding-the-log-comparison">Understanding the Log Comparison</a></li>
+<li><a class="reference internal" href="#log-format-reminder">Log Format Reminder</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#task-4-design-and-report-section">Task 4: Design and Report Section</a><ul>
+<li><a class="reference internal" href="#profiling-input-requirements">Profiling Input Requirements</a></li>
+<li><a class="reference internal" href="#stream-concurrency-analysis-nsight-systems">1. Stream Concurrency Analysis (Nsight Systems)</a></li>
+<li><a class="reference internal" href="#kernel-performance-metrics-nsight-compute">2. Kernel Performance Metrics (Nsight Compute)</a></li>
+<li><a class="reference internal" href="#interpretation-of-metrics">3. Interpretation of Metrics</a></li>
+<li><a class="reference internal" href="#stream-scaling-analysis">4. Stream Scaling Analysis</a></li>
+<li><a class="reference internal" href="#bottleneck-identification">5. Bottleneck Identification</a></li>
+<li><a class="reference internal" href="#improvement-opportunities">Improvement Opportunities</a></li>
+<li><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grading">Grading</a></li>
+<li><a class="reference internal" href="#submission">Submission</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/assignments/proj1/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="project-1-smart-traffic-monitoring">
+<h1>Project 1: Smart Traffic Monitoring<a class="headerlink" href="#project-1-smart-traffic-monitoring" title="Link to this heading">¶</a></h1>
+<p><strong>Due: Friday, May 15th at 11:59pm</strong></p>
+<p>In this assignment, you will build a GPU-accelerated backend for a smart city traffic monitoring system. Your goal is to process large volumes of traffic event data from a network of street sensors and compute per-sensor hazard scores in real time.</p>
+<p>Rather than being told exactly what primitives to use, you must determine where and how to apply CUDA operations such as filtering, aggregation, scan, and scatter. Your solution should be modular, performant, and capable of overlapping CPU input and GPU execution using CUDA streams.</p>
+<section id="using-a-gpu-resource">
+<h2>Using a GPU Resource<a class="headerlink" href="#using-a-gpu-resource" title="Link to this heading">¶</a></h2>
+<p>You are permitted to complete this assignment using <strong>either</strong>:</p>
+<ul class="simple">
+<li><p>On a <em>AWS Instance</em>, <strong>or</strong></p></li>
+<li><p>The <strong>Peanut GPU cluster</strong> on the CS Linux servers</p></li>
+<li><p>However, profiling must be done on an <strong>AWS Instance</strong>. You are not allowed to use <em>nvprof</em> on the cluster as this is a depreciated tool.</p></li>
+</ul>
+<p>It might make sense to develop on the Peanut cluster and then move to profiling on AWS instance since you can quickly update and modify your code via VS Code on the cluster.</p>
+</section>
+<section id="creating-your-private-repository">
+<h2>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h2>
+<p>To actually get your private repository, you will need this invitation URL:</p>
+<ul class="simple">
+<li><p><strong>Project 1 invitation (Please check the Post “Project 1 is ready” Ed)</strong></p></li>
+</ul>
+<p>When you click on an invitation URL, you will have to complete the following steps:</p>
+<ol class="arabic simple">
+<li><p>You will need to select your CNetID from a list. This will allow us to know what student is associated with each GitHub account. This step is only done for the very first invitation you accept.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on the waiting list for this course you will not have a repository made for you until you are admitted into the course. I will post the starter code on Ed so you can work on the assignment until you are admitted into the course.</p>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>You must click “Accept this assignment” or your repository will not actually be created.</p></li>
+<li><p>After accepting the assignment, Github will take a few minutes to create your repository. You should receive an email from Github when your repository is ready. Normally, it’s ready within seconds and you can just refresh the page.</p></li>
+<li><dl class="simple">
+<dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
+<li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-spr26/proj1-GITHUB-USERNAME.git.</p></li>
+<li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>If you run into any issues, or need us to make any manual adjustments to your registration, please let us know via Ed Discussion.</p>
+</section>
+<section id="project-2-smart-traffic-monitoring-overview">
+<h2>Project 2: Smart Traffic Monitoring Overview<a class="headerlink" href="#project-2-smart-traffic-monitoring-overview" title="Link to this heading">¶</a></h2>
+<p>Image the Ciy of Chicago deployed a network of smart sensors at major intersections to detect and report real-time traffic activity. Each sensor emits events that describe detected vehicles, including speed, type, and a confidence score for the detection. These events are collected in batches and sent to a GPU processing application.</p>
+<p>Your task is to process each batch of events as they arrive, compute meaningful metrics per sensor, and determine which areas of the city may be experiencing high traffic risk.</p>
+<p>To handle many simultaneous event batches efficiently, your program will manage a pool of CUDA streams. Each stream is used to launch GPU work for a given batch. Your system should be able to keep multiple GPU streams in flight, reusing streams as batches finish.</p>
+</section>
+<section id="task-1-understanding-the-program-usage">
+<h2>Task 1: Understanding the Program Usage<a class="headerlink" href="#task-1-understanding-the-program-usage" title="Link to this heading">¶</a></h2>
+<p>The following provides an explanation of the program usage for the monitoring system:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./traffic_monitor<span class="w"> </span><span class="o">[</span>-s<span class="w"> </span>N<span class="o">]</span><span class="w"> </span>&lt;log_filename&gt;
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Arg/Flag</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;log_filename&gt;</span></code></p></td>
+<td><p>is the path to a CSV log file where your program will write structured output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">&lt;int&gt;</span></code></p></td>
+<td><p>is an optional flag to specify the number of concurrent CUDA streams (default: 4)</p></td>
+</tr>
+</tbody>
+</table>
+<section id="input-file-format">
+<h3>Input File Format<a class="headerlink" href="#input-file-format" title="Link to this heading">¶</a></h3>
+<p>Traffic events are streamed via standard input (<code class="docutils literal notranslate"><span class="pre">stdin</span></code>) as space-separated values. Each batch is delimited by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BEGIN</span> <span class="o">&lt;</span><span class="n">batch_id</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">num_events</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">unique_ids</span><span class="o">&gt;</span>
+<span class="n">sensor_id</span> <span class="n">speed</span> <span class="n">vehicle_type</span> <span class="n">timestamp</span> <span class="n">confidence</span>
+<span class="o">...</span>
+<span class="n">END</span> <span class="o">&lt;</span><span class="n">batch_id</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The input stream ends with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DONE</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Each <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">&lt;batch_id&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">END</span> <span class="pre">&lt;batch_id&gt;</span></code> match exactly and define one batch. <code class="docutils literal notranslate"><span class="pre">&lt;batch_id&gt;</span></code> is an integer that represents the unique identifier for a batch. <code class="docutils literal notranslate"><span class="pre">&lt;num_events&gt;</span></code> is an integer that represents the total number of events in a batch. <code class="docutils literal notranslate"><span class="pre">&lt;unique_ids&gt;</span></code> is the total number of unique <code class="docutils literal notranslate"><span class="pre">sensor_ids</span></code> in a batch.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DONE</span></code> signals that no more batches will be sent. You can assume after <code class="docutils literal notranslate"><span class="pre">DONE</span></code> is provided an <code class="docutils literal notranslate"><span class="pre">EOF</span></code> is sent to indicate the closing of <code class="docutils literal notranslate"><span class="pre">stdin</span></code>.</p></li>
+<li><p>Batch IDs are integers starting at 0 or higher and <strong>do not need to be sequential</strong>.</p></li>
+</ul>
+<p>Each event line includes the following fields:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sensor_id</span> <span class="n">speed</span> <span class="n">vehicle_type</span> <span class="n">timestamp</span> <span class="n">confidence</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sensor_id</span></code> — Integer between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">NUM_SENSORS</span> <span class="pre">-</span> <span class="pre">1</span></code>. Represents the traffic sensor that recorded the event. Assume <code class="docutils literal notranslate"><span class="pre">NUM_SENSORS=1000</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">speed</span></code> — A floating-point value representing the vehicle’s speed in <strong>miles per hour (mph)</strong>.
+Example: <code class="docutils literal notranslate"><span class="pre">32.4</span></code>, <code class="docutils literal notranslate"><span class="pre">55.0</span></code>, <code class="docutils literal notranslate"><span class="pre">72.3</span></code></p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">vehicle_type</span></code> - An integer encoding the vehicle category. For this assignment there will only be three categories given</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: car</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: truck</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: motorcycle</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code> — A floating-point value (in seconds) representing when the event was detected relative to a global clock (e.g., 1035.25 means 1035.25 seconds since monitoring began). This allows for fine-grained timing resolution between events within a batch.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">confidence</span></code> — A float between <code class="docutils literal notranslate"><span class="pre">0.0</span></code> and <code class="docutils literal notranslate"><span class="pre">1.0</span></code> representing how confident the sensor is in this event’s accuracy.</p></li>
+</ul>
+<p>You can assume that before pushing a batch to the GPU that all events for that batch have been received by host. However, there can be multiple batches running on the GPU in parallel.</p>
+</section>
+<section id="output">
+<h3>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h3>
+<p>All results must be written to the log file provided as a command-line argument. This includes:</p>
+<ul class="simple">
+<li><p>The number of valid events per sensor in each batch</p></li>
+<li><p>The hazard score per sensor</p></li>
+<li><p>The severity level for each sensor</p></li>
+</ul>
+<p>This log must be structured as a CSV file.</p>
+<p>See the following section for format requirements.</p>
+</section>
+</section>
+<section id="task-2-implementing-the-traffic-monitoring-system">
+<h2>Task 2: Implementing the Traffic Monitoring System<a class="headerlink" href="#task-2-implementing-the-traffic-monitoring-system" title="Link to this heading">¶</a></h2>
+<p>Your program must process batches of traffic events as they arrive. Each batch should be processed asynchronously using CUDA streams and GPU kernels.</p>
+<p>You are responsible for designing the data-parallel pipeline that computes the final per-sensor results. Think carefully about what operations are needed to produce the expected output. Refer to the log format and example outputs in this specification (see sections <code class="docutils literal notranslate"><span class="pre">Log</span> <span class="pre">Output</span> <span class="pre">Format</span></code> and <code class="docutils literal notranslate"><span class="pre">Example</span> <span class="pre">Input</span> <span class="pre">and</span> <span class="pre">Output</span></code>) to guide your implementation strategy.</p>
+<p>Your solution must:</p>
+<ul>
+<li><p>Find <strong>valid events</strong> (i.e, filter and clean raw event data)</p>
+<p>Remove any events where the confidence score is below <code class="docutils literal notranslate"><span class="pre">0.75</span></code>. Only high-confidence events should be included in further processing.</p>
+<p>Additional filtering constraints:</p>
+<ul class="simple">
+<li><p>Events must also have <code class="docutils literal notranslate"><span class="pre">vehicle_speed</span> <span class="pre">&gt;</span> <span class="pre">5.0</span></code> to be considered valid (ignores slow/misread detections).</p></li>
+<li><p>Trucks (<code class="docutils literal notranslate"><span class="pre">vehicle_type</span> <span class="pre">=</span> <span class="pre">1</span></code>) are allowed with a lower confidence threshold of 0.65 if their speed is above 40 mph.</p></li>
+</ul>
+</li>
+<li><p>Compute meaningful metrics for each sensor such as:</p>
+<ul class="simple">
+<li><p>Number of valid events</p></li>
+<li><p>Total hazard score</p></li>
+<li><p>Risk severity classification</p></li>
+</ul>
+</li>
+</ul>
+<p>The specific operations you use (e.g., histogram, scan, reduction, compaction, scatter, etc.) are not prescribed and <strong>you must implement these operations yourself and not use libraries with the exception that you may use the Thurst or Cub library’s sort function only</strong>. You must determine the most effective way to structure the pipeline to support these goals. The use of CUDA streams for overlapping execution across batches is required.</p>
+<section id="hazard-score-calculation">
+<h3>Hazard Score Calculation<a class="headerlink" href="#hazard-score-calculation" title="Link to this heading">¶</a></h3>
+<p>For each valid event, you must compute a <code class="docutils literal notranslate"><span class="pre">risk</span></code> value that contributes to the total hazard score for the event’s sensor. Use the following formula:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">decay</span>        <span class="o">=</span> <span class="n">expf</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="n">f</span> <span class="o">*</span> <span class="p">(</span><span class="n">current_time</span> <span class="o">-</span> <span class="n">timestamp</span><span class="p">))</span>
+<span class="n">speed_factor</span> <span class="o">=</span> <span class="n">sinf</span><span class="p">(</span><span class="n">vehicle_speed</span> <span class="o">*</span> <span class="mf">0.1609</span><span class="n">f</span><span class="p">)</span>
+<span class="n">type_factor</span>  <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">}[</span><span class="n">vehicle_type</span><span class="p">]</span>
+<span class="n">risk</span>         <span class="o">=</span> <span class="mf">100.0</span><span class="n">f</span> <span class="o">*</span> <span class="n">decay</span> <span class="o">*</span> <span class="n">speed_factor</span> <span class="o">*</span> <span class="n">type_factor</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">current_time</span></code> is the <strong>maximum timestamp among all events in the batch</strong>. This ensures that the decay term emphasizes more recent events.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vehicle_speed</span></code> is in miles per hour.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">speed_factor</span></code> is a weighting function based on the speed of the vehicle. It’s designed to scale the contribution of an event to the overall hazard score based on how fast the vehicle is moving.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type_factor</span></code> is a fixed multiplier based on <code class="docutils literal notranslate"><span class="pre">vehicle_type</span></code>: 0 = car → 1.0, 1 = truck → 1.5, 2 = motorcycle → 2.0</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decay</span></code> weights recent events more heavily</p></li>
+</ul>
+<p>The final hazard score per sensor is the sum of all <code class="docutils literal notranslate"><span class="pre">risk</span></code> values for that sensor’s valid events.</p>
+</section>
+<section id="severity-classification">
+<h3>Severity Classification<a class="headerlink" href="#severity-classification" title="Link to this heading">¶</a></h3>
+<p>In addition to computing the final <code class="docutils literal notranslate"><span class="pre">risk</span></code> per sensor, your implementation must <em>classify sensors by severity</em>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LOW</span></code>: score &lt; 100</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MEDIUM</span></code>: 100-249</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HIGH</span></code>: ≥ 250</p></li>
+</ul>
+<p>This classification must appear in the CSV log output for each sensor.</p>
+</section>
+</section>
+<section id="task-3-output-logging">
+<h2>Task 3: Output Logging<a class="headerlink" href="#task-3-output-logging" title="Link to this heading">¶</a></h2>
+<p>All output and final processing <strong>must be performed inside a registered CUDA stream callback function</strong>.</p>
+<p>That is:</p>
+<ul class="simple">
+<li><p>GPU kernels should run asynchronously in CUDA streams</p></li>
+<li><dl class="simple">
+<dt>After a stream finishes, a callback must:</dt><dd><ul>
+<li><p>Aggregate and process per-sensor results</p></li>
+<li><p>Format and write the output to the log file</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cudaStreamAddCallback(...)</span></code>. No host-side output is allowed outside the callback.</p>
+<section id="log-output-format">
+<h3>Log Output Format<a class="headerlink" href="#log-output-format" title="Link to this heading">¶</a></h3>
+<p>Your program must write <strong>all output</strong> to a CSV log file whose path is provided as the <strong>first positional argument</strong> on the command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">traffic_monitor</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">N</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">log_filename</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>If the specified <code class="docutils literal notranslate"><span class="pre">&lt;log_filename&gt;</span></code> already exists, your program must overwrite it rather than append to it.</p>
+<p>The first line of the file must be a CSV header:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">timestamp</span><span class="p">,</span><span class="n">batch_id</span><span class="p">,</span><span class="n">sensor_id</span><span class="p">,</span><span class="n">valid_event_count</span><span class="p">,</span><span class="n">hazard_score</span><span class="p">,</span><span class="n">severity</span>
+</pre></div>
+</div>
+<p>Each following line must contain exactly one row for a sensor in a processed batch. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2025</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">16</span> <span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">:</span><span class="mi">54</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">203.93</span><span class="p">,</span><span class="n">MEDIUM</span>
+<span class="mi">2025</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">16</span> <span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">:</span><span class="mi">54</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mf">468.18</span><span class="p">,</span><span class="n">HIGH</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code> is the local system time when the row (i.e., log entry) is written</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">batch_id</span></code> is the batch index (from the input)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sensor_id</span></code> is the numeric ID of the sensor</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">valid_event_count</span></code> is how many valid events that sensor had in this batch</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hazard_score</span></code> is the total risk value</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">severity</span></code> is one of: <code class="docutils literal notranslate"><span class="pre">LOW</span></code>, <code class="docutils literal notranslate"><span class="pre">MEDIUM</span></code>, or <code class="docutils literal notranslate"><span class="pre">HIGH</span></code></p></li>
+</ul>
+<p><strong>Generating Timestamps in</strong></p>
+<p>You must include a timestamp in each log row using the format <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span> <span class="pre">HH:MM:SS</span></code>.</p>
+<p>To generate this timestamp in C, use the following pattern:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;time.h&gt;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">get_timestamp</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">buffer_size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">time_t</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">tm</span><span class="o">*</span><span class="w"> </span><span class="n">tm_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">localtime</span><span class="p">(</span><span class="o">&amp;</span><span class="n">now</span><span class="p">);</span>
+<span class="w">    </span><span class="n">strftime</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">buffer_size</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;%Y-%m-%d %H:%M:%S&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tm_info</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Usage example:</span>
+<span class="kt">char</span><span class="w"> </span><span class="n">timestamp</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+<span class="n">get_timestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">timestamp</span><span class="p">));</span>
+<span class="n">fprintf</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;%s,...&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">timestamp</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="example-input-and-output">
+<h3>Example Input and Output<a class="headerlink" href="#example-input-and-output" title="Link to this heading">¶</a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">data\sample.in</span></code> file, we have the following data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BEGIN</span> <span class="mi">0</span> <span class="mi">6</span> <span class="mi">3</span>
+<span class="mi">1</span> <span class="mf">25.0</span> <span class="mi">0</span> <span class="mf">1000.0</span> <span class="mf">0.95</span>
+<span class="mi">2</span> <span class="mf">45.0</span> <span class="mi">1</span> <span class="mf">1000.0</span> <span class="mf">0.85</span>
+<span class="mi">2</span> <span class="mf">55.0</span> <span class="mi">1</span> <span class="mf">1000.1</span> <span class="mf">0.88</span>
+<span class="mi">3</span> <span class="mf">45.0</span> <span class="mi">2</span> <span class="mf">1000.0</span> <span class="mf">0.9</span>
+<span class="mi">3</span> <span class="mf">50.0</span> <span class="mi">2</span> <span class="mf">1000.1</span> <span class="mf">0.9</span>
+<span class="mi">3</span> <span class="mf">55.0</span> <span class="mi">2</span> <span class="mf">1000.2</span> <span class="mf">0.92</span>
+<span class="n">END</span> <span class="mi">0</span>
+<span class="n">DONE</span>
+</pre></div>
+</div>
+<p>You can use file redirection to redirect stdin to come from this file</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>bin/traffic_monitor<span class="w"> </span>sample_log.csv<span class="w"> </span>&lt;<span class="w"> </span>data/sample.in
+</pre></div>
+</div>
+<p>then the expected CSV output inside <code class="docutils literal notranslate"><span class="pre">sample_log.csv</span></code> would be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">timestamp</span><span class="p">,</span><span class="n">batch_id</span><span class="p">,</span><span class="n">sensor_id</span><span class="p">,</span><span class="n">valid_event_count</span><span class="p">,</span><span class="n">hazard_score</span><span class="p">,</span><span class="n">severity</span>
+<span class="mi">2025</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">16</span> <span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">:</span><span class="mi">54</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mf">76.98</span><span class="p">,</span><span class="n">LOW</span>
+<span class="mi">2025</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">16</span> <span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">:</span><span class="mi">54</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">203.93</span><span class="p">,</span><span class="n">MEDIUM</span>
+<span class="mi">2025</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">16</span> <span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">:</span><span class="mi">54</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mf">468.18</span><span class="p">,</span><span class="n">HIGH</span>
+</pre></div>
+</div>
+<p>The output does not need to be sorted by sensor-id. It just happen to be sorted in the given example but any order is acceptable.</p>
+</section>
+</section>
+<section id="testing-and-validation">
+<h2>Testing and Validation<a class="headerlink" href="#testing-and-validation" title="Link to this heading">¶</a></h2>
+<p>A comprehensive test suite is provided in the <code class="docutils literal notranslate"><span class="pre">tests/</span></code> directory. Each test is self-contained and structured as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tests/
+├── test001/
+│   ├── test001.in    # Input events (BEGIN...END...DONE format)
+│   └── test001.csv   # Expected log output (CSV)
+├── test002/
+├── ...
+└── run_tests.sh      # Shell script to run all or individual tests
+</pre></div>
+</div>
+<section id="running-all-tests">
+<h3>Running All Tests<a class="headerlink" href="#running-all-tests" title="Link to this heading">¶</a></h3>
+<p>To run the entire test suite and check your implementation, use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">tests</span><span class="o">/</span><span class="n">run_tests</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>This will:</p>
+<ul class="simple">
+<li><p>Feed each test’s <code class="docutils literal notranslate"><span class="pre">.in</span></code> file into your program</p></li>
+<li><p>Generate a log file named <code class="docutils literal notranslate"><span class="pre">log_output.csv</span></code></p></li>
+<li><p>Compare it to the expected <code class="docutils literal notranslate"><span class="pre">.csv</span></code> log using <code class="docutils literal notranslate"><span class="pre">compare_logs.py</span></code></p></li>
+<li><p>Print whether each test passed or failed (based on hazard score and severity)</p></li>
+</ul>
+<p>Each test is numbered (e.g., <code class="docutils literal notranslate"><span class="pre">test004</span></code>), and outputs will clearly show:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TEST</span> <span class="mi">004</span> <span class="n">PASSED</span>
+<span class="n">TEST</span> <span class="mi">005</span> <span class="n">FAILED</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>A summary will follow at the end of execution.</p>
+<p>What Each Test Covers</p>
+<ul class="simple">
+<li><p>test001 – Canonical example with LOW, MEDIUM, and HIGH severity sensors</p></li>
+<li><p>test002 – 10 events, only half have valid confidence</p></li>
+<li><p>test003 – All confidence &gt; 0.75 but all speeds ≤ 5.0 (all invalid)</p></li>
+<li><p>test004 – 3 batches with mixed sensor IDs and mixed validity</p></li>
+<li><p>test005 – Same as test004, but batches are streamed with 3-second delays</p></li>
+<li><p>test006 – No valid events at all (should produce only CSV header)</p></li>
+<li><p>test007 – Only one batch contains a single valid event</p></li>
+<li><p>test008 – Multiple valid events from the same sensor (tests accumulation)</p></li>
+<li><p>test009 – One batch with ~10,000 events (performance test)</p></li>
+<li><p>test010 – One batch with ~50,000 events (stress test)</p></li>
+<li><p>test011 – 20 batches, each with 50–100 events with delays (streaming stress test)</p></li>
+<li><p>test012 – Truck with confidence exactly at 0.65 (valid edge case)</p></li>
+<li><p>test013 – Car with confidence just below 0.75 (should be filtered)</p></li>
+<li><p>test014 – Speed exactly 5.0 (invalid — must be strictly &gt; 5.0)</p></li>
+<li><p>test015 – Speed just above 5.0 (should be valid)</p></li>
+<li><p>test016 – Two valid events from the same sensor (risk must sum)</p></li>
+<li><p>test017 – Same sensor builds up LOW → MEDIUM → HIGH severity</p></li>
+<li><p>test018 – 15 valid events from only 3–4 sensors (tests sensor grouping logic)</p></li>
+</ul>
+</section>
+<section id="running-an-individual-test">
+<h3>Running an Individual Test<a class="headerlink" href="#running-an-individual-test" title="Link to this heading">¶</a></h3>
+<p>You may also run a single test by name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">tests</span><span class="o">/</span><span class="n">run_tests</span><span class="o">.</span><span class="n">sh</span> <span class="n">test007</span>
+</pre></div>
+</div>
+<p>This is useful for debugging one specific case at a time.</p>
+</section>
+<section id="handling-delays">
+<h3>Handling Delays<a class="headerlink" href="#handling-delays" title="Link to this heading">¶</a></h3>
+<p>Some tests simulate asynchronous streaming by including <code class="docutils literal notranslate"><span class="pre">#DELAY</span> <span class="pre">n</span></code> lines in the input. These cause the runner to pause for <code class="docutils literal notranslate"><span class="pre">n</span></code> seconds between batches to mimic real-time input behavior. Your program does not need to interpret these lines — the test runner handles it automatically.</p>
+</section>
+<section id="understanding-the-log-comparison">
+<h3>Understanding the Log Comparison<a class="headerlink" href="#understanding-the-log-comparison" title="Link to this heading">¶</a></h3>
+<p>Tests are validated using <code class="docutils literal notranslate"><span class="pre">scripts/compare_logs.py</span></code>. It checks your log output against the expected output with these rules:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> column is ignored during comparison.</p></li>
+<li><p>Rows are sorted by <code class="docutils literal notranslate"><span class="pre">(batch_id,</span> <span class="pre">sensor_id)</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hazard_score</span></code> is compared using a small epsilon tolerance to allow for floating-point rounding.</p></li>
+</ul>
+<p>If any differences are found (e.g., wrong severity or score mismatch), the log comparison will display both your output and the expected result.</p>
+</section>
+<section id="log-format-reminder">
+<h3>Log Format Reminder<a class="headerlink" href="#log-format-reminder" title="Link to this heading">¶</a></h3>
+<p>All expected log files (and your output) must follow this header format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">timestamp</span><span class="p">,</span><span class="n">batch_id</span><span class="p">,</span><span class="n">sensor_id</span><span class="p">,</span><span class="n">valid_event_count</span><span class="p">,</span><span class="n">hazard_score</span><span class="p">,</span><span class="n">severity</span>
+</pre></div>
+</div>
+<p>If a batch produces no valid events, your program should still write the header — even if no rows follow.</p>
+</section>
+</section>
+<section id="task-4-design-and-report-section">
+<h2>Task 4: Design and Report Section<a class="headerlink" href="#task-4-design-and-report-section" title="Link to this heading">¶</a></h2>
+<p>This assignment emphasizes hands-on experience with CUDA programming patterns—particularly CUDA streams, concurrency, and data-parallel pipelines—rather than maximizing raw performance.</p>
+<p>You are expected to complete the implementation to correctly process the event batches and produce the required log output. Your solution does not need to achieve the best possible occupancy, throughput, or memory access patterns.</p>
+<p>However, you must submit a short report (<cite>report.txt</cite> or <cite>report.md</cite>) that includes the following:</p>
+<section id="profiling-input-requirements">
+<h3>Profiling Input Requirements<a class="headerlink" href="#profiling-input-requirements" title="Link to this heading">¶</a></h3>
+<p>To obtain meaningful profiling results, you must run your program using a sufficiently large input dataset.</p>
+<p>Small inputs (e.g., a few hundred events) will not adequately stress the GPU and may result in misleading performance metrics.</p>
+<p>For profiling, you must use:</p>
+<ul class="simple">
+<li><p>At least 100,000 total events across all batches, OR</p></li>
+<li><p>Multiple batches (e.g., 10 or more) with at least 10,000 events per batch</p></li>
+</ul>
+<p>You may use your own generated input data or use an input file from the provided test cases.</p>
+<p>Your report should briefly describe the input size and structure used for profiling.</p>
+</section>
+<section id="stream-concurrency-analysis-nsight-systems">
+<h3>1. Stream Concurrency Analysis (Nsight Systems)<a class="headerlink" href="#stream-concurrency-analysis-nsight-systems" title="Link to this heading">¶</a></h3>
+<p>Use Nsight Systems (<code class="docutils literal notranslate"><span class="pre">nsys</span></code>) to capture a timeline of your program execution.</p>
+<p>Run your program with at least two different stream configurations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">1</span></code> (baseline)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">4</span></code> (or higher)</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nsys<span class="w"> </span>profile<span class="w"> </span>-o<span class="w"> </span>streams_report<span class="w"> </span>./traffic_monitor<span class="w"> </span>-s<span class="w"> </span><span class="m">4</span><span class="w"> </span>log.csv<span class="w"> </span>&lt;<span class="w"> </span>input.in
+</pre></div>
+</div>
+<p>Include in your report:</p>
+<ul class="simple">
+<li><p>A screenshot or description of the execution timeline</p></li>
+<li><p>Evidence of GPU activity across multiple streams</p></li>
+</ul>
+<p>Answer the following:</p>
+<ul class="simple">
+<li><p>Do GPU kernels from different batches overlap in time?</p></li>
+<li><p>Are memory transfers overlapping with kernel execution?</p></li>
+<li><p>Are multiple streams actively utilized, or is execution mostly serialized?</p></li>
+</ul>
+</section>
+<section id="kernel-performance-metrics-nsight-compute">
+<h3>2. Kernel Performance Metrics (Nsight Compute)<a class="headerlink" href="#kernel-performance-metrics-nsight-compute" title="Link to this heading">¶</a></h3>
+<p>Use Nsight Compute to profile at least one major kernel in your pipeline.</p>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>./traffic_monitor<span class="w"> </span>-s<span class="w"> </span><span class="m">4</span><span class="w"> </span>log.csv<span class="w"> </span>&lt;<span class="w"> </span>input.in
+</pre></div>
+</div>
+<p>You must report the following metrics:</p>
+<ul class="simple">
+<li><p>Kernel Duration</p></li>
+<li><p>Achieved Occupancy</p></li>
+<li><p>SM Throughput</p></li>
+<li><p>Memory Throughput</p></li>
+<li><p>Warp Execution Efficiency</p></li>
+</ul>
+</section>
+<section id="interpretation-of-metrics">
+<h3>3. Interpretation of Metrics<a class="headerlink" href="#interpretation-of-metrics" title="Link to this heading">¶</a></h3>
+<p>For at least one kernel, provide a detailed interpretation of the metrics:</p>
+<p><strong>Warp Execution Efficiency</strong>
+- Is it high or low?
+- What might be causing inefficiency (e.g., branch divergence during filtering or scoring)?</p>
+<p><strong>Memory Throughput</strong>
+- Does the kernel appear memory-bound or compute-bound?
+- Support your answer using observed throughput and utilization</p>
+<p><strong>Occupancy</strong>
+- Is occupancy high or low?
+- What factors may be limiting occupancy (e.g., register usage, block size, shared memory usage)?</p>
+</section>
+<section id="stream-scaling-analysis">
+<h3>4. Stream Scaling Analysis<a class="headerlink" href="#stream-scaling-analysis" title="Link to this heading">¶</a></h3>
+<p>Compare performance between different stream configurations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">N</span></code> (e.g., 4 or 8)</p></li>
+</ul>
+<p>Discuss:</p>
+<ul class="simple">
+<li><p>Does increasing the number of streams improve throughput?</p></li>
+<li><p>At what point do you observe diminishing returns?</p></li>
+<li><p>What factors might limit scalability (e.g., GPU saturation, memory bandwidth)?</p></li>
+</ul>
+</section>
+<section id="bottleneck-identification">
+<h3>5. Bottleneck Identification<a class="headerlink" href="#bottleneck-identification" title="Link to this heading">¶</a></h3>
+<p>Identify at least one performance bottleneck in your implementation.</p>
+<p>Examples may include:</p>
+<ul class="simple">
+<li><p>Warp divergence in filtering logic</p></li>
+<li><p>Atomic operations during aggregation</p></li>
+<li><p>Inefficient memory access patterns</p></li>
+<li><p>Lack of overlap between CPU and GPU execution</p></li>
+</ul>
+<p>For the identified bottleneck:</p>
+<ul class="simple">
+<li><p>Explain why it limits performance</p></li>
+<li><p>Describe how you would improve it (even if not implemented)</p></li>
+</ul>
+</section>
+<section id="improvement-opportunities">
+<h3>Improvement Opportunities<a class="headerlink" href="#improvement-opportunities" title="Link to this heading">¶</a></h3>
+<p>Identify additional areas where your implementation could be improved.</p>
+<p>Examples include:</p>
+<ul class="simple">
+<li><p>Increasing warp efficiency</p></li>
+<li><p>Improving shared memory usage</p></li>
+<li><p>Enhancing overlap between data transfer and computation</p></li>
+<li><p>Reducing synchronization overhead</p></li>
+</ul>
+<p>For each area:</p>
+<ul class="simple">
+<li><p>Explain why improvement is possible</p></li>
+<li><p>Describe how you would approach optimization</p></li>
+</ul>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Again, you are not required to fully optimize your implementation.</p></li>
+<li><p>The goal of this section is to demonstrate your ability to <strong>analyze GPU performance and reason about design trade-offs</strong>.</p></li>
+<li><p>Reports that include profiling data without meaningful interpretation will receive limited credit.</p></li>
+</ul>
+</section>
+</section>
+<section id="grading">
+<h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h2>
+<p>Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)</p>
+<p>The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:</p>
+<ul class="simple">
+<li><p><strong>Completeness</strong>: 60%</p></li>
+<li><p><strong>Correctness</strong>: 10%</p></li>
+<li><p><strong>Design/Style</strong>: 10%</p></li>
+<li><p><strong>Report</strong>:20%</p></li>
+</ul>
+</section>
+<section id="submission">
+<h2>Submission<a class="headerlink" href="#submission" title="Link to this heading">¶</a></h2>
+<p>Before submitting, make sure you’ve added, committed, and pushed all your code to GitHub. You must submit your final work through Gradescope (linked from our Canvas site) in the “Project #2” assignment page via two ways,</p>
+<ol class="arabic simple">
+<li><p><strong>Uploading from Github directly (recommended way)</strong>: You can link your Github account to your Gradescope account and upload the correct repository based on
+the homework assignment. When you submit your homework, a pop window will appear. Click on “Github” and then  “Connect to Github” to connect your Github account to Gradescope. Once you connect (you will only need to do this once), then you can select the repository you wish to upload and the branch (which should always be “main” or “master”) for this course.</p></li>
+<li><p><strong>Uploading via a Zip file</strong>: You can also upload a zip file of the homework directory. Please make sure you upload the entire directory and keep the initial structure the <strong>same</strong> as the starter code; otherwise, you run the risk of not passing the automated tests.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For either option, you must upload the entire directory structure; otherwise, your automated test grade will not run correctly and you will
+be <strong>penalized</strong> if we have to manually run the tests. Going with the first option will do this automatically for you. You can always add additional directories and files (and even files/directories inside the stater directories) but the default directory/file structure must not change.</p>
+</div>
+<p>Depending on the assignment, once you submit your work, an “autograder” will run. This autograder should produce the same test results as when you run the code yourself; if it doesn’t, please let us know so we can look into it. A few other notes:</p>
+<ul class="simple">
+<li><p>You are allowed to make as many submissions as you want before the deadline.</p></li>
+<li><p>Please make sure you have read and understood our <a class="reference internal" href="../../syllabus.html#late-submissions"><span class="std std-ref">Late Submission Policy</span></a>.</p></li>
+<li><p>Your completeness score is determined solely based on the automated tests, but we may adjust your score if you attempt to pass tests by rote (e.g., by writing code that hard-codes the expected output for each possible test input).</p></li>
+<li><p>Gradescope will report the test score it obtains when running your code. If there is a discrepancy between the score you get when running our grader script, and the score reported by Gradescope, please let us know so we can take a look at it.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021-2025, University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
