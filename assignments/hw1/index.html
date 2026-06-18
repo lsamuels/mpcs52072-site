@@ -117,7 +117,7 @@
       
   <section id="homework-1">
 <h1>Homework #1<a class="headerlink" href="#homework-1" title="Link to this heading">¶</a></h1>
-<p><strong>Due: Friday, April 3rd at 11:59pm</strong></p>
+<p><strong>Due: Wednesday, June 24th at 11:59pm</strong></p>
 <p>This homework is intended to server as an introduction to CUDA programming model. It also allows for you to understand how to submit and run your CUDA programs on clusters using SLURM.</p>
 <section id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
@@ -130,6 +130,7 @@
 <li><p><a class="reference external" href="https://howto.cs.uchicago.edu/slurm?s[]=%2Aslurm%2Al">Using Visual Studio Code and SSH</a></p></li>
 </ul>
 <p><strong>We will grade all assignments using the Peanut cluster’s GPUs and all programming assignments must work correctly on one of these machines.</strong>  If you have a NVIDIA GPU installed on your local machine then you can work; however, <strong>your program must still work on one of the cluster’s GPU nodes, no exceptions.</strong></p>
+<p><strong>Note:</strong> Homework 1 will be completed using the department’s computing cluster. Starting with Homework 2, we will transition fully to AWS for all course assignments. We are using the cluster for this first assignment to help everyone get started quickly while AWS access and course infrastructure are finalized.</p>
 </section>
 <section id="creating-your-private-repository">
 <h3>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h3>
@@ -153,7 +154,7 @@ GitHub account. If you do not yet have one, you can get an account here: <a clas
 <li><dl class="simple">
 <dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
 <li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
-<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-spr26/hw1-GITHUB-USERNAME.git.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-sum26/hw1-GITHUB-USERNAME.git.</p></li>
 <li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
 </ul>
 </dd>
@@ -174,7 +175,7 @@ GitHub account. If you do not yet have one, you can get an account here: <a clas
 <span class="go">num_blocks = the number of blocks to launch</span>
 </pre></div>
 </div>
-<p>The program should read in the <code class="docutils literal notranslate"><span class="pre">terms</span></code> and <code class="docutils literal notranslate"><span class="pre">num_blocks</span></code> argument argument and <strong>only</strong> print the estimate of pi. The program will run in two phases:</p>
+<p>The program should read in the <code class="docutils literal notranslate"><span class="pre">terms</span></code> and <code class="docutils literal notranslate"><span class="pre">num_blocks</span></code> argument and <strong>only</strong> print the estimate of pi. The program will run in two phases:</p>
 </section>
 <section id="phase-1-calculate-local-estimates">
 <h3>Phase 1: Calculate local estimates<a class="headerlink" href="#phase-1-calculate-local-estimates" title="Link to this heading">¶</a></h3>
@@ -211,7 +212,7 @@ GitHub account. If you do not yet have one, you can get an account here: <a clas
 </tbody>
 </table>
 <p>If <code class="docutils literal notranslate"><span class="pre">terms/num_blocks</span></code> does not divide evenly then have one block perform the necessary additional iterations to equal <code class="docutils literal notranslate"><span class="pre">terms</span></code>.</p>
-<p>You have full control over the arguments passed to <code class="docutils literal notranslate"><span class="pre">compute_estimates</span></code>, how memory is allocated, and how the interval is divided among the blocks. Please keep in mind that we are not looking at performance in this first homework assignment, so you do not need to come up with the most optimal solution.</p>
+<p>You have full control over the arguments passed to <code class="docutils literal notranslate"><span class="pre">compute_estimates</span></code>, how memory is allocated, and how the interval is divided among the blocks. Please keep in mind that we are not looking at performance in this first homework assignment, so you do not need to come up with the most optimal solution. The estimates array and all intermediate pi calculations must use <code class="docutils literal notranslate"><span class="pre">double</span></code> precision (not <code class="docutils literal notranslate"><span class="pre">float</span></code>).</p>
 </section>
 <section id="phase-2-aggregation">
 <h3>Phase 2: Aggregation<a class="headerlink" href="#phase-2-aggregation" title="Link to this heading">¶</a></h3>
@@ -323,8 +324,16 @@ y + t_y \\
 </section>
 <section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h2>
-<p>Inside each problem directory, there is a <code class="docutils literal notranslate"><span class="pre">test-data</span></code> directory that contains some sample test cases. You can run these test cases by running the provided <code class="docutils literal notranslate"><span class="pre">run_tests.sh</span></code> script. This script will run your program on each of the test cases and compare your output to the expected output. you’ll see the a directory test-data inside each problem folder. You must update each problem’s SBATCH <code class="docutils literal notranslate"><span class="pre">px-submit.sh</span></code> script to run the test cases on the cluster.</p>
-<p>Each test-<a href="#id1"><span class="problematic" id="id2">**</span></a>* is split into a .in and .ans file.  The  .in  represents that command I used to run the program executable with any additional arguments necessary. The .ans  shows the STDOUT after running the command (this is the answer).</p>
+<p>Inside each problem directory, you will find a <cite>test-data</cite> directory containing sample test cases. You can execute these test cases locally by running the provided <cite>run_tests.sh</cite> script. This script will run your program against each test case and compare your output to the expected output.</p>
+<p>Each test case consists of two files:</p>
+<ul class="simple">
+<li><p><cite>test-*.in</cite> — Contains the command-line arguments used to execute the program.</p></li>
+<li><p><cite>test-*.ans</cite> — Contains the expected STDOUT output produced by the program.</p></li>
+</ul>
+<p>The <cite>run_tests.sh</cite> script automatically reads these files, executes the corresponding commands, and compares your program’s output against the expected results.</p>
+<p>For this assignment, you will be running your programs on the department cluster using SLURM. Each problem directory contains a <cite>px-submit.sh</cite> script that can be submitted using <cite>sbatch</cite>.</p>
+<p>Before submitting jobs, you <strong>must</strong> update the SBATCH configuration in each problem’s <cite>px-submit.sh</cite> and <cite>run_tests.sh</cite> scripts to match your repository location. In particular, update the <cite>–chdir</cite> option so that it points to the appropriate Homework 1 problem directory in <strong>your</strong> repository. The paths included in the provided scripts are only examples and will not work without modification.</p>
+<p><strong>Reminder:</strong> Homework 1 will use the department cluster to help everyone become familiar with the CUDA development workflow and SLURM job scheduling. Beginning with Homework 2, we will transition fully to AWS and use cloud-based GPU resources for the remainder of the course.</p>
 </section>
 <section id="grading">
 <h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h2>
