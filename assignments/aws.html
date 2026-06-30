@@ -96,6 +96,16 @@
 <li><a class="reference internal" href="#session-manager-plugin">Session Manager Plugin</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#ssh-access-setup-linux-macos">SSH Access Setup (Linux/macOS)</a><ul>
+<li><a class="reference internal" href="#get-the-class-ssh-key-linux-macos">Get the Class SSH Key (Linux/macOS)</a></li>
+<li><a class="reference internal" href="#configure-ssh-to-tunnel-through-ssm-linux-macos">Configure SSH to Tunnel Through SSM (Linux/macOS)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ssh-access-setup-windows">SSH Access Setup (Windows)</a><ul>
+<li><a class="reference internal" href="#get-the-class-ssh-key-windows">Get the Class SSH Key( Windows)</a></li>
+<li><a class="reference internal" href="#configure-ssh-to-tunnel-through-ssm-windows">Configure SSH to Tunnel Through SSM (Windows)</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#requesting-an-aws-sandbox-instance">Requesting an AWS Sandbox Instance</a></li>
 <li><a class="reference internal" href="#configuring-aws-sso-authentication">Configuring AWS SSO Authentication</a><ul>
 <li><a class="reference internal" href="#step-1-find-your-sandbox-account-number">Step 1: Find Your Sandbox Account Number</a></li>
@@ -120,12 +130,8 @@
 <li><a class="reference internal" href="#step-2-run-the-installation-script">Step 2: Run the Installation Script</a></li>
 <li><a class="reference internal" href="#handling-dpkg-lock-errors">Handling <code class="docutils literal notranslate"><span class="pre">dpkg</span></code> Lock Errors</a></li>
 <li><a class="reference internal" href="#step-3-reboot-the-instance">Step 3: Reboot the Instance</a></li>
-<li><a class="reference internal" href="#step-4-reconnect-to-your-instance">Step 4: Reconnect to Your Instance</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#working-with-vs-code-and-aws">Working with VS Code and AWS</a><ul>
-<li><a class="reference internal" href="#recommended-workflow">Recommended Workflow</a></li>
-<li><a class="reference internal" href="#alternative-option-advanced">Alternative Option (Advanced)</a></li>
+<li><a class="reference internal" href="#step-4-reconnect-to-your-instance-in-the-terminal">Step 4: Reconnect to Your Instance in the Terminal</a></li>
+<li><a class="reference internal" href="#working-with-vs-code-and-aws">Working with VS Code and AWS</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#daily-workflow">Daily Workflow</a></li>
@@ -210,13 +216,31 @@ running even after your session ends.</p></li>
 </section>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h2>
-<p>Before accessing your instance from your local machine, you must install the required AWS tools.</p>
+<p>Before accessing your instance from your local machine, you must install the required AWS tools and ssh key for connecting to a session.</p>
 <section id="aws-cli-v2">
 <h3>AWS CLI v2<a class="headerlink" href="#aws-cli-v2" title="Link to this heading">¶</a></h3>
 <p>Install the AWS CLI:</p>
 <ul>
 <li><p><strong>macOS:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>awscli
+</pre></div>
+</div>
+</li>
+<li><p><strong>Linux: x86_64</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>curl<span class="w"> </span><span class="s2">&quot;https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip&quot;</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;awscliv2.zip&quot;</span>
+unzip<span class="w"> </span>awscliv2.zip
+sudo<span class="w"> </span>./aws/install
+rm<span class="w"> </span>-rf<span class="w"> </span>awscliv2.zip<span class="w"> </span>aws
+aws<span class="w"> </span>--version
+</pre></div>
+</div>
+</li>
+<li><p><strong>Linux: ARM64</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>curl<span class="w"> </span><span class="s2">&quot;https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip&quot;</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;awscliv2.zip&quot;</span>
+unzip<span class="w"> </span>awscliv2.zip
+sudo<span class="w"> </span>./aws/install
+rm<span class="w"> </span>-rf<span class="w"> </span>awscliv2.zip<span class="w"> </span>aws
+aws<span class="w"> </span>--version
 </pre></div>
 </div>
 </li>
@@ -235,6 +259,18 @@ running even after your session ends.</p></li>
 <p>Install the Session Manager Plugin:</p>
 <p>You can either install via package install from the <a class="reference external" href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html">AWS Website</a> or via the terminal here:</p>
 <ul>
+<li><p><strong>Linux- Ubuntu/Debian (x86_64):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span><span class="s2">&quot;https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb&quot;</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;session-manager-plugin.deb&quot;</span>
+sudo<span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>session-manager-plugin.deb
+</pre></div>
+</div>
+</li>
+<li><p><strong>Linux- Ubuntu/Debian (ARM64):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>curl<span class="w"> </span><span class="s2">&quot;https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_arm64/session-manager-plugin.deb&quot;</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;session-manager-plugin.deb&quot;</span>
+sudo<span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>session-manager-plugin.deb
+</pre></div>
+</div>
+</li>
 <li><p><strong>macOS:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span><span class="s2">&quot;https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac_arm64/session-manager-plugin.pkg&quot;</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/Downloads/session-manager-plugin.pkg&quot;</span>
 sudo<span class="w"> </span>installer<span class="w"> </span>-pkg<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/Downloads/session-manager-plugin.pkg&quot;</span><span class="w"> </span>-target<span class="w"> </span>/
@@ -257,6 +293,110 @@ sudo<span class="w"> </span>ln<span class="w"> </span>-sf<span class="w"> </span
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>session-manager-plugin<span class="w"> </span>--version
 </pre></div>
 </div>
+</section>
+</section>
+<section id="ssh-access-setup-linux-macos">
+<h2>SSH Access Setup (Linux/macOS)<a class="headerlink" href="#ssh-access-setup-linux-macos" title="Link to this heading">¶</a></h2>
+<p>The following two sections explain how to set up SSH access to your AWS instance for both Linux/macOS. Windows users should skip to the next section titled: SSH Access Setup (Windows).</p>
+<section id="get-the-class-ssh-key-linux-macos">
+<h3>Get the Class SSH Key (Linux/macOS)<a class="headerlink" href="#get-the-class-ssh-key-linux-macos" title="Link to this heading">¶</a></h3>
+<p>Your instructor will distribute a <strong>private key file</strong> through  Ed discussion (see post <strong>“[IMPORTANT] Class SSH Key”</strong>). Save it to:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>~/.ssh/aws_dummy_key
+</pre></div>
+</div>
+<p>This key does <strong>not</strong> grant access on its own. It only works in
+combination with your own AWS SSO login, so it is safe to use even though
+it is shared across the class.</p>
+<p>Restrict its permissions so SSH will accept it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/aws_dummy_key
+</pre></div>
+</div>
+</section>
+<section id="configure-ssh-to-tunnel-through-ssm-linux-macos">
+<h3>Configure SSH to Tunnel Through SSM (Linux/macOS)<a class="headerlink" href="#configure-ssh-to-tunnel-through-ssm-linux-macos" title="Link to this heading">¶</a></h3>
+<p>Open (or create) the file <code class="docutils literal notranslate"><span class="pre">~/.ssh/config</span></code> on your laptop and add the
+following block. <strong>The entire ProxyCommand must be on one line</strong> — do not
+let your editor wrap it across multiple lines.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Host i-* mi-*
+    ProxyCommand aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters portNumber=%p --profile isb-sandbox --region us-east-1
+    User ubuntu
+    IdentityFile ~/.ssh/aws_dummy_key
+    StrictHostKeyChecking no
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">us-east-1</span></code> with your sandbox’s actual region if different.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Host</span> <span class="pre">i-*</span> <span class="pre">mi-*</span></code> line means this rule applies any time you connect
+using an EC2 instance ID (which always starts with <code class="docutils literal notranslate"><span class="pre">i-</span></code>) as the
+hostname.</p></li>
+</ul>
+<p>This step is done once and will work for every future instance, since it
+matches on the <em>pattern</em> of an instance ID rather than one specific ID.</p>
+</section>
+</section>
+<section id="ssh-access-setup-windows">
+<h2>SSH Access Setup (Windows)<a class="headerlink" href="#ssh-access-setup-windows" title="Link to this heading">¶</a></h2>
+<p>These steps assume you are working inside <strong>Git Bash</strong>, not PowerShell or
+<code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code>. Open Git Bash from the Start menu before continuing.</p>
+<section id="get-the-class-ssh-key-windows">
+<h3>Get the Class SSH Key( Windows)<a class="headerlink" href="#get-the-class-ssh-key-windows" title="Link to this heading">¶</a></h3>
+<p>Your instructor will distribute a <strong>private key file</strong> through the course
+LMS (not email or chat). In Git Bash, <code class="docutils literal notranslate"><span class="pre">~</span></code> maps to
+<code class="docutils literal notranslate"><span class="pre">C:\Users\&lt;YourName&gt;</span></code>, so save it to:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>~/.ssh/aws_dummy_key
+</pre></div>
+</div>
+<p>This key does <strong>not</strong> grant access on its own. It only works in
+combination with your own AWS SSO login, so it is safe to use even though
+it is shared across the class.</p>
+<p>Windows OpenSSH will reject a private key that is readable by other
+users, so you must lock down its permissions. <code class="docutils literal notranslate"><span class="pre">chmod</span></code> does not work
+reliably for this on Windows — use <code class="docutils literal notranslate"><span class="pre">icacls</span></code> instead, run from
+<strong>PowerShell</strong> (not Git Bash) just for this one command:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">icacls</span> <span class="n">C</span><span class="p">:\</span><span class="n">Users</span><span class="p">\&lt;</span><span class="n">YourName</span><span class="p">&gt;\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">aws_dummy_key</span> <span class="p">/</span><span class="n">inheritance</span><span class="p">:</span><span class="nb">r</span>
+<span class="n">icacls</span> <span class="n">C</span><span class="p">:\</span><span class="n">Users</span><span class="p">\&lt;</span><span class="n">YourName</span><span class="p">&gt;\.</span><span class="n">ssh</span><span class="p">\</span><span class="n">aws_dummy_key</span> <span class="p">/</span><span class="n">grant</span><span class="p">:</span><span class="nb">r </span><span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$env:USERNAME</span><span class="p">)</span><span class="s2">:(R)&quot;</span>
+</pre></div>
+</div>
+<p>If you skip this step, SSH will refuse to use the key and report a
+“permissions too open” error.</p>
+</section>
+<section id="configure-ssh-to-tunnel-through-ssm-windows">
+<h3>Configure SSH to Tunnel Through SSM (Windows)<a class="headerlink" href="#configure-ssh-to-tunnel-through-ssm-windows" title="Link to this heading">¶</a></h3>
+<p>Open (or create) the file <code class="docutils literal notranslate"><span class="pre">~/.ssh/config</span></code> in Git Bash (this is the same
+file as <code class="docutils literal notranslate"><span class="pre">C:\Users\&lt;YourName&gt;\.ssh\config</span></code>) and add the following block.
+<strong>The entire ProxyCommand must be on one line</strong> — do not let your editor
+wrap it across multiple lines.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Host i-* mi-*
+    ProxyCommand aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters portNumber=%p --profile isb-sandbox --region us-east-1
+    User ubuntu
+    IdentityFile ~/.ssh/aws_dummy_key
+    StrictHostKeyChecking no
+</pre></div>
+</div>
+<p>This is the same syntax as macOS/Linux — Git Bash interprets the config
+file and runs the <code class="docutils literal notranslate"><span class="pre">aws</span></code> command the same way a Mac/Linux shell does.</p>
+<p>Notes:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>If you prefer native PowerShell instead of Git Bash</strong>, the
+<code class="docutils literal notranslate"><span class="pre">ProxyCommand</span></code> needs to be wrapped so Windows knows to run it as a
+PowerShell command, and paths should use Windows-style backslashes:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Host i-* mi-*
+    ProxyCommand powershell.exe -Command &quot;aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters portNumber=%p --profile isb-sandbox --region us-east-1&quot;
+    User ubuntu
+    IdentityFile C:\Users\YourName\.ssh\aws_dummy_key
+    StrictHostKeyChecking no
+</pre></div>
+</div>
+<p>However, <code class="docutils literal notranslate"><span class="pre">connect.sh</span></code> in Part 2 is a bash script and will <strong>not</strong>
+run under plain PowerShell. If you go this route, you will need to
+either translate <code class="docutils literal notranslate"><span class="pre">connect.sh</span></code> into a PowerShell script yourself or
+run its commands manually. Using Git Bash avoids this entirely, which
+is why it’s the recommended path for this course.</p>
+</div>
+<p>This step is done once and will work for every future instance, since it
+matches on the <em>pattern</em> of an instance ID rather than one specific ID.</p>
 </section>
 </section>
 <section id="requesting-an-aws-sandbox-instance">
@@ -581,8 +721,8 @@ include the full CUDA development toolkit required for this course.</p>
 <li><p>Restart the instance with the new tools configured</p></li>
 </ul>
 </section>
-<section id="step-4-reconnect-to-your-instance">
-<h3>Step 4: Reconnect to Your Instance<a class="headerlink" href="#step-4-reconnect-to-your-instance" title="Link to this heading">¶</a></h3>
+<section id="step-4-reconnect-to-your-instance-in-the-terminal">
+<h3>Step 4: Reconnect to Your Instance in the Terminal<a class="headerlink" href="#step-4-reconnect-to-your-instance-in-the-terminal" title="Link to this heading">¶</a></h3>
 <p>After the instance restarts, you must reconnect:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span>--target<span class="w"> </span>&lt;INSTANCE-ID&gt;<span class="w"> </span>--profile<span class="w"> </span>isb-sandbox
 </pre></div>
@@ -592,58 +732,18 @@ include the full CUDA development toolkit required for this course.</p>
 </pre></div>
 </div>
 </section>
-</section>
 <section id="working-with-vs-code-and-aws">
-<h2>Working with VS Code and AWS<a class="headerlink" href="#working-with-vs-code-and-aws" title="Link to this heading">¶</a></h2>
-<p>At this time, you <strong>cannot directly connect to your AWS instance using VS Code Remote SSH</strong>,
-like you may have done with the CS Linux servers.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>VS Code remote development (Remote SSH / Remote Tunnels) is <strong>not currently supported</strong>
-for these AWS sandbox environments.</p>
-<p>We are actively working with technical staff to enable this feature, but it is
-<strong>not available yet</strong>.</p>
-</div>
-<section id="recommended-workflow">
-<h3>Recommended Workflow<a class="headerlink" href="#recommended-workflow" title="Link to this heading">¶</a></h3>
-<p>Until this feature is available, you should use the following workflow:</p>
-<ol class="arabic">
-<li><p><strong>Work locally on your machine</strong></p>
-<ul class="simple">
-<li><p>Edit your code using VS Code (or your preferred editor)</p></li>
-<li><p>Save changes locally</p></li>
-<li><p>Work on the Peanut cluster using their gpus to verify your solution is working then switch over to the move powerful GPU on the instance.</p></li>
-</ul>
-</li>
-<li><p><strong>Push your changes to GitHub</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;your message&quot;</span>
-git<span class="w"> </span>push
-</pre></div>
-</div>
-</li>
-<li><p><strong>Pull changes on the AWS instance</strong></p>
-<p>Inside your AWS terminal session:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>pull
-</pre></div>
-</div>
-</li>
-<li><p><strong>Compile and run your code on the instance</strong></p>
-<ul class="simple">
-<li><p>Use the GPU-enabled environment for execution and profiling</p></li>
-</ul>
-</li>
+<h3>Working with VS Code and AWS<a class="headerlink" href="#working-with-vs-code-and-aws" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Open VS Code.</p></li>
+<li><p>Press <code class="docutils literal notranslate"><span class="pre">Cmd+Shift+P</span></code> (Mac) or <code class="docutils literal notranslate"><span class="pre">Ctrl+Shift+P</span></code> (Windows/Linux).</p></li>
+<li><p>Select <strong>Remote-SSH: Connect to Host</strong>.</p></li>
+<li><p>Type your instance ID (for example, <code class="docutils literal notranslate"><span class="pre">i-0abc1234567890</span></code>) and press
+Enter.</p></li>
 </ol>
-</section>
-<section id="alternative-option-advanced">
-<h3>Alternative Option (Advanced)<a class="headerlink" href="#alternative-option-advanced" title="Link to this heading">¶</a></h3>
-<p>If you prefer to work entirely on the instance, you can use terminal-based editors:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">vim</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">emacs</span></code></p></li>
-</ul>
-<p>However, this is <strong>not required</strong>, and most students will find the local + GitHub workflow easier.</p>
+<p>VS Code will open a new window connected directly to your sandbox
+instance. You can now browse files, edit code, and use the integrated
+terminal — everything runs on the GPU instance itself.</p>
 </section>
 </section>
 <section id="daily-workflow">
@@ -657,20 +757,23 @@ re-authenticate and reconnect each day.</p>
 </pre></div>
 </div>
 </li>
-<li><p>Connect to your instance:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span>--target<span class="w"> </span>&lt;INSTANCE-ID&gt;<span class="w"> </span>--profile<span class="w"> </span>isb-sandbox
+<li><p>Connect to your instance via the terminal or VS Code.</p></li>
+<li><p>Switch to the development user:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>su<span class="w"> </span>-<span class="w"> </span>ubuntu
 </pre></div>
 </div>
 </li>
-<li><p>Switch to the development user:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>su<span class="w"> </span>-<span class="w"> </span>ubuntu
+<li><p>Work on your assignments, and <strong>push your work to GitHub</strong> frequently.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;your message&quot;</span>
+git<span class="w"> </span>push
 </pre></div>
 </div>
 </li>
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>To avoid retyping your Instance ID every time, you can store it as an environment variable:</p>
+<p>If logging in through the terminal, To avoid retyping your Instance ID every time, you can store it as an environment variable:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">INSTANCE_ID</span><span class="o">=</span>i-0abc123def456789
 aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span>--target<span class="w"> </span><span class="nv">$INSTANCE_ID</span><span class="w"> </span>--profile<span class="w"> </span>isb-sandbox
 </pre></div>
