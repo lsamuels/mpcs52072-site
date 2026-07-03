@@ -90,7 +90,6 @@
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
 <li><a class="reference internal" href="#">Homework #3</a><ul>
-<li><a class="reference internal" href="#aws-instances-and-gpu-profiling">AWS Instances and GPU Profiling</a></li>
 <li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a></li>
 <li><a class="reference internal" href="#programming-problem-convolution-based-edge-detection">Programming Problem:  Convolution-Based Edge Detection</a><ul>
 <li><a class="reference internal" href="#directory-structure">Directory Structure</a></li>
@@ -107,7 +106,13 @@
 <li><a class="reference internal" href="#basic-timing-workflow">Basic Timing Workflow</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#report-submit-as-report-md">Report (Submit as <code class="docutils literal notranslate"><span class="pre">report.md</span></code>)</a></li>
+<li><a class="reference internal" href="#gpu-profiling-with-nsight-compute-ncu">GPU Profiling with Nsight Compute (ncu)</a><ul>
+<li><a class="reference internal" href="#learning-to-read-ncu-output">Learning to Read ncu Output</a></li>
+<li><a class="reference internal" href="#using-ncu-without-the-gui">Using ncu Without the GUI</a></li>
+<li><a class="reference internal" href="#required-profiling-runs">Required Profiling Runs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#report-submit-as-report-md">Report (Submit as report.md)</a></li>
 <li><a class="reference internal" href="#grading">Grading</a></li>
 <li><a class="reference internal" href="#submission">Submission</a></li>
 </ul>
@@ -124,7 +129,7 @@
       
   <section id="homework-3">
 <h1>Homework #3<a class="headerlink" href="#homework-3" title="Link to this heading">¶</a></h1>
-<p><strong>Due: Friday, April 17th at 11:59pm</strong></p>
+<p><strong>Due: Friday, July 10th at 11:59pm</strong></p>
 <p>In this assignment, you will implement an edge detection algorithm on grayscale images using
 2D convolution on the GPU. Your implementation will support:</p>
 <ul class="simple">
@@ -134,10 +139,6 @@
 </ul>
 <p>This assignment is designed to help you understand how stencil-based image operations interact
 with CUDA memory models and how optimization strategies like shared memory tiling can accelerate performance.</p>
-<section id="aws-instances-and-gpu-profiling">
-<h2>AWS Instances and GPU Profiling<a class="headerlink" href="#aws-instances-and-gpu-profiling" title="Link to this heading">¶</a></h2>
-<p>We are still working on configuring the AWS instances so we are temporarily <strong>suspending GPU profiling requirements</strong> for this assignment. We expect to begin performing profiling-based performance analysis in future assignments once the AWS instances are fully configured.</p>
-</section>
 <section id="creating-your-private-repository">
 <h2>Creating Your Private Repository<a class="headerlink" href="#creating-your-private-repository" title="Link to this heading">¶</a></h2>
 <p>To actually get your private repository, you will need this invitation URL:</p>
@@ -158,7 +159,7 @@ with CUDA memory models and how optimization strategies like shared memory tilin
 <li><dl class="simple">
 <dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
 <li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
-<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-spr26/hw3-GITHUB-USERNAME.git.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-sum26/hw3-GITHUB-USERNAME.git.</p></li>
 <li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
 </ul>
 </dd>
@@ -327,21 +328,160 @@ global memory version (stencil 5x5): 6.848 ms
 <p>You should wrap the timing around <strong>only the kernel launch</strong>, not memory allocations or file I/O.</p>
 </section>
 </section>
+<section id="gpu-profiling-with-nsight-compute-ncu">
+<h2>GPU Profiling with Nsight Compute (ncu)<a class="headerlink" href="#gpu-profiling-with-nsight-compute-ncu" title="Link to this heading">¶</a></h2>
+<p>For this assignment, you are required to profile both your global memory and
+shared memory convolution kernels using <strong>Nsight Compute (ncu)</strong>, and use the
+profiling data to support your answers in a  <code class="docutils literal notranslate"><span class="pre">report.md</span></code> file. Timing numbers alone
+(e.g., from CUDA events) are not sufficient to answer the report questions.
+You need to explain <em>why</em> the two kernels perform differently, and that
+requires looking inside the kernel’s actual GPU execution behavior.</p>
+<p>You have not been given a breakdown of every <code class="docutils literal notranslate"><span class="pre">ncu</span></code> metric in this spec.
+Part of this assignment is learning to read and interpret the tool’s output
+yourself, the same way you would need to on the job. See the sections below
+for how to get started.</p>
+<p>You must use <code class="docutils literal notranslate"><span class="pre">sudo</span></code> and the full absolute path to the <code class="docutils literal notranslate"><span class="pre">ncu</span></code> binary on an AWS instance. For example, you can run as follow:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>/usr/local/cuda-12.3/bin/ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>--target-processes<span class="w"> </span>all<span class="w"> </span>./edge_detect<span class="w"> </span>global<span class="w"> </span>data/stencil5x5.txt<span class="w"> </span>data/test_img.png<span class="w"> </span>output.png
+</pre></div>
+</div>
+<section id="learning-to-read-ncu-output">
+<h3>Learning to Read ncu Output<a class="headerlink" href="#learning-to-read-ncu-output" title="Link to this heading">¶</a></h3>
+<p>A few starting points for learning what the metrics mean:</p>
+<ul>
+<li><p>Nsight Compute prints <code class="docutils literal notranslate"><span class="pre">OPT</span></code> and <code class="docutils literal notranslate"><span class="pre">INF</span></code> notes directly under most
+sections of its terminal output. These are the tool’s own plain-English
+explanations of what’s going on, and they often tell you exactly where to
+look next in the report. Read these carefully before searching elsewhere.</p></li>
+<li><p>The official Nsight Compute Profiling Guide has a full metrics reference:
+<a class="reference external" href="https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html">https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html</a>
+Use Ctrl+F to look up any metric name you don’t recognize (e.g.,
+“Achieved Occupancy”, “L1/TEX Hit Rate”, “Warp Cycles Per Issued
+Instruction”).</p></li>
+<li><p>You can list every available metric name with a one-line description
+directly from the command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ncu<span class="w"> </span>--query-metrics
+</pre></div>
+</div>
+<p>This is a long list which you don’t need to read all of it, but it’s useful
+for looking up something specific once you know its name.</p>
+</li>
+<li><p>Every <code class="docutils literal notranslate"><span class="pre">ncu</span></code> report is organized into named sections: GPU Speed Of Light,
+Compute Workload Analysis, Memory Workload Analysis, Scheduler Statistics,
+Warp State Statistics, Launch Statistics, Occupancy, Source Counters, and
+others. Get comfortable with what each section is broadly <em>about</em> before
+worrying about every individual metric inside it.</p></li>
+</ul>
+</section>
+<section id="using-ncu-without-the-gui">
+<h3>Using ncu Without the GUI<a class="headerlink" href="#using-ncu-without-the-gui" title="Link to this heading">¶</a></h3>
+<p>You are accessing your AWS instance remotely through VS Code, so there is no
+graphical display attached to the machine your kernels run on. This means
+<code class="docutils literal notranslate"><span class="pre">ncu-ui</span></code> (the Nsight Compute GUI) is not something you can open directly on
+the instance, even though the <code class="docutils literal notranslate"><span class="pre">ncu</span></code> command-line tool itself is installed
+and fully functional. For this assignment, do all of your profiling entirely
+from the command line — everything you need for the report can be obtained
+this way.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you’re curious, it is technically possible to view <code class="docutils literal notranslate"><span class="pre">.ncu-rep</span></code> files
+in the GUI by copying the file to your local machine (e.g., via <code class="docutils literal notranslate"><span class="pre">scp</span></code>
+or the VS Code file explorer’s download option) and opening it in a
+locally installed copy of Nsight Compute. This is <strong>not required</strong> for
+this assignment. The command-line output contains everything you need
+but may be a nice way to visually explore a report if you want to.</p>
+</div>
+<p><strong>Profile and save a report in one step:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>-o<span class="w"> </span>report_global_7x7<span class="w"> </span>./edge_detect<span class="w"> </span>global<span class="w"> </span>data/stencil7x7.txt<span class="w"> </span>data/test_img.png<span class="w"> </span>output.png
+</pre></div>
+</div>
+<p>This prints the full text report to your terminal <em>and</em> saves a
+<code class="docutils literal notranslate"><span class="pre">report_global_7x7.ncu-rep</span></code> file that you can re-open later or include in
+your submission.</p>
+<p><strong>Re-print a saved report’s text output later</strong> (e.g., to paste into
+<code class="docutils literal notranslate"><span class="pre">report.md</span></code>, or to re-check something without re-running the program):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ncu<span class="w"> </span>--import<span class="w"> </span>report_global_7x7.ncu-rep
+</pre></div>
+</div>
+<p><strong>Focus on one section at a time</strong>, to cut down on output while you’re
+exploring:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>--section<span class="w"> </span>Occupancy<span class="w"> </span>./edge_detect<span class="w"> </span>global<span class="w"> </span>data/stencil7x7.txt<span class="w"> </span>data/test_img.png<span class="w"> </span>output.png
+ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>--section<span class="w"> </span>WarpStateStats<span class="w"> </span>./edge_detect<span class="w"> </span>global<span class="w"> </span>data/stencil7x7.txt<span class="w"> </span>data/test_img.png<span class="w"> </span>output.png
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">ncu</span> <span class="pre">--list-sections</span></code> to see all available section names.</p>
+<p><strong>Redirect output to a file</strong> so you can search through it or paste it into
+your report:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>./edge_detect<span class="w"> </span>global<span class="w"> </span>data/stencil7x7.txt<span class="w"> </span>data/test_img.png<span class="w"> </span>output.png<span class="w"> </span>&gt;<span class="w"> </span>global_7x7.txt
+grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Occupancy&quot;</span><span class="w"> </span>global_7x7.txt
+</pre></div>
+</div>
+</section>
+<section id="required-profiling-runs">
+<h3>Required Profiling Runs<a class="headerlink" href="#required-profiling-runs" title="Link to this heading">¶</a></h3>
+<p>At minimum, generate and save the following reports, and include the
+<code class="docutils literal notranslate"><span class="pre">.ncu-rep</span></code> files (or the redirected text output) in your submission:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">report_global_3x3.ncu-rep</span></code> and <code class="docutils literal notranslate"><span class="pre">report_shared_3x3.ncu-rep</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">report_global_7x7.ncu-rep</span></code> and <code class="docutils literal notranslate"><span class="pre">report_shared_7x7.ncu-rep</span></code></p></li>
+</ul>
+<p>You are encouraged to also profile the 5×5 stencil and/or the larger test
+image if you want additional evidence for your report answers.</p>
+</section>
+</section>
 <section id="report-submit-as-report-md">
-<h2>Report (Submit as <code class="docutils literal notranslate"><span class="pre">report.md</span></code>)<a class="headerlink" href="#report-submit-as-report-md" title="Link to this heading">¶</a></h2>
+<h2>Report (Submit as report.md)<a class="headerlink" href="#report-submit-as-report-md" title="Link to this heading">¶</a></h2>
 <p>Answer the following:</p>
 <ol class="arabic simple">
-<li><p>What is the average runtime for each stencil using both global and shared memory?</p></li>
-<li><p>How does performance scale with stencil size?</p></li>
-<li><p>What speedup (if any) does shared memory provide?</p></li>
-<li><p>What implementation issues did you encounter with:
-- Loading the stencil from file?
-- Allocating shared memory?
-- Managing kernel launch arguments?
-- Using constant memory?</p></li>
+<li><p>What is the average runtime for each stencil size (3×3, 5×5, 7×7) using
+both global and shared memory? Use CUDA event timings as before.</p></li>
+<li><p>How does performance scale with stencil size, for both kernel versions?
+Is the scaling roughly linear, worse than linear, or something else?
+Relate this to how much work per pixel increases as radius grows (hint:
+how many multiply-adds does a single output pixel require for an n×n
+stencil?).</p></li>
+<li><p>What speedup (if any) does shared memory provide, and does that speedup
+change as stencil size increases? Support your answer with specific
+<code class="docutils literal notranslate"><span class="pre">ncu</span></code> metrics from your saved reports — cite the metric name, its
+value in each version, and explain in your own words what that metric
+actually measures.</p></li>
+<li><p>If the global memory version outperforms the shared memory version in
+any of your test cases, explain why using specific <code class="docutils literal notranslate"><span class="pre">ncu</span></code> evidence. Do
+not just guess. Run <code class="docutils literal notranslate"><span class="pre">ncu</span> <span class="pre">--set</span> <span class="pre">full</span></code> on both versions and examine the
+full report output. Identify at least two sections of the report (e.g.,
+relating to occupancy, memory caching, or warp stalls) that show a
+measurable difference between the two kernels, and explain what each
+metric you cite measures and why the difference matters for
+performance.</p></li>
+<li><p>Examine the Launch Statistics and Occupancy sections of your reports.
+What is <code class="docutils literal notranslate"><span class="pre">Waves</span> <span class="pre">Per</span> <span class="pre">SM</span></code> for your kernels on the test image? Is your 2D
+grid large enough to fill the GPU (i.e., is <code class="docutils literal notranslate"><span class="pre">Waves</span> <span class="pre">Per</span> <span class="pre">SM</span></code> comfortably
+above 1), or are you leaving SMs idle? If you tested a larger image
+(15MB+, as suggested below), how did <code class="docutils literal notranslate"><span class="pre">Waves</span> <span class="pre">Per</span> <span class="pre">SM</span></code> and the GPU Speed
+Of Light throughput numbers change compared to the smaller image?</p></li>
+<li><p>Look at <code class="docutils literal notranslate"><span class="pre">Registers</span> <span class="pre">Per</span> <span class="pre">Thread</span></code> and the four “Block Limit” values in
+the Occupancy section for both kernel versions. Is register usage the
+binding constraint on occupancy for either kernel, or is something else
+(shared memory, warps, SM count) the limiting factor? Explain your
+reasoning using the Block Limit values.</p></li>
+<li><p>What implementation issues did you encounter with:</p>
+<ul class="simple">
+<li><p>Loading the stencil from file?</p></li>
+<li><p>Allocating shared memory (particularly using dynamic shared memory
+with 2D tiles + halo)?</p></li>
+<li><p>Managing kernel launch arguments?</p></li>
+<li><p>Using constant memory?</p></li>
+<li><p>Interpreting any Nsight Compute metric that was confusing or
+unexpected, and how you figured out what it meant?</p></li>
+</ul>
+</li>
 </ol>
-<p><strong>You are not required to produce graphs or provide the timing measurements for this specific assignment</strong>. Please provide a brief overview of what’s happening in your implementation and execution when answering the above questions. However, feel free to provide timings and graphs in your report to justify your answers. As you answer these questions, We want to provide more insight into the timing differences between the shared memory and global memory kernel runtimes. One thing we’ll mention is that it’s perfectly fine if the global memory version outperforms the shared memory version in some executions. However, you need to explain why you think that’s happening. I won’t spell it out for you because that’s part of what we’re grading you on, so you need to think carefully about what might be going on.</p>
-<p>Also, I recommend downloading even larger images (e.g., 15MB or greater) and considering how that might affect the timing results.</p>
+<p><strong>You are not required to produce graphs for this assignment</strong>, but you are
+required to cite specific metric names and values from your <code class="docutils literal notranslate"><span class="pre">ncu</span></code> reports
+to support your answers to questions 3–6. Please provide a brief overview
+of what’s happening in your implementation and execution when answering the
+above questions.</p>
+<p>Also, I recommend downloading even larger images (e.g., 15MB or greater) and
+considering how that might affect the timing and profiling results.</p>
 </section>
 <section id="grading">
 <h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h2>
