@@ -91,32 +91,16 @@
 <li><a class="reference internal" href="#">Homework #4</a><ul>
 <li><a class="reference internal" href="#creating-your-private-repository">Creating Your Private Repository</a></li>
 <li><a class="reference internal" href="#getting-started">Getting Started</a></li>
-<li><a class="reference internal" href="#command-line-interface">Command-Line Interface</a></li>
 <li><a class="reference internal" href="#task-1-thread-coarsening">Task 1 — Thread Coarsening</a><ul>
-<li><a class="reference internal" href="#concept">Concept</a></li>
-<li><a class="reference internal" href="#requirements">Requirements</a></li>
-<li><a class="reference internal" href="#example-pattern">Example Pattern</a></li>
-<li><a class="reference internal" href="#important-considerations">Important Considerations</a></li>
+<li><a class="reference internal" href="#implementing-edge-detect-coarsened">Implementing <code class="docutils literal notranslate"><span class="pre">edge_detect_coarsened</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#task-2-profiling-baseline-kernels">Task 2 — Profiling Baseline Kernels</a><ul>
-<li><a class="reference internal" href="#experimental-setup">Experimental Setup</a></li>
-<li><a class="reference internal" href="#running-the-profiler">Running the Profiler</a></li>
-<li><a class="reference internal" href="#metrics-to-report">Metrics to Report</a></li>
-<li><a class="reference internal" href="#task">Task</a></li>
-<li><a class="reference internal" href="#required-tables">Required Tables</a></li>
+<li><a class="reference internal" href="#program-usage-command-line-interface">Program Usage: Command-Line Interface</a><ul>
+<li><a class="reference internal" href="#task-2-gpu-profiling-with-nsight-compute-ncu">Task 2 — GPU Profiling with Nsight Compute (ncu)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#task-3-parameter-sweep-profiling">Task 3 — Parameter Sweep &amp; Profiling</a><ul>
-<li><a class="reference internal" href="#running-experiments">Running Experiments</a></li>
-<li><a class="reference internal" href="#id1">Required Tables</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#task-4-analysis-discussion">Task 4 — Analysis &amp; Discussion</a></li>
-<li><a class="reference internal" href="#deliverables">Deliverables</a><ul>
-<li><a class="reference internal" href="#report-guidelines">Report Guidelines</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#required-profiling-runs">Required profiling runs</a></li>
+<li><a class="reference internal" href="#report-report-md">Report ( <code class="docutils literal notranslate"><span class="pre">report.md</span></code>)</a></li>
 <li><a class="reference internal" href="#grading">Grading</a></li>
 <li><a class="reference internal" href="#submission">Submission</a></li>
 </ul>
@@ -133,7 +117,7 @@
       
   <section id="homework-4">
 <h1>Homework #4<a class="headerlink" href="#homework-4" title="Link to this heading">¶</a></h1>
-<p><strong>Due: Friday, April 24th at 11:59pm</strong></p>
+<p><strong>Due: Friday, July 17th at 11:59pm</strong></p>
 <p>In this assignment, you will extend your convolution-based edge detection implementation by introducing <strong>thread coarsening</strong>, and then use profiling tools to analyze its performance.</p>
 <p>Specifically, you will:</p>
 <ol class="arabic simple">
@@ -168,7 +152,7 @@
 <li><dl class="simple">
 <dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
 <li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
-<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-spr26/hw4-GITHUB-USERNAME.git.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-sum26/hw4-GITHUB-USERNAME.git.</p></li>
 <li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
 </ul>
 </dd>
@@ -195,301 +179,181 @@ git<span class="w"> </span>push
 </div>
 <p>This ensures you have a clean baseline to compare against as you implement optimizations.</p>
 </section>
-<section id="command-line-interface">
-<h2>Command-Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading">¶</a></h2>
-<p>Your program now supports an optional <strong>coarsening factor</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./edge_detect<span class="w"> </span>global<span class="p">|</span>shared<span class="w"> </span>stencil.txt<span class="w"> </span>input.png<span class="w"> </span>output.png<span class="w"> </span><span class="o">[</span>coarse_factor<span class="o">]</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coarse_factor</span></code> is optional</p></li>
-<li><p>Default value: <code class="docutils literal notranslate"><span class="pre">1</span></code> (no coarsening use your previous shared-memory kernel from hw3)</p></li>
-<li><p>Coarsening applies <strong>only to the shared memory kernel</strong></p></li>
-<li><p>You do not need to error check your arguments. You can assume we will always give you correct arguments. This means we will never give you a coarse_factor argument when running the global version. We will also always provide a positive integer greater than or equal to 1 for the <code class="docutils literal notranslate"><span class="pre">coarse_factor</span></code>.</p></li>
-</ul>
-<p>Example usage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./edge_detect<span class="w"> </span>global<span class="w"> </span>stencil3.txt<span class="w"> </span><span class="k">in</span>.png<span class="w"> </span>out.png
-./edge_detect<span class="w"> </span>shared<span class="w"> </span>stencil3.txt<span class="w"> </span><span class="k">in</span>.png<span class="w"> </span>out.png<span class="w"> </span><span class="m">1</span>
-./edge_detect<span class="w"> </span>shared<span class="w"> </span>stencil3.txt<span class="w"> </span><span class="k">in</span>.png<span class="w"> </span>out.png<span class="w"> </span><span class="m">2</span>
-./edge_detect<span class="w"> </span>shared<span class="w"> </span>stencil3.txt<span class="w"> </span><span class="k">in</span>.png<span class="w"> </span>out.png<span class="w"> </span><span class="m">4</span>
-</pre></div>
-</div>
-</section>
 <section id="task-1-thread-coarsening">
 <h2>Task 1 — Thread Coarsening<a class="headerlink" href="#task-1-thread-coarsening" title="Link to this heading">¶</a></h2>
-<section id="concept">
-<h3>Concept<a class="headerlink" href="#concept" title="Link to this heading">¶</a></h3>
-<p>In your current implementation:</p>
-<blockquote>
-<div><p>Each thread computes one output pixel</p>
-</div></blockquote>
-<p>You will modify this so that:</p>
-<blockquote>
-<div><p>Each thread computes multiple output pixels</p>
-</div></blockquote>
-<p>This technique is called <em>thread coarsening</em>. Please watch the videos for week 4 where I explain thread coarsening.</p>
+<p>In HW3 you already saw that increasing stencil size (radius) increases
+the number of multiply-adds per output pixel, and that shared memory’s
+advantage over global memory changes as that per-pixel work grows.
+Thread coarsening is a <em>different</em> lever: instead of changing how much
+data one thread reads, it changes how much <em>work</em> one thread does, which is how
+many output pixels a single thread is responsible for producing.</p>
+<p>Coarsening trades <strong>occupancy</strong> (fewer, “heavier” threads means fewer
+resident warps per SM) against <strong>amortized overhead</strong> (each thread’s
+halo-loading and index arithmetic is now spread across more useful
+work). Unlike the radius sweep, where the “cost” side of the tradeoff
+was largely about redundant memory traffic, the “cost” side of
+coarsening is primarily about running out of registers or occupancy
+headroom. You will use this assignment to make that distinction
+concrete with your own profiling data.</p>
+<p>Please watch the videos for week 4 where I explain thread coarsening.</p>
+<section id="implementing-edge-detect-coarsened">
+<h3>Implementing <code class="docutils literal notranslate"><span class="pre">edge_detect_coarsened</span></code><a class="headerlink" href="#implementing-edge-detect-coarsened" title="Link to this heading">¶</a></h3>
+<p>Add a third kernel, <code class="docutils literal notranslate"><span class="pre">edge_detect_coarsened</span></code>, alongside your existing
+<code class="docutils literal notranslate"><span class="pre">edge_detect_global</span></code> and <code class="docutils literal notranslate"><span class="pre">edge_detect_shared</span></code> kernels.</p>
+<p><strong>Coarsening axis:</strong> each thread computes <code class="docutils literal notranslate"><span class="pre">coarse_factor</span></code> consecutive
+output pixels along the <strong>x-direction</strong> (i.e., along a row), while
+still covering a single row of the block in <code class="docutils literal notranslate"><span class="pre">y</span></code>. This keeps the
+tiling logic close to your existing shared-memory kernel rather than
+requiring a full 2D coarsening scheme.</p>
+<p><strong>Shared memory sizing:</strong> your HW3 shared kernel allocated a tile of
+size <code class="docutils literal notranslate"><span class="pre">(BLOCK_SIZE</span> <span class="pre">+</span> <span class="pre">2*radius)</span> <span class="pre">x</span> <span class="pre">(BLOCK_SIZE</span> <span class="pre">+</span> <span class="pre">2*radius)</span></code>. For the
+coarsened kernel, each block now covers <code class="docutils literal notranslate"><span class="pre">BLOCK_SIZE_X</span> <span class="pre">*</span> <span class="pre">coarsening</span></code>
+output columns, so the tile becomes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">shared_mem_size</span> <span class="o">=</span>
+    <span class="p">(</span><span class="n">BLOCK_SIZE_X</span> <span class="o">*</span> <span class="n">coarse_factor</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span> <span class="o">*</span>
+    <span class="p">(</span><span class="n">BLOCK_SIZE_Y</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">radius</span><span class="p">);</span>
+<span class="n">edge_detect_coarsened</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">shared_mem_size</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="o">...</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Declare shared memory the same way you did in HW3:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">extern</span> <span class="n">__shared__</span> <span class="n">uint8_t</span> <span class="n">tile</span><span class="p">[];</span>
+</pre></div>
+</div>
+<p><strong>Stencil access:</strong> continue reading stencil coefficients from
+<code class="docutils literal notranslate"><span class="pre">__constant__</span></code> memory exactly as in HW3, which coarsening does not change
+how the stencil itself is stored or loaded.Your implementation must work for all stencil sizes (3x3, 5x5, 7x7)</p>
+<p><strong>Zero-padding:</strong> your zero-padding boundary handling from HW3 still
+applies at the edges of the image; make sure it’s still correct at the
+edges of each thread’s <em>set</em> of coarsened output pixels, not just the
+first one.</p>
+<p><strong>Correctness requirement:</strong> the coarsened kernel’s output image must
+be pixel-identical to your global and shared kernels’ output, for
+every stencil size and every coarsening factor you test.</p>
 </section>
-<section id="requirements">
-<h3>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h3>
+</section>
+<section id="program-usage-command-line-interface">
+<h2>Program Usage: Command-Line Interface<a class="headerlink" href="#program-usage-command-line-interface" title="Link to this heading">¶</a></h2>
+<p>Extend your CLI to accept the coarsened mode and an optional
+coarsening factor:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">edge_detect</span> <span class="k">global</span><span class="o">|</span><span class="n">shared</span><span class="o">|</span><span class="n">coarsened</span> <span class="n">stencil</span><span class="o">.</span><span class="n">txt</span> <span class="nb">input</span><span class="o">.</span><span class="n">png</span> <span class="n">output</span><span class="o">.</span><span class="n">png</span> <span class="p">[</span><span class="n">coarsening</span><span class="p">]</span>
+</pre></div>
+</div>
 <ul class="simple">
-<li><p>Implement a new kenerl that performs thread coarsening in your using shared memory.</p></li>
-<li><p>Each thread computes <code class="docutils literal notranslate"><span class="pre">coarse_factor</span></code> outputs</p></li>
-<li><p>Your implementation must work for all stencil sizes (3x3, 5x5, 7x7)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coarsening</span></code> is only meaningful for the <code class="docutils literal notranslate"><span class="pre">coarsened</span></code> mode. Default
+to <code class="docutils literal notranslate"><span class="pre">1</span></code> if omitted.</p></li>
+<li><p>As in HW3, you do not need argument-validation code, which you can assume valid
+arguments matching this usage.</p></li>
 </ul>
+<p>Example output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./edge_detect coarsened data/stencil5x5.txt data/test_img.png output.png 4
+coarsened memory version (stencil 5x5, coarsening 4): 2.048 ms
+
+$ ./edge_detect shared data/stencil5x5.txt data/test_img.png output.png
+shared memory version (stencil 5x5): 3.215 ms
+</pre></div>
+</div>
+<p>Continue measuring kernel execution time with CUDA events exactly as
+in HW3, which you wrap the timing around the kernel launch only.</p>
+<section id="task-2-gpu-profiling-with-nsight-compute-ncu">
+<h3>Task 2 — GPU Profiling with Nsight Compute (ncu)<a class="headerlink" href="#task-2-gpu-profiling-with-nsight-compute-ncu" title="Link to this heading">¶</a></h3>
+<p>As in HW3, you must profile using <code class="docutils literal notranslate"><span class="pre">ncu</span></code> from the command line (no
+GUI on the AWS instance), and your report answers must be grounded in
+specific metric names and values. The timing numbers alone are not
+sufficient.</p>
 </section>
-<section id="example-pattern">
-<h3>Example Pattern<a class="headerlink" href="#example-pattern" title="Link to this heading">¶</a></h3>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">coarse_factor</span><span class="p">;</span><span class="w"> </span><span class="n">c</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">out_col</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">base_col</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">out_col</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">width</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// compute convolution</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
+</section>
+<section id="required-profiling-runs">
+<h2>Required profiling runs<a class="headerlink" href="#required-profiling-runs" title="Link to this heading">¶</a></h2>
+<p>At minimum, generate and save the following reports:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">report_coarsened1_3x3.ncu-rep</span></code>, <code class="docutils literal notranslate"><span class="pre">report_coarsened2_3x3.ncu-rep</span></code>,
+<code class="docutils literal notranslate"><span class="pre">report_coarsened4_3x3.ncu-rep</span></code>, <code class="docutils literal notranslate"><span class="pre">report_coarsened8_3x3.ncu-rep</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">report_coarsened1_7x7.ncu-rep</span></code>, <code class="docutils literal notranslate"><span class="pre">report_coarsened2_7x7.ncu-rep</span></code>,
+<code class="docutils literal notranslate"><span class="pre">report_coarsened4_7x7.ncu-rep</span></code>, <code class="docutils literal notranslate"><span class="pre">report_coarsened8_7x7.ncu-rep</span></code></p></li>
+</ul>
+<p>(i.e., a coarsening sweep of 1, 2, 4, 8 at both the smallest and
+largest stencil size.) You are encouraged to also profile 5×5 and/or
+additional coarsening factors (16, 32) if your report would benefit
+from more data points.</p>
+<p>For each run, pay particular attention to metrics from the
+<strong>Occupancy</strong> and <strong>Launch Statistics</strong> sections: specifically
+<code class="docutils literal notranslate"><span class="pre">Achieved</span> <span class="pre">Occupancy</span></code>, <code class="docutils literal notranslate"><span class="pre">Registers</span> <span class="pre">Per</span> <span class="pre">Thread</span></code>, and the <strong>Block
+Limit</strong> values (registers, shared memory, warps, blocks) since these
+are what will let you explain <em>why</em> a given coarsening factor helps or
+hurts, not just <em>that</em> it does.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="mf">12.3</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">ncu</span> <span class="o">--</span><span class="nb">set</span> <span class="n">full</span> <span class="o">--</span><span class="n">target</span><span class="o">-</span><span class="n">processes</span> <span class="nb">all</span> <span class="o">-</span><span class="n">o</span> <span class="n">report_coarsened4_7x7</span> <span class="o">./</span><span class="n">edge_detect</span> <span class="n">coarsened</span> <span class="n">data</span><span class="o">/</span><span class="n">stencil7x7</span><span class="o">.</span><span class="n">txt</span> <span class="n">data</span><span class="o">/</span><span class="n">test_img</span><span class="o">.</span><span class="n">png</span> <span class="n">output</span><span class="o">.</span><span class="n">png</span> <span class="mi">4</span>
 </pre></div>
 </div>
 </section>
-<section id="important-considerations">
-<h3>Important Considerations<a class="headerlink" href="#important-considerations" title="Link to this heading">¶</a></h3>
-<ul>
-<li><p>Update grid dimensions appropriately:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">gridDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ceil</span><span class="p">(</span><span class="n">width</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">coarse_factor</span><span class="p">))</span>
-</pre></div>
-</div>
-</li>
-<li><p>Ensure correct indexing</p></li>
-<li><p>Handle boundary conditions carefully</p></li>
-<li><p>Reuse shared memory efficiently</p></li>
-<li><p>Avoid redundant global memory accesses</p></li>
-</ul>
-</section>
-</section>
-<section id="task-2-profiling-baseline-kernels">
-<h2>Task 2 — Profiling Baseline Kernels<a class="headerlink" href="#task-2-profiling-baseline-kernels" title="Link to this heading">¶</a></h2>
-<p>You should already have:</p>
-<ul class="simple">
-<li><p>A global memory convolution kernel</p></li>
-<li><p>A shared memory (tiled) convolution kernel</p></li>
-</ul>
-<section id="experimental-setup">
-<h3>Experimental Setup<a class="headerlink" href="#experimental-setup" title="Link to this heading">¶</a></h3>
-<p>To ensure consistent and meaningful performance results, you must use the provided input image for all profiling experiments.</p>
-<p>Requirements:</p>
-<ul class="simple">
-<li><p>Use the same input image for all runs</p></li>
-<li><p>Use one image that is sufficiently large (e.g., 2048×2048 or larger). You may need to use your own image and please make sure to add it to the repo.</p></li>
-<li><p>Do not vary image size when comparing stencil sizes or coarsening factors</p></li>
-</ul>
-<p>Rationale:</p>
-<ul class="simple">
-<li><p>Small images may not fully utilize the GPU</p></li>
-<li><p>Large images ensure that performance differences reflect kernel behavior rather than overhead</p></li>
-</ul>
-</section>
-<section id="running-the-profiler">
-<h3>Running the Profiler<a class="headerlink" href="#running-the-profiler" title="Link to this heading">¶</a></h3>
-<p>Use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>./edge_detect<span class="w"> </span><span class="o">[</span>args<span class="o">]</span>
-</pre></div>
-</div>
-</section>
-<section id="metrics-to-report">
-<h3>Metrics to Report<a class="headerlink" href="#metrics-to-report" title="Link to this heading">¶</a></h3>
-<p>Focus only on the following:</p>
-<ul class="simple">
-<li><p>Kernel Duration</p></li>
-<li><p>Achieved Occupancy</p></li>
-<li><p>SM Throughput (%)</p></li>
-<li><p>Memory Throughput (%)</p></li>
-<li><p>Warp Execution Efficiency</p></li>
-</ul>
-</section>
-<section id="task">
-<h3>Task<a class="headerlink" href="#task" title="Link to this heading">¶</a></h3>
-<p>For each stencil size (3x3, 5x5, 7x7):</p>
+<section id="report-report-md">
+<h2>Report ( <code class="docutils literal notranslate"><span class="pre">report.md</span></code>)<a class="headerlink" href="#report-report-md" title="Link to this heading">¶</a></h2>
+<p>Answer the following questions and place it in a <code class="docutils literal notranslate"><span class="pre">report.md</span></code> file in your repository:</p>
 <ol class="arabic simple">
-<li><p>Run the global kernel</p></li>
-<li><p>Run the shared memory kernel (coarse factor = 1)</p></li>
-<li><p>Collect metrics</p></li>
+<li><p>What is the average runtime for the coarsened kernel at coarsening
+factors 1, 2, 4, 8 for both the 3×3 and 7×7 stencils? Use CUDA
+event timings.</p></li>
+<li><p>For each stencil size, at what coarsening factor does runtime stop
+improving or start getting worse? Is the falloff point the same for
+3×3 and 7×7, or does it shift? State the specific factor for each.</p></li>
+<li><p>Explain the falloff you identified in Q2 using your <code class="docutils literal notranslate"><span class="pre">ncu</span></code>
+occupancy and register data and cite the metric name and value at the
+falloff point and the point just before it. Specifically: does
+<code class="docutils literal notranslate"><span class="pre">Achieved</span> <span class="pre">Occupancy</span></code> drop as coarsening increases? Does
+<code class="docutils literal notranslate"><span class="pre">Registers</span> <span class="pre">Per</span> <span class="pre">Thread</span></code> grow? Which <strong>Block Limit</strong> value becomes
+the binding constraint?</p></li>
+<li><p>Compare the coarsening tradeoff to the stencil-size tradeoff from
+HW3. Both produce a “there’s a sweet spot” result, but for different
+underlying reasons. In 2-3 sentences, explain what limits
+performance as stencil size grows (revisit your HW3 answers) versus
+what limits performance as coarsening grows, and why these are
+different mechanisms even though the resulting charts look similar.</p></li>
+<li><p>Does the best coarsening factor depend on stencil size? If your
+answer to Q2 showed a shift between 3×3 and 7×7, propose an
+explanation grounded in your metrics — larger stencils mean larger
+shared-memory tiles per block, which interacts with coarsening’s own
+shared-memory growth. Does shared-memory usage, rather than
+registers, become the binding constraint at larger stencil sizes?
+Support your answer with the relevant Block Limit value.</p></li>
+<li><p>What implementation issues did you encounter extending your shared
+kernel to support coarsening particularly around shared memory
+tile sizing, zero-padding at the edges of a thread’s coarsened
+output span, or interpreting any new <code class="docutils literal notranslate"><span class="pre">ncu</span></code> metric?</p></li>
 </ol>
-<p>—</p>
-</section>
-<section id="required-tables">
-<h3>Required Tables<a class="headerlink" href="#required-tables" title="Link to this heading">¶</a></h3>
-<p>Produce one table per stencil size.</p>
-<p>Example (3x3):</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Metric</p></th>
-<th class="head"><p>Global</p></th>
-<th class="head"><p>Shared</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Kernel Duration</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>Achieved Occupancy</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>SM Throughput</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>Memory Throughput</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>Warp Exec Efficiency</p></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>Repeat for 5x5 and 7x7.</p>
-</section>
-</section>
-<section id="task-3-parameter-sweep-profiling">
-<h2>Task 3 — Parameter Sweep &amp; Profiling<a class="headerlink" href="#task-3-parameter-sweep-profiling" title="Link to this heading">¶</a></h2>
-<p>You must evaluate:</p>
-<ul class="simple">
-<li><p>Stencil sizes:
-- 3x3
-- 5x5
-- 7x7</p></li>
-<li><p>Coarsening factors:
-- 1
-- 2
-- 4</p></li>
-</ul>
-<section id="running-experiments">
-<h3>Running Experiments<a class="headerlink" href="#running-experiments" title="Link to this heading">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>./edge_detect<span class="w"> </span>shared<span class="w"> </span>stencil5.txt<span class="w"> </span><span class="k">in</span>.png<span class="w"> </span>out.png<span class="w"> </span><span class="m">1</span>
-ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>./edge_detect<span class="w"> </span>shared<span class="w"> </span>stencil5.txt<span class="w"> </span><span class="k">in</span>.png<span class="w"> </span>out.png<span class="w"> </span><span class="m">2</span>
-ncu<span class="w"> </span>--set<span class="w"> </span>full<span class="w"> </span>./edge_detect<span class="w"> </span>shared<span class="w"> </span>stencil5.txt<span class="w"> </span><span class="k">in</span>.png<span class="w"> </span>out.png<span class="w"> </span><span class="m">4</span>
-</pre></div>
-</div>
-</section>
-<section id="id1">
-<h3>Required Tables<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
-<p>For each stencil size, create a table:</p>
-<p>Example (3x3):</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Metric</p></th>
-<th class="head"><p>CF=1</p></th>
-<th class="head"><p>CF=2</p></th>
-<th class="head"><p>CF=4</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Kernel Duration</p></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>Achieved Occupancy</p></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>SM Throughput</p></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>Memory Throughput</p></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>Repeat for 5x5 and 7x7.</p>
-</section>
-</section>
-<section id="task-4-analysis-discussion">
-<h2>Task 4 — Analysis &amp; Discussion<a class="headerlink" href="#task-4-analysis-discussion" title="Link to this heading">¶</a></h2>
-<p>Answer the following:</p>
-<ol class="arabic simple">
-<li><p>Optimal Coarsening</p>
-<ul class="simple">
-<li><p>What is the best coarse factor for each stencil size?</p></li>
-</ul>
-</li>
-<li><p>Performance Trends</p>
-<ul class="simple">
-<li><p>How does performance change as coarse factor increases?</p></li>
-<li><p>Why does performance eventually degrade?</p></li>
-</ul>
-</li>
-<li><p>Occupancy Tradeoff</p>
-<ul class="simple">
-<li><p>How does occupancy change with increasing coarse factor?</p></li>
-<li><p>Does higher occupancy always lead to better performance?</p></li>
-</ul>
-</li>
-<li><p>Memory Behavior</p>
-<ul class="simple">
-<li><p>Does coarsening significantly change memory throughput?</p></li>
-<li><p>Why or why not?</p></li>
-</ul>
-</li>
-<li><p>Scaling Insight</p>
-<ul class="simple">
-<li><p>Does the optimal coarse factor depend on stencil size?</p></li>
-<li><p>Why might larger stencils benefit more from coarsening?</p></li>
-</ul>
-</li>
-<li><p>Final Insight</p>
-<ul class="simple">
-<li><p>What combination of techniques gave the best performance?</p></li>
-<li><p>Explain the tradeoffs involved</p></li>
-</ul>
-</li>
-</ol>
-<p>—</p>
-</section>
-<section id="deliverables">
-<h2>Deliverables<a class="headerlink" href="#deliverables" title="Link to this heading">¶</a></h2>
-<ol class="arabic">
-<li><p>Code</p>
-<ul class="simple">
-<li><p>Global kernel</p></li>
-<li><p>Shared memory kernel</p></li>
-<li><p>Coarsened kernel</p></li>
-</ul>
-</li>
-<li><p>Report (PDF) named <code class="docutils literal notranslate"><span class="pre">hw4_report.pd</span></code></p>
-<p>Must include:</p>
-<ul class="simple">
-<li><p>All required tables</p></li>
-<li><p>Answers to all questions</p></li>
-<li><p>Clear explanation of performance trends</p></li>
-</ul>
-</li>
-</ol>
-<section id="report-guidelines">
-<h3>Report Guidelines<a class="headerlink" href="#report-guidelines" title="Link to this heading">¶</a></h3>
-<ul class="simple">
-<li><p>Do not paste raw profiler output</p></li>
-<li><p>Use tables to summarize results</p></li>
-<li><p>Support all claims with data</p></li>
-<li><p>Be concise and precise</p></li>
-</ul>
-</section>
+<p>As in HW3, you are not required to produce graphs, but you must cite
+specific metric names and values from your saved <code class="docutils literal notranslate"><span class="pre">ncu</span></code> reports to
+support Q3-Q5.</p>
 </section>
 <section id="grading">
 <h2>Grading<a class="headerlink" href="#grading" title="Link to this heading">¶</a></h2>
 <p>Programming assignments will be graded according to a general rubric. Specifically, we will assign points for completeness, correctness, design, and style. (For more details on the categories, see our Assignment Rubric page.)</p>
 <p>The exact weights for each category will vary from one assignment to another. For this assignment, the weights will be:</p>
-<ul class="simple">
-<li><p>Task #1: 25%</p></li>
-<li><p>Task #2: 15%</p></li>
-<li><p>Task #3: 15%</p></li>
-<li><p>Task #4: 45%</p></li>
-</ul>
+<p>Same weighting structure as HW3:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 60.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Category</p></th>
+<th class="head"><p>Weight</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Completeness</p></td>
+<td><p>60%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Correctness</p></td>
+<td><p>15%</p></td>
+</tr>
+<tr class="row-even"><td><p>Design/Style</p></td>
+<td><p>10%</p></td>
+</tr>
+<tr class="row-odd"><td><p>report.md</p></td>
+<td><p>15%</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="submission">
 <h2>Submission<a class="headerlink" href="#submission" title="Link to this heading">¶</a></h2>
