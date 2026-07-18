@@ -110,14 +110,15 @@
 <li><a class="reference internal" href="#task-1-file-parsing-cpu">Task 1: File Parsing (CPU)</a></li>
 <li><a class="reference internal" href="#task-2-host-side-setup">Task 2: Host-Side Setup</a></li>
 <li><a class="reference internal" href="#task-3-flagging-kernel-gpu">Task 3: Flagging Kernel (GPU)</a></li>
-<li><a class="reference internal" href="#task-4-prefix-scan-gpu">Task 4: Prefix Scan (GPU)</a><ul>
-<li><a class="reference internal" href="#note-on-prefix-scan-usage">Note on Prefix Scan Usage</a></li>
+<li><a class="reference internal" href="#task-4-reduction-gpu">Task 4: Reduction (GPU)</a><ul>
+<li><a class="reference internal" href="#note-on-reduction-usage">Note on Reduction Usage</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#task-5-histogram-kernels">Task 5: Histogram Kernels</a><ul>
 <li><a class="reference internal" href="#command-line-flag">Command Line Flag</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#task-6-top-k-reduction-gpu">Task 6: Top-K Reduction (GPU)</a></li>
 <li><a class="reference internal" href="#testing-and-directory-structure">Testing and Directory Structure</a><ul>
 <li><a class="reference internal" href="#running-a-single-test">Running a Single Test</a></li>
 <li><a class="reference internal" href="#running-all-tests">Running All Tests</a></li>
@@ -140,10 +141,10 @@
       
   <section id="homework-5">
 <h1>Homework #5<a class="headerlink" href="#homework-5" title="Link to this heading">¶</a></h1>
-<p><strong>Due: Friday, May 1st at 11:59pm</strong></p>
+<p><strong>Due: Friday, July 24th at 11:59pm</strong></p>
 <p>This assignment introduces several important GPU programming patterns:</p>
 <ul class="simple">
-<li><p>Prefix scan (exclusive scan)</p></li>
+<li><p>Parallel reduction (sum and top-K)</p></li>
 <li><p>Histogram computation with atomics</p></li>
 <li><p>Shared memory usage</p></li>
 <li><p>Warp-level primitives (e.g., <code class="docutils literal notranslate"><span class="pre">__ballot_sync</span></code> and <code class="docutils literal notranslate"><span class="pre">__popc</span></code>)</p></li>
@@ -168,7 +169,7 @@
 <li><dl class="simple">
 <dt>You now need to clone your repository (i.e., download it to your machine).</dt><dd><ul class="simple">
 <li><p>Make sure you’ve set up <a class="reference external" href="https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">SSH access</a> on your GitHub account.</p></li>
-<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-spr26/hw5-GITHUB-USERNAME.git.</p></li>
+<li><p>For each repository, you will need to get the SSH URL of the repository. To get this URL, log into GitHub and navigate to your project repository (take into account that you will have a different repository per project). Then, click on the green “Code” button, and make sure the “SSH” tab is selected. Your repository URL should look something like this: <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:mpcs52072-sum26/hw5-GITHUB-USERNAME.git.</p></li>
 <li><p>If you do not know how to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> to clone your repository then follow this guide that Github provides: <a class="reference external" href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository">Cloning a Repository</a></p></li>
 </ul>
 </dd>
@@ -181,11 +182,12 @@
 <h2>Assignment Focus<a class="headerlink" href="#assignment-focus" title="Link to this heading">¶</a></h2>
 <p>This assignment is designed to help you become familiar with common GPU programming patterns, including:</p>
 <ul class="simple">
-<li><p>Prefix scan</p></li>
+<li><p>Parallel reduction (including a top-K variant)</p></li>
 <li><p>Histogram computation</p></li>
 <li><p>Warp-level primitives</p></li>
 </ul>
 <p>The primary goal is to build a correct and functional implementation of these patterns in a realistic pipeline.</p>
+<p>You are <strong>not</strong> allowed to use any CUDA libraries or third-party libraries (e.g. Thrust, CUB) anywhere in this assignment. This includes the reduction, top-K, and histogram tasks. You are implementing the entire pipeline yourself, from the kernels you write to the merge/combine logic above. Calls like <code class="docutils literal notranslate"><span class="pre">thrust::sort</span></code> or <code class="docutils literal notranslate"><span class="pre">thrust::reduce</span></code> are off-limits even if you write them yourself and don’t copy them from an example.</p>
 <p><strong>You are not required to profile or optimize performance for this assignment.</strong></p>
 <p>While you will implement multiple GPU techniques (e.g., shared memory and warp-level primitives), the emphasis is on understanding how these patterns work and not on achieving maximum performance.</p>
 <p>We will return to performance analysis and profiling in future assignments.</p>
@@ -323,7 +325,9 @@ Copy to GPU
    ↓
 Compute Score + Flag
    ↓
-Prefix Scan
+Reduction (Count Trending Posts)
+   ↓
+Top-K Reduction (Highest-Engagement Trending Posts)
    ↓
 Compute Histograms (Shared Memory/Warp Prims)
    ↓
@@ -362,7 +366,6 @@ Number of threads per block used when launching CUDA kernels.</p></li>
 <ul class="simple">
 <li><p>The total number of posts whose engagement score meets or exceeds the threshold.</p></li>
 </ul>
-<p>—</p>
 <p><strong>Line 2: Content Type Histogram</strong></p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TEXT_COUNT,IMAGE_COUNT,VIDEO_COUNT,LINK_COUNT
 </pre></div>
@@ -374,7 +377,6 @@ Number of threads per block used when launching CUDA kernels.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">LINK_COUNT</span></code>: number of posts with <code class="docutils literal notranslate"><span class="pre">content_type</span> <span class="pre">=</span> <span class="pre">3</span></code></p></li>
 </ul>
 <p>This histogram counts <strong>all posts</strong>, not just trending ones.</p>
-<p>—</p>
 <p><strong>Line 3: Engagement Histogram</strong></p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ENG_0_99_COUNT,ENG_100_499_COUNT,ENG_500_999_COUNT,ENG_1000_PLUS_COUNT
 </pre></div>
@@ -386,6 +388,19 @@ Number of threads per block used when launching CUDA kernels.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ENG_1000_PLUS_COUNT</span></code>: number of posts with engagement score 1000 or greater</p></li>
 </ul>
 <p>This histogram also counts <strong>all posts</strong>, not just trending ones.</p>
+<p><strong>Line 4: Top-3 Trending Posts</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>post_id:score,post_id:score,post_id:score
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The three <strong>trending</strong> posts (i.e. <code class="docutils literal notranslate"><span class="pre">score</span> <span class="pre">&gt;=</span> <span class="pre">threshold</span></code>) with the highest engagement scores, ordered from highest to lowest.</p></li>
+<li><p>If two posts have the same score, the post with the <strong>lower ``post_id``</strong> is ranked first.</p></li>
+<li><p>If fewer than 3 posts are trending, pad the remaining slot(s) with <code class="docutils literal notranslate"><span class="pre">-1:0</span></code>.</p></li>
+</ul>
+<p>Example: if the top trending posts are post 42 (score 1500), post 7 (score 1200), and only those two posts are trending:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>42:1500,7:1200,-1:0
+</pre></div>
+</div>
 </section>
 <section id="example-cli">
 <h3>Example CLI<a class="headerlink" href="#example-cli" title="Link to this heading">¶</a></h3>
@@ -403,6 +418,7 @@ Number of threads per block used when launching CUDA kernels.</p></li>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>2
 2,1,1,1
 1,1,1,2
+&lt;post_id&gt;:&lt;score&gt;,&lt;post_id&gt;:&lt;score&gt;,&lt;post_id&gt;:&lt;score&gt;
 </pre></div>
 </div>
 </section>
@@ -434,7 +450,8 @@ comments
 <ul class="simple">
 <li><p>Posts</p></li>
 <li><p>Flags</p></li>
-<li><p>Scan results</p></li>
+<li><p>Block-level partial sums (for the count reduction)</p></li>
+<li><p>Block-level top-K candidates (for the top-K reduction: see Task 6)</p></li>
 <li><p>Content histogram (size 4)</p></li>
 <li><p>Engagement histogram (size 4)</p></li>
 </ul>
@@ -453,44 +470,37 @@ comments
 <li><p>Write 0 or 1 into the flags array</p></li>
 </ul>
 </section>
-<section id="task-4-prefix-scan-gpu">
-<h2>Task 4: Prefix Scan (GPU)<a class="headerlink" href="#task-4-prefix-scan-gpu" title="Link to this heading">¶</a></h2>
-<p>Implement an <strong>exclusive prefix scan</strong> over the flags array.</p>
+<section id="task-4-reduction-gpu">
+<h2>Task 4: Reduction (GPU)<a class="headerlink" href="#task-4-reduction-gpu" title="Link to this heading">¶</a></h2>
+<p>Implement a <strong>parallel reduction</strong> to compute the total number of trending posts, i.e., the sum of every entry in the <code class="docutils literal notranslate"><span class="pre">flags</span></code> array.</p>
 <p>Definition:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>scan[i] = number of 1s in flags[0 ... i-1]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>total = flags[0] + flags[1] + ... + flags[n-1]
 </pre></div>
 </div>
 <p>Example:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>flags: [0, 1, 1, 0, 1]
-scan:  [0, 0, 1, 2, 2]
+total: 3
 </pre></div>
 </div>
 <p>Requirements:</p>
 <ul class="simple">
-<li><p>Must be an <strong>exclusive scan</strong></p></li>
-<li><p>You may implement this using one or more kernels</p></li>
-<li><p>You may not use Thrust or other libraries</p></li>
+<li><p>Each block should perform a <strong>shared-memory tree reduction</strong> over the portion of the <code class="docutils literal notranslate"><span class="pre">flags</span></code> array it is responsible for, producing one partial sum per block.</p></li>
+<li><p>Combine the per-block partial sums into a single final total. You may do this either by:</p>
+<ul>
+<li><p>having each block write its partial sum into a small array and launching a second (smaller) reduction kernel over that array, <strong>or</strong></p></li>
+<li><p>having each block perform a single <code class="docutils literal notranslate"><span class="pre">atomicAdd</span></code> of its partial sum into a global counter.</p></li>
 </ul>
-<section id="note-on-prefix-scan-usage">
-<h3>Note on Prefix Scan Usage<a class="headerlink" href="#note-on-prefix-scan-usage" title="Link to this heading">¶</a></h3>
-<p>the prefix scan is used to compute the total number of trending posts.</p>
-<p>Given a binary flag array:</p>
-<blockquote>
-<div><p>flags[i] = 1 if post i is trending
-flags[i] = 0 otherwise</p>
-</div></blockquote>
-<p>The exclusive prefix scan produces:</p>
-<blockquote>
-<div><p>scan[i] = number of trending posts before index i</p>
-</div></blockquote>
-<p>The total number of trending posts can then be computed as:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scan</span><span class="p">[</span><span class="n">n</span><span class="mi">-1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">flags</span><span class="p">[</span><span class="n">n</span><span class="mi">-1</span><span class="p">];</span>
+</li>
+<li><p>You may not use Thrust or other libraries.</p></li>
+<li><p>You do not need to worry about shared-memory bank conflicts or other performance tuning for this assignment. A straightforward tree reduction is sufficient.</p></li>
+</ul>
+<section id="note-on-reduction-usage">
+<h3>Note on Reduction Usage<a class="headerlink" href="#note-on-reduction-usage" title="Link to this heading">¶</a></h3>
+<p>The only thing we need from the <code class="docutils literal notranslate"><span class="pre">flags</span></code> array in this assignment is a single number: how many posts are trending. Because we don’t need to know <em>where</em> each trending post sits relative to the others (no compaction/reordering step follows), a reduction is exactly the right tool. It collapses the array down to one value without requiring any positional bookkeeping.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">flags</span><span class="p">[</span><span class="mi">0</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="n">n</span><span class="mi">-1</span><span class="p">]);</span>
 </pre></div>
 </div>
-<p>This allows you to compute the total number of selected elements
-without using atomic operations.</p>
-<p>Although prefix scan is often used for stream compaction (filtering),
-you will explore that use case in a future assignment.</p>
+<p>This total becomes <strong>Line 1</strong> of your program’s output.</p>
 </section>
 </section>
 <section id="task-5-histogram-kernels">
@@ -531,6 +541,43 @@ cooperate before updating histogram bins.</p>
 </div>
 <p>Both versions must produce <strong>identical output</strong>.</p>
 </section>
+</section>
+<section id="task-6-top-k-reduction-gpu">
+<h2>Task 6: Top-K Reduction (GPU)<a class="headerlink" href="#task-6-top-k-reduction-gpu" title="Link to this heading">¶</a></h2>
+<p>In addition to counting trending posts (Task 4), you will compute the <strong>3 trending posts with the highest engagement scores</strong>, using a reduction, which is the same pattern as Task 4, but instead of each thread/block combining values down to a single sum, they combine values down to a single <strong>top-3 list</strong>.</p>
+<p>Definitions:</p>
+<ul class="simple">
+<li><p>Only <strong>trending</strong> posts (<code class="docutils literal notranslate"><span class="pre">score</span> <span class="pre">&gt;=</span> <span class="pre">threshold</span></code>) are eligible.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K</span> <span class="pre">=</span> <span class="pre">3</span></code> (a fixed constant. You do not need to support other values of K).</p></li>
+<li><p>Ties are broken by lower <code class="docutils literal notranslate"><span class="pre">post_id</span></code> first.</p></li>
+<li><p>If fewer than 3 posts are trending, remaining slot(s) are filled with <code class="docutils literal notranslate"><span class="pre">post_id</span> <span class="pre">=</span> <span class="pre">-1</span></code> and <code class="docutils literal notranslate"><span class="pre">score</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+</ul>
+<p>Algorithm sketch:</p>
+<ol class="arabic">
+<li><p><strong>Per-thread candidates</strong>: Each thread looks at the post(s) it’s responsible for and keeps a local top-3 list of <code class="docutils literal notranslate"><span class="pre">(post_id,</span> <span class="pre">score)</span></code> pairs (only among trending posts it has seen).</p></li>
+<li><p><strong>Block-level reduction</strong>: Within a block, merge threads’ local top-3 lists down to a single top-3 list for the block. This is structurally the same as a sum reduction (pairwise combine across shared memory), except the “combine” operation is a merge-and-keep-top-3 instead of an add.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>merge(listA, listB):
+    combined = listA ++ listB      // up to 6 candidates
+    sort combined by score descending (ties -&gt; lower post_id first)
+    return the first 3 entries of combined
+</pre></div>
+</div>
+</li>
+<li><p><strong>Global reduction</strong>: Combine each block’s top-3 list into a single final top-3 list, using the same <code class="docutils literal notranslate"><span class="pre">merge</span></code> operation. You may do this either by:</p>
+<ul class="simple">
+<li><p>writing each block’s top-3 to a small global array and launching a second kernel that reduces that array down to one top-3 list, or</p></li>
+<li><p>protecting a single global top-3 list with a lock/critical-section pattern (e.g. <a href="#id1"><span class="problematic" id="id2">``</span></a>atomicCAS``based spinlock) that each block merges into.</p></li>
+</ul>
+<p>The first approach (second reduction kernel) is recommended as it avoids needing a lock-like pattern and mirrors the two-phase structure you already used for Task 4.</p>
+</li>
+<li><p>Write the final top-3 list out as <strong>Line 4</strong> of your program’s output (see the Output section above for the exact format).</p></li>
+</ol>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>A thread’s local top-3 list should never contain duplicate <code class="docutils literal notranslate"><span class="pre">post_id</span></code> values, and no post should be counted twice anywhere in the merge chain, where each post is only ever considered by the one thread that reads it.</p></li>
+<li><p>You do not need to make this reduction warp-optimized; a straightforward shared-memory version (structurally similar to Task 4) is sufficient.</p></li>
+<li><p>Do not sort the <em>entire</em> dataset. Sorting will entail significant overhead and we will penalize your for it.</p></li>
+</ul>
 </section>
 <section id="testing-and-directory-structure">
 <h2>Testing and Directory Structure<a class="headerlink" href="#testing-and-directory-structure" title="Link to this heading">¶</a></h2>
